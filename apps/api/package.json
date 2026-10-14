@@ -1,0 +1,23 @@
+{
+  "name": "@mcarena/api",
+  "version": "0.1.0",
+  "private": true,
+  "description": "McArena API server: Fastify + match orchestration + MCP data source switching (mock/replay/live)",
+  "license": "MIT",
+  "type": "module",
+  "main": "./src/server.ts",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "tsup src/server.ts --format esm --target node20 --clean --sourcemap --out-dir dist",
+    "start": "node dist/server.js",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@fastify/cors": "^10.0.0",
+    "@mcarena/arena-core": "*",
+    "@mcarena/mcd-mcp-client": "*",
+    "@mcarena/shared": "*",
+    "fastify": "^5.2.0",
+    "zod": "^3.25.0"
+  }
+}

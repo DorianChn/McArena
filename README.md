@@ -31,25 +31,34 @@
 - Node.js ≥ 20（开发使用 22.x）
 - npm ≥ 10
 
-### 无 Token 演示（5 分钟）
+### 一键启动（模拟数据模式，无需 Token）
 
 ```bash
 git clone https://github.com/OWNER/McArena.git
 cd McArena
 npm ci
-npm run demo        # 基于仓内真实数据快照，立即跑一局完整比赛
+npm run dev
+# 前端 http://localhost:5173 ｜ API http://localhost:8787
 ```
+
+首次启动为**模拟数据模式**（界面黄色标识「模拟数据」）——可在无 Token 环境下完整走通
+「任务卡 → 双 Agent 决策 → 裁判打分 → 结果回放」全链路，且每局比赛支持 seed 复现。
 
 ### 实时模式（需要麦当劳 MCP Token）
 
 1. 前往 [麦当劳 MCP 开放平台](https://open.mcd.cn/mcp)，手机号登录后在控制台「激活」申请 MCP Token；
-2. 配置环境变量（**不要写进任何提交文件**）：
+2. 复制 `.env.example` 为 `.env`，设置 `MCD_MCP_MODE=live` 与 `MCD_MCP_TOKEN`（**不要提交 .env**）；
+3. `npm run dev`。
+
+> 实时数据采集（tools 调用 → 快照落盘 → 数据集组装）将在阶段02实现，详见 MCP_INTEGRATION.md「实测校验记录」。
+
+### 质量检查
 
 ```bash
-cp .env.example .env
-# 编辑 .env，填入 MCD_MCP_TOKEN
-npm run snapshot:capture   # 采集最新官方数据，生成带 sha256 的快照
-npm run dev                # 启动前端 (5173) 与 API (8787)
+npm run lint       # ESLint（typescript-eslint 类型感知规则）
+npm run typecheck  # TypeScript strict 全量检查
+npm test           # Vitest：契约 / 协议 / 编排 / API / 前端客户端
+npm run build      # 生产构建（API tsup 打包 + Web Vite 构建）
 ```
 
 ### WorkBuddy 中使用

@@ -1,0 +1,23 @@
+{
+  "name": "@mcarena/mcd-mcp-client",
+  "version": "0.1.0",
+  "private": true,
+  "description": "McArena adapter for the official McDonald's China MCP Server (Streamable HTTP) + clearly-marked mock adapter for development",
+  "license": "MIT",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@mcarena/shared": "*",
+    "zod": "^3.25.0"
+  }
+}

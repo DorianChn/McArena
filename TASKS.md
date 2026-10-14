@@ -11,19 +11,45 @@
 | P0-2 🤖 | 创建 `<repo-root>` 并 `git init` | 架构师 | ✅ 完成 | 目录存在，main 分支 |
 | P0-3 🤖 | 写入 CONTEST_DECLARATION.md（官方原文，禁止改动） | 架构师 | ✅ 完成 | diff 与官方仓库一致 |
 | P0-4 🤖 | 写入 mcp-config.example.json（仅环境变量占位符） | 架构师 | ✅ 完成 | 无任何真实凭据 |
-| P0-5 🤖 | npm workspaces 骨架：根 package.json / tsconfig.base / .gitignore / .editorconfig | 后端 | ⬜ | `npm install` 成功 |
-| P0-6 🤖 | Vitest + GitHub Actions CI（build + test） | 后端 | ⬜ | push 后 CI 绿 |
+| P0-5 🤖 | npm workspaces 骨架：根 package.json / tsconfig.base / .gitignore / .editorconfig | 后端 | ✅ 完成 | `npm install` 成功 |
+| P0-6 🤖 | Vitest + GitHub Actions CI（build + test） | 后端 | ✅ 完成 | 本地 39/39 测试通过；CI 待 push 后验证 |
 | P0-7 🤖 | 编写 PROJECT_PLAN / ARCHITECTURE / TASKS / ACCEPTANCE_CRITERIA | 架构师 | ✅ 完成 | 四文件齐备 |
 | P0-8 👤 | 在 https://open.mcd.cn/mcp 手机号登录并申请 MCP Token，仅写入本地 `.env` | 用户 | ⬜ **阻塞 R1** | `.env` 存在且不入库 |
 | P0-9 👤 | 在 GitHub 创建 **公开** 仓库 `McArena`（须早于 10/25 23:59 创建） | 用户 | ⬜ | 仓库 Public，创建时间合规 |
+
+## 阶段01 基础工程与架构实现（10/14）
+
+> 目标：工程可启动、前后端通信正常、契约/接口/测试/lint 全绿；真实业务算法留给阶段02。
+> 范围控制：Mock 模式为唯一默认模式；live 模式在阶段02 接通官方 MCP 后启用。
+
+| ID | 任务 | 负责 | 状态 | 验收 |
+|---|---|---|---|---|
+| S1-1 🤖 | 前后端 TypeScript 工程（npm workspaces × 5 包） | 后端 | ✅ 完成 | typecheck 6/6 通过 |
+| S1-2 🤖 | React + Vite + Tailwind CSS 配置（@tailwindcss/vite，v4） | 前端 | ✅ 完成 | `vite build` 成功（13.45KB CSS / 217.81KB JS） |
+| S1-3 🤖 | Node.js 后端 + API（Fastify + CORS + 统一错误处理 + SSE） | 后端 | ✅ 完成 | 7 路由冒烟 + 契约错误体 |
+| S1-4 🤖 | 统一数据契约（packages/shared：Challenge/Constraints/MenuItem/MealProposal/MCPDataSnapshot/AgentExecution/JudgeResult/MatchResult/EvidenceRecord + API DTO + DataOrigin） | 后端 | ✅ 完成 | 8 契约测试通过 |
+| S1-5 🤖 | MCP Adapter 接口（McdMcpAdapter + HttpMcpAdapter + MockMcpAdapter + 只读白名单/写操作黑名单/限流/退避） | 后端 | ✅ 完成 | 假服务器契约测试 12 项通过 |
+| S1-6 🤖 | Agent Engine / Judge Engine 接口（arena-core，纯函数边界）+ Mock 脚手架引擎 | 算法 | ✅ 完成 | 4 编排测试通过（含确定性复现） |
+| S1-7 🤖 | 比赛状态管理（MatchOrchestrator 状态机 + MatchStore 环形缓冲 + SSE 事件序列） | 后端 | ✅ 完成 | SSE 回放验证 |
+| S1-8 🤖 | 错误处理与日志系统（9 类错误码 + HTTP 映射 + JSON 日志 + 敏感字段脱敏） | 后端 | ✅ 完成 | 错误体契约 + 脱敏测试 |
+| S1-9 🤖 | ESLint（typescript-eslint 类型感知）+ TypeScript strict + Vitest | 后端 | ✅ 完成 | lint 0 error / test 39/39 / build 通过 |
+| S1-10 🤖 | 前后端实际启动联调（dev 双服务 + Vite 代理 + curl 冒烟） | 全栈 | ✅ 完成 | healthz / match / stream / 404 / 400 全部符合预期 |
+| S1-11 🤖 | 阶段 Git Commit | 全栈 | ✅ 完成 | 见 git log |
+
+### 阶段01 设计决策记录
+
+- **内部包源码直引**：workspaces 包 exports 指向 TS 源码，运行时由 tsx（API）与 Vite（Web）编译，避免构建顺序耦合；`tsc --noEmit` 仅作类型检查。
+- **数据来源三分法**：`official-live` / `official-snapshot` / `mock`，由 `DataOrigin` 贯穿 MatchResult 与 UI，mock 结果强制携带中文警示，杜绝「模拟数据冒充官方数据」。
+- **写操作红线**：MCP 客户端只读白名单 + 写操作黑名单双重机制，默认拒绝一切下单类工具（单测覆盖）。
+- **接口先行**：Agent/Judge 引擎以接口固定，真实算法（阶段02）可无缝替换 mock 脚手架。
 
 ## P1 官方 MCP 数据接入（10/15–10/16）
 
 | ID | 任务 | 负责 | 状态 | 验收 |
 |---|---|---|---|---|
-| P1-1 🤖 | `packages/shared`：zod 契约（MenuSnapshot/TaskCard/DecisionTrace/Verdict/MatchRecord） | 后端 | ⬜ | 类型导出 + schema 测试 |
-| P1-2 🤖 | `packages/mcd-mcp-client`：initialize/tools/list/tools/call + 退避重试 + 超时 | 后端 | ⬜ | 假服务器契约测试通过 |
-| P1-3 🤖 | 写操作黑名单（create-order 等默认拒绝） | 后端 | ⬜ | 单测：拦截即抛错 |
+| P1-1 🤖 | `packages/shared`：zod 契约（MenuSnapshot/TaskCard/DecisionTrace/Verdict/MatchRecord） | 后端 | ✅ 完成（阶段01 已含全部核心对象 + API DTO） | 类型导出 + schema 测试 |
+| P1-2 🤖 | `packages/mcd-mcp-client`：initialize/tools/list/tools/call + 退避重试 + 超时 | 后端 | ✅ 协议层完成（待真实 Token 端到端验证） | 假服务器契约测试通过 |
+| P1-3 🤖 | 写操作黑名单（create-order 等默认拒绝） | 后端 | ✅ 完成 | 单测：拦截即抛错 |
 | P1-4 🤖👤 | 用真实 Token 试连，落 `snapshots/schema-YYYYMMDD/tools.json`（实测 schema） | 后端+用户 | ⬜ 依赖 P0-8 | tools.json 生成；与官方文档差异记录入 MCP_INTEGRATION.md |
 | P1-5 🤖 | `tools/snapshot-capture.ts`：采集只读数据快照 + manifest(sha256) | 后端 | ⬜ | 无 Token 可回放 |
 | P1-6 🤖 | `packages/shared` 按**实测 schema** 校正契约 | 后端 | ⬜ 依赖 P1-4 | 契约测试通过 |

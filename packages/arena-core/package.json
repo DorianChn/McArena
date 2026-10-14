@@ -1,0 +1,22 @@
+{
+  "name": "@mcarena/arena-core",
+  "version": "0.1.0",
+  "private": true,
+  "description": "McArena arena core: Agent/Judge engine interfaces, match orchestrator & state machine (pure functions, zero network)",
+  "license": "MIT",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@mcarena/shared": "*"
+  }
+}

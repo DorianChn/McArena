@@ -1,0 +1,22 @@
+{
+  "name": "@mcarena/shared",
+  "version": "0.1.0",
+  "private": true,
+  "description": "McArena shared data contracts (zod schemas + TS types), errors and logger - single source of truth for front/back end",
+  "license": "MIT",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "zod": "^3.25.0"
+  }
+}
