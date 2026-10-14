@@ -132,7 +132,7 @@ export function ResultPage({ navigate }: { navigate: (route: 'home' | 'setup' | 
                 </span>
               </div>
               <p className="mt-2 text-center text-[10px] leading-relaxed text-ink-3">
-                雷达图各轴按维度满分归一化展示；维度得分取双方较高值（见裁判记分表）
+                雷达图各轴按该维度满分归一化；两条曲线分别是 α / β 的裁判独立重算得分（不取较高值）
               </p>
             </div>
             <DimensionBars result={result} />

@@ -125,6 +125,9 @@
 | 14 | 06 | Windows Git Bash 下调用脚本报 `Cannot find module 'C:\c\Users\...'` | Node（Windows 二进制）不识别 MSYS 的 `/c/...` 路径 | 传参统一使用 `C:/...` 形式；文档中示例亦注明 |
 | 15 | 06 | 失败路径仍打印「已启用默认产物输出」，产生误导 | 提示在 spawn 前输出 | 改为仅在子进程退出码为 0 时输出 |
 | 16 | 06 | 批量文件编辑时部分改动未落盘 | 编辑器批量替换部分失效 | 改为逐条编辑 + 每次编辑后用 `grep` 复核 |
+| 17 | 05（实测） | 首页「对决双方」α 卡片被挤成窄条、标题逐字换行、区块被拉得极高 | Grid 模板为 `[1fr auto 1fr]`，但 DOM 顺序是 α、β、VS —— VS 落在第 3 轨，β 落在中间 `auto` 轨被撑到最大 | DOM 改为 α → VS → β；模板改 `[minmax(0,1fr)_auto_minmax(0,1fr)]`；标题容器加 `min-w-0` + `break-words` |
+| 18 | 05（实测） | 浏览器控制台 404（`Failed to load resource`） | `index.html` 未声明 favicon，浏览器自动请求 `/favicon.ico` | 内联 SVG data-URI favicon，并补 `color-scheme` / `description` meta |
+| 19 | 05（实测） | 结果页雷达图说明与实现不符（写「取双方较高值」，实际已用单方得分） | 后期把数据源从 `judge.dimensions` 改为 `judge.agentScores` 时未同步文案 | 文案改为「两条曲线分别是 α / β 的裁判独立重算得分（不取较高值）」 |
 
 ---
 
@@ -148,6 +151,8 @@ f5b301f feat(stage-01): engineering foundation - shared contracts, MCP adapter, 
 | `docs/evidence/stage06/04-error-paths.txt` | 异常路径真实输出（退出码 3 / 2 / 3） |
 | `docs/evidence/stage06/sample-match-report.html` | 可直接用浏览器打开的 HTML 战报（真实生成） |
 | `docs/evidence/stage06/sample-match-result.json` | 完整比赛记录（可复现） |
+| `docs/screenshots/stage05/*.png` | 真实浏览器截图 9 张（深/浅色、桌面/移动端、空状态） |
+| `docs/evidence/stage05/visual-check-report.json` | 浏览器实测结构化报告（16 步、控制台消息、视口、主题切换结果） |
 
 ### 3. 关键命令（可自行复跑）
 ```bash
@@ -160,6 +165,9 @@ npm run bench     # 8 个官方场景双 Agent 基准对比
 
 node skill/mc-arena/scripts/parse-request.mjs "3个人 预算60 要低卡 外带"
 node skill/mc-arena/scripts/run-match.mjs --people 2 --budget 60 --goal balanced --seed 42
+
+# 前端浏览器实测（需先 npm run dev）
+NODE_PATH="<隔离工作区>/node_modules" node tools/e2e/visual-check.mjs
 ```
 
 ### 4. 阶段报告
@@ -179,8 +187,11 @@ node skill/mc-arena/scripts/run-match.mjs --people 2 --budget 60 --goal balanced
 ## 七、缺失与待补（不编造）
 
 1. **完整原始对话导出缺失**：本环境无法读取 WorkBuddy 对话的逐条原文，本文的阶段指令与摘要来自开发会话的阶段记录与仓库真实产物，**不是逐字复刻**。如需逐字原文，请在 WorkBuddy 对话右上角使用「导出」功能，并将导出内容按下方格式追加。
-2. **阶段05 浏览器实测记录缺失**：阶段05 的代码实现、类型检查、Lint、构建、测试均已完成并可复核，但**未产出 `STAGE_05_REPORT.md`**，也**未归档浏览器截图**。该项列为待补。
-3. **MCP 官方数据缺失**：`snapshots/` 目录暂无官方快照，`live` 模式需 Token。因此阶段06 的 Skill 实测运行在**场景数据集（mock）**上，输出中已明确标注「模拟数据，非麦当劳官方数据」。**未**伪造任何 `verified` 核价状态。
+2. **阶段05 浏览器实测已补做（10/14 完成）**：用 `tools/e2e/visual-check.mjs`（playwright-core + 系统 Chrome）真实点击走通
+   首页 → 挑战设置 → 竞技场 → 结果页 → 移动端 → 空状态，控制台 **0 错误 / 0 警告**，产出 9 张截图与
+   `STAGE_05_REPORT.md`。**仍缺**：演示 GIF（未录制）、跨浏览器（Firefox/Safari）与真机移动端实测。
+3. **MCP 官方数据缺失**：`snapshots/` 目录暂无官方快照，`live` 模式需 Token。因此阶段05/06 的实测均运行在
+   **场景数据集（mock）**上，输出中已明确标注「模拟数据，非麦当劳官方数据」。**未**伪造任何 `verified` 核价状态。
 4. **GitHub 发布未执行**：按要求**未提交 GitHub**（本地提交已完成）。
 
 ### 原始导出追加区（待用户补充）

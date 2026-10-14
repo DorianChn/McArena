@@ -151,7 +151,7 @@
 | S5-6 🤖 | 分享：成绩卡 + 导出 PNG + 复制分享文案 + 复制可复现配置 + GitHub 入口 | 前端 | ✅ 完成 | `components/ShareCard.tsx` + `lib/share.ts` |
 | S5-7 🤖 | 其他：中文界面、响应式、Loading/Error/Empty、无障碍基础、性能优化 | 前端 | ✅ 完成 | `components/ui/*`、`feedback.tsx`、焦点环/44px/`prefers-reduced-motion` |
 | S5-8 🤖 | 质量门禁：typecheck 0 错 / lint 0 错 / web build 成功 / 全量测试 134 通过 | 全栈 | ✅ 完成 | 见提交记录 |
-| S5-9 🤖 | 浏览器实测 + 移动端检查 + 控制台检查 + 截图归档 + `STAGE_05_REPORT.md` | 全栈 | ⬜ **未完成** | 待补（见 STAGE_06_REPORT.md 第十节） |
+| S5-9 🤖 | 浏览器实测 + 移动端检查 + 控制台检查 + 截图归档 + `STAGE_05_REPORT.md` | 全栈 | ✅ 完成 | 控制台 0 错误；9 张截图；`STAGE_05_REPORT.md` |
 
 ## 阶段06 WorkBuddy Skill 集成（10/14）
 
@@ -179,5 +179,6 @@
 | B1 | 麦当劳 MCP Token 未申请（需手机号验证登录+人机验证，AI 无法代办） | 用户在 open.mcd.cn/mcp 完成登录激活 | P1-4 实测 schema、live 模式、裁判 `verified/mismatch` 实测；不影响 replay/mock 全链路 |
 | B2 | GitHub 公开仓库未创建 | 用户手动建仓 | P5 发布；不影响本地开发 |
 | B3 | `snapshots/` 无官方快照（阶段06 新登记） | 采集并放入官方快照，或申请 Token 后实时采集 | replay 模式与 Skill 的官方数据演示；当前回退场景数据集（已明确标注 mock） |
-| B4 | 阶段05 浏览器实测与截图未完成（阶段06 新登记） | 启动 dev server 后实测归档 | `STAGE_05_REPORT.md` 缺失；不影响阶段06 |
+| B4 | ~~阶段05 浏览器实测与截图未完成~~ **已解除（10/14）** | — | 已完成：控制台 0 错误 + 9 张截图 + `STAGE_05_REPORT.md` |
+| B5 | 演示 GIF 未录制；未做跨浏览器与真机实测（阶段05 新登记） | 使用录屏工具；在 Firefox/Safari 与真机复测 | 交付物打磨；不影响功能验收 |
 

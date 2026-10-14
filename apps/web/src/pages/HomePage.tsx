@@ -1,3 +1,4 @@
+import { Fragment } from 'react'
 import { useApp } from '../state/match.js'
 import { Badge } from '../components/ui/Badge.js'
 import { Button } from '../components/ui/Button.js'
@@ -107,36 +108,45 @@ export function HomePage({
       {/* ---------- 对决双方 ---------- */}
       <section className="space-y-4">
         <SectionTitle hint="算法实质不同 · 同一数据集同一任务卡">对决双方</SectionTitle>
-        <div className="grid items-stretch gap-4 lg:grid-cols-[1fr_auto_1fr]">
-          {AGENTS.map((agent) => (
-            <Card key={agent.side} className="mca-anim-in flex flex-col">
-              <CardBody className="flex flex-1 flex-col">
-                <div className="flex items-center gap-3">
-                  <AgentAvatar side={agent.side} size={52} />
-                  <div>
-                    <h3 className="text-lg font-bold">Agent {agent.side === 'alpha' ? 'α' : 'β'} · {agent.name}</h3>
-                    <p className="text-xs text-ink-3">
-                      {agent.engine}｜{agent.role}
-                    </p>
-                  </div>
+        {/* 注意：DOM 顺序必须是 α → VS → β，才能与三轨模板 [1fr auto 1fr] 对齐；
+            若把 VS 放在最后，中间的 auto 轨道会套住 β 卡片并被其内容撑到最大。
+            minmax(0,1fr) 允许轨道收缩到内容宽度以下，避免长英文标识（optimizer-search@1.0.0）挤压对侧。 */}
+        <div className="grid items-stretch gap-4 lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]">
+          {AGENTS.map((agent, index) => (
+            <Fragment key={agent.side}>
+              {index === 1 && (
+                <div className="flex items-center justify-center lg:px-2">
+                  <span className="flex h-14 w-14 items-center justify-center rounded-full border-2 border-brand bg-brand-soft text-lg font-black text-brand">
+                    VS
+                  </span>
                 </div>
-                <p className="mt-3 flex-1 text-sm leading-relaxed text-ink-2">{agent.description}</p>
-                <dl className="mt-4 grid grid-cols-3 gap-2">
-                  {agent.facts.map(([label, value]) => (
-                    <div key={label} className="rounded-lg border border-line bg-surface-2/60 px-2 py-2 text-center">
-                      <dt className="text-[11px] text-ink-3">{label}</dt>
-                      <dd className="mt-0.5 text-sm font-bold text-ink">{value}</dd>
+              )}
+              <Card className="mca-anim-in flex flex-col">
+                <CardBody className="flex flex-1 flex-col">
+                  <div className="flex items-center gap-3">
+                    <AgentAvatar side={agent.side} size={52} />
+                    <div className="min-w-0">
+                      <h3 className="text-lg font-bold">
+                        Agent {agent.side === 'alpha' ? 'α' : 'β'} · {agent.name}
+                      </h3>
+                      <p className="break-words text-xs text-ink-3">
+                        {agent.engine}｜{agent.role}
+                      </p>
                     </div>
-                  ))}
-                </dl>
-              </CardBody>
-            </Card>
+                  </div>
+                  <p className="mt-3 flex-1 text-sm leading-relaxed text-ink-2">{agent.description}</p>
+                  <dl className="mt-4 grid grid-cols-3 gap-2">
+                    {agent.facts.map(([label, value]) => (
+                      <div key={label} className="rounded-lg border border-line bg-surface-2/60 px-2 py-2 text-center">
+                        <dt className="text-[11px] text-ink-3">{label}</dt>
+                        <dd className="mt-0.5 text-sm font-bold text-ink">{value}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                </CardBody>
+              </Card>
+            </Fragment>
           ))}
-          <div className="flex items-center justify-center lg:px-2">
-            <span className="flex h-14 w-14 items-center justify-center rounded-full border-2 border-brand bg-brand-soft text-lg font-black text-brand">
-              VS
-            </span>
-          </div>
         </div>
         <p className="text-xs text-ink-3">
           注：两名 Agent 均为<strong className="text-ink-2">算法型 Agent</strong>（未调用大模型，已明确标注），

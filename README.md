@@ -144,8 +144,9 @@ TypeScript strict 0 错误；ESLint 0 错误（30 条 warning，均为既有 `no
 | `apps/web` | React 中文可视化界面（决策时间轴 / 雷达图 / 解释面板 / Agent 指标） |
 | `skill/mc-arena` | WorkBuddy Skill（SKILL.md + scripts/run-match.mjs + scripts/parse-request.mjs + scripts/install.mjs + references） |
 | `snapshots/` | 官方数据快照目录（**当前为空**，需采集；空时自动回退场景数据集） |
-| `docs/evidence/` | 各阶段真实运行证据（CLI 输出、HTML 战报、JSON 结果） |
-| `tools/` | 快照采集等工程脚本 |
+| `docs/evidence/` | 各阶段真实运行证据（CLI 输出、HTML 战报、JSON 结果、浏览器实测报告） |
+| `docs/screenshots/` | 真实浏览器截图（深/浅色、桌面/移动端、空状态） |
+| `tools/` | 工程脚本（快照采集、`tools/e2e/visual-check.mjs` 浏览器实测） |
 
 ### 阶段成果
 
@@ -153,7 +154,7 @@ TypeScript strict 0 错误；ESLint 0 错误（30 条 warning，均为既有 `no
 - 阶段02：官方 MCP 接入层（只读白名单、429 退避、限流、快照回放）
 - 阶段03：双 Agent 竞技引擎（Speed / Optimizer + 执行状态机 + 基准测试）——见 [`STAGE_03_REPORT.md`](STAGE_03_REPORT.md)
 - 阶段04：独立智能裁判系统（独立验证 / 资格硬门槛 / 官方核价优先 / 可复现实验 ID）——见 [`STAGE_04_REPORT.md`](STAGE_04_REPORT.md) 与 [`JUDGE_SPEC.md`](JUDGE_SPEC.md)
-- 阶段05：完整前端 UI/UX（四页面 / 双主题 / 响应式 / 分享卡 / 无障碍；API 契约支持自定义挑战）
+- 阶段05：完整前端 UI/UX（四页面 / 双主题 / 响应式 / 分享卡 / 无障碍；API 契约支持自定义挑战）——见 [`STAGE_05_REPORT.md`](STAGE_05_REPORT.md)（含真实浏览器实测与截图）
 - 阶段06：WorkBuddy Skill 集成（任务卡构造下沉共享引擎 / `challenge` CLI / Skill 三脚本 / 官方规范校验通过）——见 [`STAGE_06_REPORT.md`](STAGE_06_REPORT.md)
 
 ## 🎯 适用人群
