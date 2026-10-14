@@ -11,17 +11,11 @@ import {
   isMcArenaError,
 } from '@mcarena/shared'
 import type { Logger } from '@mcarena/shared'
-import {
-  MatchOrchestrator,
-  MockAgentAlpha,
-  MockAgentBeta,
-  MockJudgeEngine,
-} from '@mcarena/arena-core'
+import { MatchService, MatchStore, createMatchOrchestrator } from './services/match-service.js'
 import { loadConfig } from './config.js'
 import type { ApiConfig } from './config.js'
 import { createDataSource } from './services/data-source.js'
 import type { ArenaDataSource } from './services/data-source.js'
-import { MatchService, MatchStore } from './services/match-service.js'
 
 export const SERVICE_NAME = 'mcarena-api'
 export const SERVICE_VERSION = '0.1.0'
@@ -150,17 +144,14 @@ export async function startServer(): Promise<FastifyInstance> {
   const config = loadConfig()
   const logger = createLogger({ level: config.logLevel, base: { module: 'api' } })
   const dataSource = createDataSource(config, logger)
-  const orchestrator = new MatchOrchestrator({
-    agentAlpha: new MockAgentAlpha(),
-    agentBeta: new MockAgentBeta(),
-    judge: new MockJudgeEngine(),
-    logger,
-  })
+  // 阶段03：真实双 Agent（极速猎手 / 深度优化师）+ 规则裁判，失败自动降级恢复
+  const orchestrator = createMatchOrchestrator(logger)
   const matchService = new MatchService({
     dataSource,
     orchestrator,
     store: new MatchStore(),
     logger,
+    agentRecovery: 'recover',
   })
 
   const app = await buildApp({ config, logger, dataSource, matchService })

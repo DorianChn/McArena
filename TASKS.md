@@ -59,19 +59,39 @@
 
 | ID | 任务 | 负责 | 状态 | 验收 |
 |---|---|---|---|---|
-| P2-1 🤖 | RuleEngine：seed→TaskCard 生成器（mulberry32，含约束变体） | 算法 | ⬜ | 同 seed 同输出 |
-| P2-2 🤖 | Agent α「预算猎手」：约束满足 + 最低总价 | 算法 | ⬜ | 单测：超预算必被拒 |
-| P2-3 🤖 | Agent β「营养均衡派」：营养目标加权偏差最小化 | 算法 | ⬜ | 单测：目标达成率计算正确 |
-| P2-4 🤖 | Judge：五维打分 + 加权 + 破平 + 逐项公式与证据 | 算法 | ⬜ | 打分单测 + 边界（并列/零分） |
-| P2-5 🤖 | MatchRecord 组装：snapshotHash + engineVersion + seed | 全栈 | ⬜ | 复现测试：同输入字节级一致 |
-| P2-6 🤖 | **Gate G2**：`npm test` 100% 通过，复现性测试通过 | 全栈 | ⬜ | CI 绿 + 本地绿 |
+| P2-1 🤖 | RuleEngine：seed→TaskCard 生成器（mulberry32，含约束变体） | 算法 | ✅ 完成 | 同 seed 同输出（复现测试通过） |
+| P2-2 🤖 | Agent α「极速猎手」：单遍贪心，约束满足 + 最低总价（原「预算猎手」） | 算法 | ✅ 完成（阶段03） | 单测：超预算必被拒；candidateCount 恒为 1 |
+| P2-3 🤖 | Agent β「深度优化师」：束搜索多候选 + 组合比较，营养目标加权偏差最小化（原「营养均衡派」） | 算法 | ✅ 完成（阶段03） | 单测：目标达成率计算正确；候选 46–288 个 |
+| P2-4 🤖 | Judge：五维打分 + 加权 + 破平 + 逐项公式与证据 | 算法 | ✅ 完成（阶段03） | 打分单测 + 边界（并列/零分）；破平顺序 预算→需求→营养 |
+| P2-5 🤖 | MatchRecord 组装：snapshotHash + engineVersion + seed + Agent 指标 | 全栈 | ✅ 完成（阶段03） | 复现测试：同 seed 指纹一致（已剔除时间戳/耗时） |
+| P2-6 🤖 | **Gate G2**：`npm test` 100% 通过，复现性测试通过 | 全栈 | ✅ 完成（阶段03，66/66） | CI 待 push 后验证 |
+
+## 阶段03 双 Agent 竞技引擎（10/14）
+
+> 目标：两个**算法实质不同**的 Agent 在同挑战同数据上竞技，支持取消/超时/失败恢复，全过程可复现可溯源。
+> 详细实测数据与验收证据见 `STAGE_03_REPORT.md`。
+
+| ID | 任务 | 负责 | 状态 | 验收 |
+|---|---|---|---|---|
+| S3-1 🤖 | Agent A「极速猎手」Speed Agent：单遍贪心、低计算成本、即时有效解 | 算法 | ✅ 完成 | candidateCount = 1；工具调用 1 次 |
+| S3-2 🤖 | Agent B「深度优化师」Optimizer Agent：束搜索 + 多候选组合比较 | 算法 | ✅ 完成 | 候选 46–288；工具调用 ≤ 6；营养/用券更优 |
+| S3-3 🤖 | 两名 Agent 接收相同挑战 + 读取同一份经验证的数据集 | 算法 | ✅ 完成 | `benchmarkScenario()` 统一注入 |
+| S3-4 🤖 | 约束支持：预算 / 人数 / 商品类别（新增 requiredCategories）/ 营养 / 券 | 算法 | ✅ 完成 | 8 场景测试全覆盖 |
+| S3-5 🤖 | Agent 执行状态机：取消 / 超时 / 失败恢复 / 结构化校验 | 算法 | ✅ 完成 | `agent-runner.test.ts` 9 项 |
+| S3-6 🤖 | 记录真实运行时间 / 候选方案 / 工具调用证据 | 算法 | ✅ 完成 | `durationMs`/`candidateCount`/`toolCalls` 为实测值 |
+| S3-7 🤖 | 固定随机种子可复现挑战 | 算法 | ✅ 完成 | `canonicalizeMatch` 指纹一致 |
+| S3-8 🤖 | 决策过程传递给前端（SSE agent.started/phase/step/completed/failed + AgentCard 指标） | 全栈 | ✅ 完成 | SSE 冒烟：25 step + 14 phase + 2 completed |
+| S3-9 🤖 | 8 个官方测试场景 + 基准对比（有效率/费用/约束满足度/耗时/工具调用） | 算法 | ✅ 完成 | `npm run bench`；汇总见 STAGE_03_REPORT.md §3 |
+| S3-10 🤖 | 中文 CLI：match / bench / timeout / cancel | 全栈 | ✅ 完成 | `npm run demo` 输出战报 |
+| S3-11 🤖 | API 换装真实引擎（RuleEngine 任务卡 + ReplayPriceOracle + 降级恢复策略） | 后端 | ✅ 完成 | API 冒烟 10 用例通过 |
+| S3-12 🤖 | STAGE_03_REPORT.md + 测试（66/66）+ 类型/Lint/构建全绿 + Git 提交 | 全栈 | ✅ 完成 | 见 git log（未 push） |
 
 ## P3 服务与界面（10/19–10/21）
 
 | ID | 任务 | 负责 | 状态 | 验收 |
 |---|---|---|---|---|
-| P3-1 🤖 | apps/api：Fastify 路由（/api/match、/api/match/:id/stream SSE、/api/snapshot、/api/healthz） | 后端 | ⬜ | curl 冒烟通过 |
-| P3-2 🤖 | 模式编排：replay 默认 / live 需 Token + 自动落快照 + 限流降级 | 后端 | ⬜ | 无 Token 启动 replay 正常 |
+| P3-1 🤖 | apps/api：Fastify 路由（/api/match、/api/match/:id/stream SSE、/api/snapshot、/api/healthz） | 后端 | ✅ 完成（阶段01） | curl 冒烟通过 |
+| P3-2 🤖 | 模式编排：replay 默认 / live 需 Token + 自动落快照 + 限流降级 | 后端 | 🟡 部分（live 仍阻塞于 Token） | 无 Token 时 mock/replay 正常 |
 | P3-3 🤖 | apps/web：首页 + 任务卡 + 开始比赛 | 前端 | ⬜ | 可发起一局 |
 | P3-4 🤖 | apps/web：对战时间轴 + 记分牌 + ECharts 雷达图 + 得分解释面板 | 前端 | ⬜ | 公式/证据可见 |
 | P3-5 🤖 | apps/web：复现按钮（输入 seed+snapshotId → 同结果） | 前端 | ⬜ | 两次运行结果一致 |

@@ -15,7 +15,7 @@ import type {
 /**
  * 开发脚手架引擎（mock-dev-scaffold）。
  *
- * ⚠️ 这不是正式 Agent 策略：阶段02 的「预算猎手 / 营养均衡派」将替换本实现。
+ * ⚠️ 这不是正式 Agent 策略：阶段03 的「极速猎手 / 深度优化师」（engine: speed-greedy / optimizer-search）为正式实现。
  * 本引擎仅用于在无真实算法前打通 编排→数据→Agent→裁判→界面 全链路，
  * 其输出与后端引擎标识 mock-dev-scaffold 在 MatchResult 中原样标注。
  */
@@ -153,6 +153,9 @@ abstract class MockAgentEngineBase implements AgentEngine {
       evidence: steps,
       startedAt,
       finishedAt: new Date().toISOString(),
+      toolCalls: [],
+      phases: [],
+      recovery: { used: false, reason: '' },
     })
   }
 }

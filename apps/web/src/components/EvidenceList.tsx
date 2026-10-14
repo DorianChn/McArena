@@ -3,6 +3,8 @@ import type { EvidenceRecord } from '@mcarena/shared'
 const KIND_LABELS: Record<EvidenceRecord['kind'], string> = {
   'data-source': '数据来源',
   selection: '选择',
+  search: '搜索',
+  evaluate: '评估',
   'constraint-check': '约束校验',
   price: '价格',
   nutrition: '营养',

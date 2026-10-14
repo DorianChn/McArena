@@ -57,6 +57,7 @@ export const MatchPhaseSchema = z.enum([
   'challenge',
   'agent-alpha',
   'agent-beta',
+  'judging',
   'judge',
   'done',
 ])
@@ -77,6 +78,26 @@ export const MatchStreamEventSchema = z.discriminatedUnion('type', [
     at: z.string().datetime(),
   }),
   z.object({
+    type: z.literal('agent.started'),
+    agentId: z.enum(['alpha', 'beta']),
+    at: z.string().datetime(),
+  }),
+  z.object({
+    type: z.literal('agent.phase'),
+    agentId: z.enum(['alpha', 'beta']),
+    phase: z.enum([
+      'init',
+      'load-data',
+      'plan',
+      'search',
+      'evaluate',
+      'finalize',
+      'done',
+    ]),
+    message: z.string().min(1),
+    at: z.string().datetime(),
+  }),
+  z.object({
     type: z.literal('agent.step'),
     agentId: z.enum(['alpha', 'beta']),
     evidence: EvidenceRecordSchema,
@@ -85,6 +106,19 @@ export const MatchStreamEventSchema = z.discriminatedUnion('type', [
   z.object({
     type: z.literal('agent.completed'),
     agentId: z.enum(['alpha', 'beta']),
+    status: z.enum(['completed', 'failed']).default('completed'),
+    durationMs: z.number().int().nonnegative().optional(),
+    candidateCount: z.number().int().nonnegative().optional(),
+    toolCallCount: z.number().int().nonnegative().optional(),
+    recoveryUsed: z.boolean().default(false),
+    at: z.string().datetime(),
+  }),
+  z.object({
+    type: z.literal('agent.failed'),
+    agentId: z.enum(['alpha', 'beta']),
+    code: z.string().min(1),
+    message: z.string().min(1),
+    recoveryUsed: z.boolean().default(false),
     at: z.string().datetime(),
   }),
   z.object({

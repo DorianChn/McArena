@@ -72,6 +72,10 @@
 | 日期 | 校验项 | 结果 |
 |---|---|---|
 | 2026-10-14 | 官方 README 工具清单（34 项）与规则文档 | 已核对，见上方表格 |
-| 待 P1-4 | 真实 Token 环境 `tools/list` 实测 schema | ⬜ 采集后回填（差异记录写入本节） |
+| 2026-10-14 | MCP 协议层对拍（initialize / tools/list / tools/call、401/429/SSE 解析） | ✅ 假服务器契约测试 13 项通过 |
+| 2026-10-14 | 双 Agent 竞技引擎在**数据集驱动**下的完整闭环（阶段03） | ✅ `npm run bench` 8 场景通过，见 STAGE_03_REPORT.md |
+| 待 P1-4 | 真实 Token 环境 `tools/list` 实测 schema | ⬜ **BLOCKED（B1）**：采集后回填（差异记录写入本节） |
 
 > 说明：在上述实测完成前，代码中的工具参数以官方 README 描述为准编写，字段命名在实测校验后按实际 schema 校正；未经验证的参数不会被硬编码进生产逻辑。
+>
+> 阶段03 双 Agent 引擎已在数据结构上与官方 MCP 输出解耦：只要把 `scenario://stage03-fixtures` 数据集替换为 `replay`/`live` 模式产出的官方数据集，`npm run bench` 与 `npm run demo` 无需任何代码改动即可在真实官方数据上复现全部对比指标。

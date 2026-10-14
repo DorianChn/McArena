@@ -77,8 +77,8 @@ Verdict           // 裁判结论：五维得分、加权总分、胜者、逐�
 ```
 runMatch(config, dataSource): MatchRecord
   ├── RuleEngine.generateTaskCard(seed)           // 随机但可复现的任务卡
-  ├── AgentAlpha.decide(task, snapshot)           // 预算猎手（价格优先，满足约束下最省钱）
-  ├── AgentBeta.decide(task, snapshot)            // 营养均衡派（蛋白质/热量/钠目标最接近）
+  ├── AgentAlpha.decide(task, snapshot)           // 极速猎手（单遍贪心，1 个候选，满足约束下最省钱）
+  ├── AgentBeta.decide(task, snapshot)            // 深度优化师（束搜索多候选，约束/营养/价格择优）
   └── Judge.evaluate(task, snapshot, [traceA, traceB])
         ├── 需求满足度 30  // 餐品数量/场景/约束满足率
         ├── 预算控制   25  // 应付总价 ≤ 预算；越接近预算下限且不超支得分越高（防通合并买浪费）

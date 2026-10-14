@@ -9,9 +9,11 @@
 
 一局比赛 = 一张任务卡（预算 × 人数 × 场景 × 约束）+ 两名风格迥异的点餐 Agent + 一位只认规则的裁判：
 
-- 🤖 **Agent α「预算猎手」**：在满足全部约束的前提下，把每一分钱花到最省；
-- 🤖 **Agent β「营养均衡派」**：以蛋白质、热量、钠为目标画像，挑选最均衡的搭配；
+- ⚡ **Agent α「极速猎手」（Speed Agent）**：单遍贪心构造，只评估 1 个候选方案，用最低计算成本给出一个便宜、可预测的有效解；
+- 🔬 **Agent β「深度优化师」（Optimizer Agent）**：束搜索枚举成百上千个候选购物车，逐一修复硬约束、逐一真实计价，按「约束满足率 → 营养偏差 → 价格」择优；
 - ⚖️ **裁判引擎**：需求满足度 / 预算控制 / 营养均衡 / 优惠利用 / 可解释性，五维打分、公式公开、证据可查。
+
+两名 Agent 的算法**实质不同**（贪心 vs 束搜索），基准测试实测差异：平均候选数 1 vs 134、平均工具调用 1 vs 4.75 次；模拟数据下 α 更便宜、β 营养与用券更优。两者均为**算法型 Agent**（未配置大模型，已明确标注），不得把固定输出冒充 AI 推理。
 
 所有价格来自官方 `calculate-price` 工具，所有餐品与营养来自官方菜单工具——**没有任何编造的数据**。
 
@@ -51,6 +53,17 @@ npm run dev
 3. `npm run dev`。
 
 > 实时数据采集（tools 调用 → 快照落盘 → 数据集组装）将在阶段02实现，详见 MCP_INTEGRATION.md「实测校验记录」。
+
+### 命令行竞技（无需启动服务，本地完整体验）
+
+```bash
+npm run demo                          # 打一局比赛，输出中文战报（任务卡/双 Agent 指标/裁判结论）
+npm run bench                         # 跑 8 个官方测试场景，输出双 Agent 五维对比表
+npm run demo -w @mcarena/arena-core -- timeout   # 演示：Agent 超时 → 降级恢复（明确标注）
+npm run demo -w @mcarena/arena-core -- cancel    # 演示：取消执行 → CANCELLED，不产出提案
+```
+
+`npm run bench` 覆盖验收要求的全部场景：¥20 / ¥30 / ¥50 预算、双人套餐、指定蛋白质目标、指定商品类别、优惠券组合、没有有效解，并对比两名 Agent 的**有效率、费用、约束满足度、运行时间与工具调用数量**。实测数据见 [`STAGE_03_REPORT.md`](STAGE_03_REPORT.md)。
 
 ### 质量检查
 
@@ -97,10 +110,16 @@ npm run build # TypeScript strict 全量构建
 | `packages/mcd-mcp-client` | 官方 MCP Streamable HTTP 客户端（退避重试 / 写操作黑名单） |
 | `packages/arena-core` | 竞技内核：规则引擎、双 Agent、裁判引擎（零网络纯函数） |
 | `apps/api` | Fastify 服务：比赛 API + SSE 实时流 |
-| `apps/web` | React 中文可视化界面（决策时间轴 / 雷达图 / 解释面板） |
+| `apps/web` | React 中文可视化界面（决策时间轴 / 雷达图 / 解释面板 / Agent 指标） |
 | `skill/mc-arena` | WorkBuddy Skill（SKILL.md + 脚本） |
 | `snapshots/` | 录制的官方数据快照 + manifest（sha256） |
 | `tools/` | 快照采集等工程脚本 |
+
+### 阶段成果
+
+- 阶段00/01：工程基座、共享契约、MCP 客户端、API 与前端（提交 `23767dc` / `f5b301f`）
+- 阶段02：官方 MCP 接入层（只读白名单、429 退避、限流、快照回放）
+- 阶段03：双 Agent 竞技引擎（Speed / Optimizer + 执行状态机 + 基准测试）——见 [`STAGE_03_REPORT.md`](STAGE_03_REPORT.md)
 
 ## 🎯 适用人群
 

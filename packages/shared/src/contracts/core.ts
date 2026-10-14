@@ -101,6 +101,8 @@ export const ChallengeConstraintsSchema = z.object({
   mustIncludeCodes: z.array(z.string()).default([]),
   excludedCodes: z.array(z.string()).default([]),
   requiredTags: z.array(z.string()).default([]),
+  /** 必需的商品类别（如「汉堡」「饮品」），与 requiredTags 取交集语义 */
+  requiredCategories: z.array(z.string()).default([]),
   nutritionTarget: z
     .object({
       kcal: z.number().nonnegative().optional(),
@@ -161,6 +163,8 @@ export type MealProposal = z.infer<typeof MealProposalSchema>
 export const EvidenceKindSchema = z.enum([
   'data-source',
   'selection',
+  'search',
+  'evaluate',
   'constraint-check',
   'price',
   'nutrition',

@@ -14,7 +14,9 @@
     }
   },
   "scripts": {
-    "typecheck": "tsc -p tsconfig.json"
+    "typecheck": "tsc -p tsconfig.json",
+    "demo": "tsx src/cli/demo.ts",
+    "bench": "tsx src/cli/demo.ts bench"
   },
   "dependencies": {
     "@mcarena/shared": "*"

@@ -17,13 +17,54 @@ export type AgentId = z.infer<typeof AgentIdSchema>
 export const AgentStatusSchema = z.enum(['completed', 'failed'])
 export type AgentStatus = z.infer<typeof AgentStatusSchema>
 
+/** Agent 执行阶段（状态机的可观测轨迹，前端按序展示） */
+export const AgentPhaseNameSchema = z.enum([
+  'init',
+  'load-data',
+  'plan',
+  'search',
+  'evaluate',
+  'finalize',
+  'done',
+])
+export type AgentPhaseName = z.infer<typeof AgentPhaseNameSchema>
+
+export const AgentPhaseRecordSchema = z.object({
+  name: AgentPhaseNameSchema,
+  /** 中文说明 */
+  message: z.string().min(1),
+  at: z.string().datetime(),
+})
+export type AgentPhaseRecord = z.infer<typeof AgentPhaseRecordSchema>
+
+/** 单次工具调用记录（MCP 工具或价格预言机） */
+export const ToolCallRecordSchema = z.object({
+  /** 工具名，如 calculate-price / query-meals */
+  tool: z.string().min(1),
+  args: z.record(z.unknown()).default({}),
+  /** 中文结果摘要（不含敏感信息） */
+  resultSummary: z.string().default(''),
+  /** 命中：true=取得结果，false=未命中（如回放价格预言机无该购物车记录） */
+  hit: z.boolean().default(true),
+  at: z.string().datetime(),
+})
+export type ToolCallRecord = z.infer<typeof ToolCallRecordSchema>
+
+export const AgentRecoverySchema = z.object({
+  /** true 表示本次输出为降级恢复结果（非该 Agent 常规推理路径） */
+  used: z.boolean(),
+  /** 触发恢复的原因（中文，如「执行超时」/「未捕获异常」） */
+  reason: z.string().default(''),
+})
+export type AgentRecovery = z.infer<typeof AgentRecoverySchema>
+
 export const AgentExecutionSchema = z.object({
   agentId: AgentIdSchema,
-  /** Agent 中文名，如「预算猎手」 */
+  /** Agent 中文名，如「极速猎手」 */
   name: z.string().min(1),
   /** 角色定位（中文） */
   role: z.string().min(1),
-  /** 引擎标识；mock 引擎固定为 mock-dev-scaffold */
+  /** 引擎标识；算法型 Agent 为 speed-greedy / optimizer-search */
   engine: z.string().min(1),
   engineVersion: z.string().min(1),
   status: AgentStatusSchema,
@@ -34,6 +75,18 @@ export const AgentExecutionSchema = z.object({
   startedAt: z.string().datetime(),
   finishedAt: z.string().datetime(),
   errorCode: ErrorCodeSchema.optional(),
+  /** 真实运行耗时（毫秒，含提案构造全过程） */
+  durationMs: z.number().int().nonnegative().optional(),
+  /** 决策过程中评估过的候选购物车数量（1 = 单遍贪心，不经组合搜索） */
+  candidateCount: z.number().int().nonnegative().optional(),
+  /** 实际发生的工具调用次数 */
+  toolCallCount: z.number().int().nonnegative().optional(),
+  /** 工具调用明细（逐条可溯源） */
+  toolCalls: z.array(ToolCallRecordSchema).default([]),
+  /** 执行阶段轨迹（状态机可观测性） */
+  phases: z.array(AgentPhaseRecordSchema).default([]),
+  /** 降级恢复标注；常规完成时为 { used:false } */
+  recovery: AgentRecoverySchema.default({ used: false }),
 })
 export type AgentExecution = z.infer<typeof AgentExecutionSchema>
 
@@ -133,6 +186,17 @@ export function canonicalizeMatch(result: MatchResult): string {
       status: agent.status,
       dataOrigin: agent.dataOrigin,
       proposal: agent.proposal,
+      // 注意：durationMs 为真实耗时（非确定性），不进入指纹；
+      // candidateCount / toolCallCount / toolCalls / phases 由算法决定，进入指纹。
+      candidateCount: agent.candidateCount ?? 0,
+      toolCallCount: agent.toolCallCount ?? 0,
+      toolCalls: agent.toolCalls.map((call) => ({
+        tool: call.tool,
+        args: call.args,
+        hit: call.hit,
+      })),
+      phases: agent.phases.map((phase) => ({ name: phase.name, message: phase.message })),
+      recovery: agent.recovery,
       evidence: agent.evidence.map((ev) => ({
         id: ev.id,
         kind: ev.kind,
@@ -141,7 +205,29 @@ export function canonicalizeMatch(result: MatchResult): string {
         resultSummary: ev.resultSummary ?? null,
       })),
     })),
-    judge: result.judge,
+    judge: {
+      dimensions: result.judge.dimensions.map((dimension) => ({
+        key: dimension.key,
+        label: dimension.label,
+        score: dimension.score,
+        max: dimension.max,
+        weight: dimension.weight,
+        formula: dimension.formula,
+        // 剔除时间戳，仅保留确定性内容
+        evidence: dimension.evidence.map((ev) => ({
+          id: ev.id,
+          kind: ev.kind,
+          message: ev.message,
+          tool: ev.tool ?? null,
+          resultSummary: ev.resultSummary ?? null,
+        })),
+      })),
+      totalScore: result.judge.totalScore,
+      totalMax: result.judge.totalMax,
+      winner: result.judge.winner,
+      headline: result.judge.headline,
+      notes: result.judge.notes,
+    },
     engineVersions: result.engineVersions,
     warnings: result.warnings,
   }

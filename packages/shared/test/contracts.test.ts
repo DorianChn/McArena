@@ -63,6 +63,9 @@ function makeResult(overrides: Partial<MatchResult> = {}): MatchResult {
         evidence: [],
         startedAt: '2026-10-14T05:00:01.000Z',
         finishedAt: '2026-10-14T05:00:01.100Z',
+        toolCalls: [],
+        phases: [],
+        recovery: { used: false, reason: '' },
       },
       {
         agentId: 'beta',
@@ -76,6 +79,9 @@ function makeResult(overrides: Partial<MatchResult> = {}): MatchResult {
         evidence: [],
         startedAt: '2026-10-14T05:00:01.000Z',
         finishedAt: '2026-10-14T05:00:01.100Z',
+        toolCalls: [],
+        phases: [],
+        recovery: { used: false, reason: '' },
       },
     ],
     judge: {

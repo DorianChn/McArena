@@ -2,13 +2,17 @@ import { McArenaError, MatchResultSchema } from '@mcarena/shared'
 import type {
   AgentExecution,
   AgentId,
+  AgentPhaseName,
   ArenaDataset,
   Challenge,
+  EvidenceRecord,
   JudgeResult,
   Logger,
   MatchResult,
   MatchStreamEvent,
+  PriceQuote,
 } from '@mcarena/shared'
+import { runAgent } from './engine/agent-runner.js'
 
 /** 引擎接口层：定义了「Agent 如何决策」与「裁判如何打分」的契约。
  *  真实算法（规则引擎/双 Agent 策略/五维打分）在阶段02实现；
@@ -18,11 +22,30 @@ export interface AgentContext {
   challenge: Challenge
   dataset: ArenaDataset
   logger: Logger
+  /** 整单计价预言机：优先取官方 calculate-price 记录；无记录时返回 null，Agent 按官方单价折算并显式标注 */
+  priceOracle?: PriceOracle
+  /** 取消信号：Agent 在安全检查点检测到 abort 时抛出 AgentCancelledError */
+  signal?: AbortSignal
+  /** 阶段变更回调（用于 SSE 实时推送决策过程） */
+  onPhase?: (phase: AgentPhaseName, message: string) => void
+  /** 证据产出回调（用于 SSE 实时推送） */
+  onEvidence?: (evidence: EvidenceRecord) => void
+}
+
+/** 购物车签名（用于在数据集中查找已录制的官方计价记录） */
+export interface CartSignature {
+  items: Array<{ code: string; qty: number }>
+  couponCodes: string[]
+}
+
+export interface PriceOracle {
+  /** 命中已录制的官方计价记录则返回 PriceQuote，否则 null */
+  quote(cart: CartSignature): Promise<PriceQuote | null>
 }
 
 export interface AgentEngine {
   readonly id: AgentId
-  /** 中文名，如「预算猎手」 */
+  /** 中文名，如「极速猎手」 */
   readonly name: string
   /** 角色定位（中文） */
   readonly role: string
@@ -78,6 +101,13 @@ export interface RunMatchInput {
   sink?: (event: MatchStreamEvent) => void
   now?: () => Date
   matchId?: string
+  priceOracle?: PriceOracle
+  /** 取消整场比赛（传播到两个 Agent） */
+  signal?: AbortSignal
+  /** 单个 Agent 的超时时间（毫秒），默认 10s */
+  agentTimeoutMs?: number
+  /** Agent 失败/超时后的策略：propagate（默认，严格模式）或 recover（降级恢复） */
+  agentRecovery?: 'recover' | 'propagate'
 }
 
 export interface OrchestratorDeps {
@@ -111,6 +141,72 @@ export class MatchOrchestrator {
       input.sink?.(event)
     }
 
+    /** 单个 Agent 的完整执行（状态机 + 超时 + 取消 + SSE 事件流） */
+    const runAgentPhase = async (
+      phase: MatchPhase,
+      agent: AgentEngine,
+      input2: RunMatchInput,
+      iso2: () => string,
+    ): Promise<AgentExecution> => {
+      run.phase = phase
+      record({
+        type: 'phase',
+        phase,
+        message: `${agent.name} 决策中…`,
+        at: iso2(),
+      })
+      const execution = await runAgent({
+        agent,
+        context: {
+          challenge: input2.challenge,
+          dataset: input2.dataset,
+          logger: this.deps.logger,
+          priceOracle: input2.priceOracle,
+        },
+        timeoutMs: input2.agentTimeoutMs,
+        signal: input2.signal,
+        recovery: input2.agentRecovery ?? 'propagate',
+        logger: this.deps.logger,
+        onEvent: (event) => {
+          if (event.type === 'started') {
+            record({ type: 'agent.started', agentId: event.agentId, at: iso2() })
+          } else if (event.type === 'phase') {
+            record({
+              type: 'agent.phase',
+              agentId: event.agentId,
+              phase: event.phase,
+              message: event.message,
+              at: iso2(),
+            })
+          }
+        },
+      })
+      for (const evidence of execution.evidence) {
+        record({ type: 'agent.step', agentId: execution.agentId, evidence, at: iso2() })
+      }
+      record({
+        type: 'agent.completed',
+        agentId: execution.agentId,
+        status: execution.status,
+        durationMs: execution.durationMs,
+        candidateCount: execution.candidateCount,
+        toolCallCount: execution.toolCallCount,
+        recoveryUsed: execution.recovery.used,
+        at: iso2(),
+      })
+      if (execution.status === 'failed') {
+        record({
+          type: 'agent.failed',
+          agentId: execution.agentId,
+          code: execution.errorCode ?? 'INTERNAL',
+          message: `${agent.name} 执行失败（${execution.errorCode ?? 'INTERNAL'}）`,
+          recoveryUsed: execution.recovery.used,
+          at: iso2(),
+        })
+      }
+      return execution
+    }
+
     record({
       type: 'match.created',
       matchId,
@@ -137,44 +233,26 @@ export class MatchOrchestrator {
     run.state = 'running'
     try {
       // ---- Agent α ----
-      run.phase = 'agent-alpha'
-      record({
-        type: 'phase',
-        phase: 'agent-alpha',
-        message: `${this.deps.agentAlpha.name} 决策中…`,
-        at: iso(),
-      })
-      const alpha = await this.deps.agentAlpha.decide({
-        challenge: input.challenge,
-        dataset: input.dataset,
-        logger: this.deps.logger,
-      })
-      for (const evidence of alpha.evidence) {
-        record({ type: 'agent.step', agentId: 'alpha', evidence, at: iso() })
+      const alpha = await runAgentPhase('agent-alpha', this.deps.agentAlpha, input, iso)
+      if (alpha.errorCode === 'CANCELLED') {
+        run.state = 'failed'
+        run.error = { code: 'CANCELLED', message: '比赛已被取消' }
+        record({ type: 'match.failed', error: { code: 'CANCELLED', message: '比赛已被取消' }, at: iso() })
+        return run
       }
-      record({ type: 'agent.completed', agentId: 'alpha', at: iso() })
 
       // ---- Agent β ----
-      run.phase = 'agent-beta'
-      record({
-        type: 'phase',
-        phase: 'agent-beta',
-        message: `${this.deps.agentBeta.name} 决策中…`,
-        at: iso(),
-      })
-      const beta = await this.deps.agentBeta.decide({
-        challenge: input.challenge,
-        dataset: input.dataset,
-        logger: this.deps.logger,
-      })
-      for (const evidence of beta.evidence) {
-        record({ type: 'agent.step', agentId: 'beta', evidence, at: iso() })
+      const beta = await runAgentPhase('agent-beta', this.deps.agentBeta, input, iso)
+      if (beta.errorCode === 'CANCELLED') {
+        run.state = 'failed'
+        run.error = { code: 'CANCELLED', message: '比赛已被取消' }
+        record({ type: 'match.failed', error: { code: 'CANCELLED', message: '比赛已被取消' }, at: iso() })
+        return run
       }
-      record({ type: 'agent.completed', agentId: 'beta', at: iso() })
 
       // ---- Judge ----
       run.phase = 'judging'
-      record({ type: 'phase', phase: 'judge', message: '裁判打分中…', at: iso() })
+      record({ type: 'phase', phase: 'judging', message: '裁判打分中…', at: iso() })
       const judge = await this.deps.judge.evaluate({
         challenge: input.challenge,
         dataset: input.dataset,

@@ -23,7 +23,9 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "verify": "npm run lint && npm run typecheck && npm run build && npm test",
-    "start": "npm run build && node apps/api/dist/server.js"
+    "start": "npm run build && node apps/api/dist/server.js",
+    "demo": "npm run demo -w @mcarena/arena-core",
+    "bench": "npm run bench -w @mcarena/arena-core"
   },
   "devDependencies": {
     "@types/node": "^22.10.0",

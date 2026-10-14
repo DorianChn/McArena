@@ -10,6 +10,8 @@ export const ERROR_CODES = [
   'CONFIG_ERROR',
   'NOT_IMPLEMENTED',
   'NOT_FOUND',
+  'TIMEOUT',
+  'CANCELLED',
   'INTERNAL',
 ] as const
 
@@ -32,6 +34,8 @@ const DEFAULT_HTTP_STATUS: Record<ErrorCode, number> = {
   CONFIG_ERROR: 500,
   NOT_IMPLEMENTED: 501,
   NOT_FOUND: 404,
+  TIMEOUT: 504,
+  CANCELLED: 409,
   INTERNAL: 500,
 }
 

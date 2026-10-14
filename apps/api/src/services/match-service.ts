@@ -1,8 +1,15 @@
 import type { ArenaDataset, MatchResult, StartMatchRequest } from '@mcarena/shared'
 import type { MatchStreamEvent } from '@mcarena/shared'
 import { NotFoundError } from '@mcarena/shared'
-import { buildDevelopmentChallenge } from '@mcarena/arena-core'
-import type { MatchOrchestrator } from '@mcarena/arena-core'
+import {
+  MatchOrchestrator,
+  OptimizerAgent,
+  ReplayPriceOracle,
+  RuleBasedJudge,
+  RuleEngine,
+  SpeedAgent,
+} from '@mcarena/arena-core'
+import type { MatchOrchestrator as Orchestrator } from '@mcarena/arena-core'
 import type { ArenaDataSource } from './data-source.js'
 import type { Logger } from '@mcarena/shared'
 
@@ -43,14 +50,26 @@ export class MatchStore {
   }
 }
 
+/** 阶段03：双 Agent 竞技编排器（真实算法引擎 + 规则裁判 + 降级恢复策略） */
+export function createMatchOrchestrator(logger: Logger): Orchestrator {
+  return new MatchOrchestrator({
+    agentAlpha: new SpeedAgent(),
+    agentBeta: new OptimizerAgent(),
+    judge: new RuleBasedJudge(),
+    logger,
+  })
+}
+
 export class MatchService {
   constructor(
     private readonly deps: {
       dataSource: ArenaDataSource
-      orchestrator: MatchOrchestrator
+      orchestrator: Orchestrator
       store: MatchStore
       logger: Logger
       defaultSeedSource?: () => number
+      /** Agent 失败/超时策略：默认降级恢复，保证比赛可继续 */
+      agentRecovery?: 'recover' | 'propagate'
     },
   ) {}
 
@@ -60,21 +79,29 @@ export class MatchService {
     logger.info('开始比赛', { mode: this.deps.dataSource.mode })
 
     const dataset: ArenaDataset = await this.deps.dataSource.load()
-    // 任务卡：阶段01 使用开发脚手架构造器（随机 RuleEngine 属阶段02）
-    const challenge = buildDevelopmentChallenge(seed)
+    // 任务卡：固定随机种子可复现（RuleEngine.generateTaskCard(seed, dataset)）
+    const challenge = RuleEngine.generateTaskCard(seed, dataset)
+    const priceOracle = new ReplayPriceOracle(dataset)
 
     const run = await this.deps.orchestrator.run({
       challenge,
       dataset,
       seed,
       matchId: undefined,
+      priceOracle,
+      agentRecovery: this.deps.agentRecovery ?? 'recover',
     })
     const result = run.result
     if (!result) {
-      throw new Error('比赛未产生结果')
+      throw new Error(`比赛未产生结果：${run.error?.message ?? '未知原因'}`)
     }
     this.deps.store.save(result, run.events)
-    logger.info('比赛完成', { matchId: result.matchId, winner: result.judge.winner })
+    logger.info('比赛完成', {
+      matchId: result.matchId,
+      winner: result.judge.winner,
+      durationMs: result.agents.map((agent) => agent.durationMs ?? 0),
+      toolCalls: result.agents.map((agent) => agent.toolCallCount ?? 0),
+    })
     return result
   }
 
