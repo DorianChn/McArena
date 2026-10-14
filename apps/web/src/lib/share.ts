@@ -44,7 +44,7 @@ export function shareText(result: MatchResult): string {
   const lines = [
     '🍔【麦门 AI 竞技场 · 挑战成绩】',
     `任务卡：${result.challenge.title}（种子 ${result.seed}）`,
-    `胜者：${winnerLabel}｜比分 ${result.judge.totalScore.toFixed(1)} / 100`,
+    `胜者：${winnerLabel}｜五维总分 α ${result.judge.agentScores[0].total.toFixed(1)} : β ${result.judge.agentScores[1].total.toFixed(1)} / ${result.judge.totalMax}`,
     `应付价格：α ${yuan(alpha?.proposal?.totalCents ?? null)}｜β ${yuan(beta?.proposal?.totalCents ?? null)}`,
     `裁判实验 ID：${result.judge.experimentId}`,
     `数据来源：${result.dataOrigin === 'mock' ? '模拟数据（非麦当劳官方数据）' : result.dataset.sourceRef}｜sha256 ${shortHash(result.dataset.sha256)}`,

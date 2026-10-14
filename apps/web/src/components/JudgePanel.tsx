@@ -29,13 +29,14 @@ export function JudgePanel({ judge }: { judge: JudgeResult }) {
       <CardBody className="space-y-5">
         <p className="text-sm font-semibold leading-relaxed text-ink">{judge.headline}</p>
 
-        {/* 五维得分 */}
+        {/* 五维得分（并列展示双方，避免「得分」列被误读为某一方或双方最高分） */}
         <div className="overflow-x-auto">
           <table className="w-full min-w-[560px] text-left text-sm">
             <thead>
               <tr className="text-xs text-ink-3">
                 <th className="pb-2">维度</th>
-                <th className="pb-2 text-right">得分</th>
+                <th className="pb-2 text-right">α</th>
+                <th className="pb-2 text-right">β</th>
                 <th className="pb-2 text-right">满分</th>
                 <th className="pb-2">公式</th>
               </tr>
@@ -44,7 +45,12 @@ export function JudgePanel({ judge }: { judge: JudgeResult }) {
               {judge.dimensions.map((dimension) => (
                 <tr key={dimension.key} className="border-t border-line align-top">
                   <td className="py-2 font-medium text-ink-2">{dimension.label}</td>
-                  <td className="py-2 text-right font-bold text-gold">{dimension.score.toFixed(1)}</td>
+                  <td className="py-2 text-right font-bold text-gold">
+                    {(judge.agentScores[0].dimensions[dimension.key] ?? 0).toFixed(1)}
+                  </td>
+                  <td className="py-2 text-right font-bold text-gold">
+                    {(judge.agentScores[1].dimensions[dimension.key] ?? 0).toFixed(1)}
+                  </td>
                   <td className="py-2 text-right text-ink-3">{dimension.max}</td>
                   <td className="py-2 font-mono text-[11px] leading-relaxed text-ink-3">{dimension.formula}</td>
                 </tr>
@@ -52,10 +58,11 @@ export function JudgePanel({ judge }: { judge: JudgeResult }) {
             </tbody>
             <tfoot>
               <tr className="border-t border-line-strong font-semibold">
-                <td className="pt-2 text-ink">加权总分</td>
-                <td className="pt-2 text-right text-gold">{judge.totalScore.toFixed(1)}</td>
+                <td className="pt-2 text-ink">五维总分</td>
+                <td className="pt-2 text-right text-gold">{judge.agentScores[0].total.toFixed(1)}</td>
+                <td className="pt-2 text-right text-gold">{judge.agentScores[1].total.toFixed(1)}</td>
                 <td className="pt-2 text-right text-ink-3">{judge.totalMax}</td>
-                <td />
+                <td className="pt-2 text-[11px] text-ink-3">胜负由字典序判定，与五维总分不必然同向</td>
               </tr>
             </tfoot>
           </table>

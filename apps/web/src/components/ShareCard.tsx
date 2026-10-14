@@ -73,8 +73,10 @@ export function ShareCard({ result }: { result: MatchResult }) {
               <p className="text-[11px] text-ink-3">本局胜者</p>
               <p className="text-xl font-black text-brand">{winnerName}</p>
               <p className="text-xs text-ink-2">
-                比分 {result.judge.totalScore.toFixed(1)} / 100｜实验 {result.judge.experimentId}
+                五维总分 α {result.judge.agentScores[0].total.toFixed(1)} : β{' '}
+                {result.judge.agentScores[1].total.toFixed(1)}
               </p>
+              <p className="text-xs text-ink-3">实验 {result.judge.experimentId}</p>
             </div>
           </div>
         </div>

@@ -74,7 +74,12 @@ export function ResultPage({ navigate }: { navigate: (route: 'home' | 'setup' | 
         </p>
         <p className="mt-2 text-sm text-ink-2">{result.judge.headline}</p>
         <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
-          <Badge tone="gold">比分 {result.judge.totalScore.toFixed(1)} / {result.judge.totalMax}</Badge>
+          {/* 注意：胜负由字典序（资格→已验证成本→目标达成→速度）决定，与五维总分不必然同向，
+              因此这里必须并列展示双方得分，不能用 judge.totalScore（那是双方较高分，可能属于败方）。 */}
+          <Badge tone="gold">
+            五维总分 α {result.judge.agentScores[0].total.toFixed(1)} : β {result.judge.agentScores[1].total.toFixed(1)} /{' '}
+            {result.judge.totalMax}
+          </Badge>
           <Badge tone="neutral">裁判实验 {result.judge.experimentId}</Badge>
           <Badge tone="neutral">规则 {result.judge.rulesVersion}</Badge>
           <Badge tone={result.judge.costBasis === 'official-verified' ? 'ok' : 'warn'}>

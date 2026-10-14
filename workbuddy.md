@@ -128,6 +128,7 @@
 | 17 | 05（实测） | 首页「对决双方」α 卡片被挤成窄条、标题逐字换行、区块被拉得极高 | Grid 模板为 `[1fr auto 1fr]`，但 DOM 顺序是 α、β、VS —— VS 落在第 3 轨，β 落在中间 `auto` 轨被撑到最大 | DOM 改为 α → VS → β；模板改 `[minmax(0,1fr)_auto_minmax(0,1fr)]`；标题容器加 `min-w-0` + `break-words` |
 | 18 | 05（实测） | 浏览器控制台 404（`Failed to load resource`） | `index.html` 未声明 favicon，浏览器自动请求 `/favicon.ico` | 内联 SVG data-URI favicon，并补 `color-scheme` / `description` meta |
 | 19 | 05（实测） | 结果页雷达图说明与实现不符（写「取双方较高值」，实际已用单方得分） | 后期把数据源从 `judge.dimensions` 改为 `judge.agentScores` 时未同步文案 | 文案改为「两条曲线分别是 α / β 的裁判独立重算得分（不取较高值）」 |
+| 20 | 06（复核） | 结果页「🏆 胜出」旁徽章显示 `比分 69.3 / 100`，但 `judge.totalScore = max(α, β)` **可能显示败方分数**（α 以 62.8 胜出时徽章显示 β 的 79.9） | 胜负由字典序决定、与五维总分不必然同向，徽章却用了双方较高分 | 四处改为并列展示 α : β（结果页徽章 / JudgePanel 记分表新增两列 / 分享卡 / 分享文案），并在页脚注明「胜负由字典序判定，与五维总分不必然同向」 |
 
 ---
 

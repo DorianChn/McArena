@@ -239,6 +239,25 @@ exit=3
 | `docs/evidence/stage06/sample-match-result.json` | 完整比赛记录（40.7 KB，含全部证据与验证明细） |
 | `docs/evidence/stage06/01~04-*.txt/json` | 上述真实输出存档 |
 
+### 5.7 最终复核（10/14 20:59，提交 `7ce9235` 之后）
+
+在阶段05 浏览器实测完成后对阶段06 做了完整复核：
+
+| 复核项 | 命令 | 结果 |
+|---|---|---|
+| 官方规范校验 | `python quick_validate.py skill/mc-arena` | `Skill is valid!` |
+| 重新安装到用户级 | `node skill/mc-arena/scripts/install.mjs` | 完成，写入 `.mcarena-root` |
+| 已安装文件完整性 | `find ~/.workbuddy-ai/skills/mc-arena -type f` | 10 个文件（SKILL.md / INSTALL.md / scripts×3 / references×4 / .mcarena-root） |
+| 自然语言解析（**仓库外 cwd**） | `node <已安装>/scripts/parse-request.mjs "3个人 预算60 要低卡 外带"` | `--people 3 --budget 60 --scene take-away --goal low-cal` |
+| 真实跑局（**仓库外 cwd**） | 上一步参数 → `run-match.mjs ... --seed 2026 --json` | `ok:true`；任务卡「自定义挑战 · 3 人外带｜预算 ¥60、人均 450 kcal」；α `speed-greedy@1.0.0` 候选 1 / β `optimizer-search@1.0.0` 候选 274；`experimentId exp_ba4c0b472cb24851` |
+| 全量门禁 | `npm run verify` | exit 0；测试 **189/189**；typecheck 0 错；lint 0 error；build 成功 |
+
+复核中发现并修复的展示缺陷（属阶段05 范围，已记入 `STAGE_05_REPORT.md` 与 `workbuddy.md`）：
+
+> 结果页「🏆 胜出」旁徽章用 `judge.totalScore = max(α, β)` 显示「比分」，**可能显示败方分数**
+> （实测中 α 以五维 62.8 胜出时，徽章会显示 β 的 79.9）。已在四处改为并列展示 α : β
+> （结果页徽章 / `JudgePanel` 记分表新增两列 / 分享卡 / 分享文案），并注明「胜负由字典序判定，与五维总分不必然同向」。
+
 ---
 
 ## 六、实际限制与替代方案（如实记录）
@@ -303,6 +322,7 @@ exit=3
 | 5 | 失败时仍打印「已启用默认产物输出」 | 提示在 spawn 前输出 | 改为仅在子进程退出码为 0 时输出 |
 | 6 | 子进程测试偶发 5s 超时 | 默认 `testTimeout` 过短 | `describe(..., { timeout })` 显式放宽 |
 | 7 | 批量编辑部分未落盘 | 编辑工具批量替换部分失效 | 改为逐条编辑 + `grep` 复核 |
+| 8 | 结果页「🏆 胜出」旁徽章显示 `比分 69.3 / 100`，可能**显示败方分数** | `judge.totalScore = max(α, β)` 被当作「本局比分」，而胜负由字典序决定、与五维总分不必然同向 | 四处改为并列展示 α : β（结果页徽章 / `JudgePanel` 记分表新增两列 / 分享卡 / 分享文案） |
 
 ---
 
