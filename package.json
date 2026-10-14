@@ -1,0 +1,28 @@
+{
+  "name": "mcarena",
+  "version": "1.0.0",
+  "private": true,
+  "description": "McArena - McDonald's MCP based dual-agent ordering decision arena",
+  "license": "MIT",
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "npm run build --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "dev": "npm run dev --workspaces --if-present",
+    "demo": "node packages/arena-core/src/cli/demo.mjs",
+    "snapshot:capture": "node tools/snapshot-capture.mjs",
+    "lint": "echo \"lint: TODO(P4)\" && exit 0"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.0",
+    "vitest": "^2.1.0",
+    "@types/node": "^22.0.0"
+  }
+}

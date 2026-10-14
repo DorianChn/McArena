@@ -1,0 +1,25 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npm test
+      - name: Secret scan (block real tokens)
+        run: |
+          if grep -rInE "Bearer [A-Za-z0-9._-]{20,}" --include="*.ts" --include="*.js" --include="*.mjs" --include="*.json" --include="*.md" packages apps tools skill docs; then
+            echo "::error::possible hardcoded token found"; exit 1
+          fi
