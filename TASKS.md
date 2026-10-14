@@ -86,6 +86,24 @@
 | S3-11 🤖 | API 换装真实引擎（RuleEngine 任务卡 + ReplayPriceOracle + 降级恢复策略） | 后端 | ✅ 完成 | API 冒烟 10 用例通过 |
 | S3-12 🤖 | STAGE_03_REPORT.md + 测试（66/66）+ 类型/Lint/构建全绿 + Git 提交 | 全栈 | ✅ 完成 | 见 git log（未 push） |
 
+## 阶段04 独立智能裁判系统（10/14）
+
+> 目标：Judge Engine 作为两 Agent 之外的独立裁判，**不信任 Agent 自述成绩**，全部指标独立重算；
+> 资格硬门槛 + 有效成本优先 + 可解释报告 + 可复现实验 ID。详细规范见 `JUDGE_SPEC.md`，实测数据见 `STAGE_04_REPORT.md`。
+
+| ID | 任务 | 负责 | 状态 | 验收 |
+|---|---|---|---|---|
+| S4-1 🤖 | 独立验证器 `verifyAgentProposal()`：餐品存在/在售、数量、重复、单价数据卫生 | 算法 | ✅ 完成 | `verifier.test.ts` 35 项 |
+| S4-2 🤖 | 预算/人数/种类/必选餐品-标签-类别硬约束（fatal 即失格） | 算法 | ✅ 完成 | 各场景单测覆盖 |
+| S4-3 🤖 | 优惠券逐张验证（存在/门槛/标签/类型/重复申报）+ 共享引擎重算优惠 | 算法 | ✅ 完成 | 5 类券场景单测 |
+| S4-4 🤖 | 官方 calculate-price 优先核价；无记录 → NOT_VERIFIED（warning，不视为通过） | 算法 | ✅ 完成 | verified/mismatch/not-verified 三路径单测 |
+| S4-5 🤖 | 五维评分改为裁判重算输入（需求30/预算25/营养20/优惠15/可解释10） | 算法 | ✅ 完成 | 虚报 Agent 不得高分（单测） |
+| S4-6 🤖 | 字典序胜负判定：资格 → 官方成本 → 重算成本 → 营养/目标 → 速度 → 平局 | 算法 | ✅ 完成 | 无效方案不能低价赢（单测） |
+| S4-7 🤖 | `experimentId` 可复现实验 ID + `costBasis` + `allViolations` 扁平汇总 | 算法 | ✅ 完成 | 确定性与敏感性单测 |
+| S4-8 🤖 | 契约扩展（Violation/Check/AgentVerification/CostBasis）+ canonicalizeMatch 同步 | 后端 | ✅ 完成 | 契约测试 8 项通过 |
+| S4-9 🤖 | CLI 战报 + 前端 JudgePanel 展示独立验证报告（NOT_VERIFIED 高亮/证据引用） | 全栈 | ✅ 完成 | `demo match` 输出验证摘要；web build 成功 |
+| S4-10 🤖 | JUDGE_SPEC.md + STAGE_04_REPORT.md + 测试 66 项新增（全库 132/132 通过）+ Git 提交 | 全栈 | ✅ 完成 | typecheck 0 / lint 0 error / build 通过（未 push） |
+
 ## P3 服务与界面（10/19–10/21）
 
 | ID | 任务 | 负责 | 状态 | 验收 |
@@ -122,5 +140,5 @@
 
 | 编号 | 描述 | 解除条件 | 影响范围 |
 |---|---|---|---|
-| B1 | 麦当劳 MCP Token 未申请（需手机号验证登录+人机验证，AI 无法代办） | 用户在 open.mcd.cn/mcp 完成登录激活 | P1-4 实测 schema、live 模式；不影响 replay 全链路 |
+| B1 | 麦当劳 MCP Token 未申请（需手机号验证登录+人机验证，AI 无法代办） | 用户在 open.mcd.cn/mcp 完成登录激活 | P1-4 实测 schema、live 模式、裁判 `verified/mismatch` 实测；不影响 replay 全链路 |
 | B2 | GitHub 公开仓库未创建 | 用户手动建仓 | P5 发布；不影响本地开发 |

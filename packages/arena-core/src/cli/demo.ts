@@ -50,6 +50,18 @@ function printMatchReport(input: {
   }>
   winner: string
   headline: string
+  verification: Array<{
+    agentId: 'alpha' | 'beta'
+    eligible: boolean
+    priceStatus: 'verified' | 'mismatch' | 'not-verified'
+    officialCostCents: number | null
+    claimedCostCents: number | null
+    effectiveCostCents: number | null
+    responseMs: number
+    fatalViolations: number
+  }>
+  experimentId: string
+  costBasis: 'official-verified' | 'claimed-unverified'
 }): void {
   const line = '─'.repeat(64)
   console.log(line)
@@ -71,7 +83,27 @@ function printMatchReport(input: {
   }
   console.log('')
   console.log(`裁判结论：${input.headline}`)
+  console.log(`独立验证（实验 ${input.experimentId}｜成本依据 ${input.costBasis}）：`)
+  for (const entry of input.verification) {
+    const who = entry.agentId === 'alpha' ? 'α' : 'β'
+    const price =
+      entry.priceStatus === 'verified'
+        ? '官方核价一致'
+        : entry.priceStatus === 'mismatch'
+          ? '与官方不符（以官方为准）'
+          : 'NOT_VERIFIED'
+    console.log(
+      `  ${who}｜资格 ${entry.eligible ? '通过' : `未通过（致命违规 ${entry.fatalViolations} 项）`}` +
+        `｜${price}` +
+        `｜官方 ${fmt(entry.officialCostCents)}｜自述 ${fmt(entry.claimedCostCents)}｜裁决 ${fmt(entry.effectiveCostCents)}` +
+        `｜实测 ${entry.responseMs}ms`,
+    )
+  }
   console.log(line)
+}
+
+function fmt(cents: number | null): string {
+  return cents === null ? '—' : `¥${(cents / 100).toFixed(2)}`
 }
 
 async function runMatch(seed: number): Promise<void> {
@@ -116,6 +148,18 @@ async function runMatch(seed: number): Promise<void> {
     })),
     winner: result.judge.winner,
     headline: result.judge.headline,
+    verification: result.judge.verification.map((entry) => ({
+      agentId: entry.agentId,
+      eligible: entry.eligible,
+      priceStatus: entry.priceStatus,
+      officialCostCents: entry.officialCostCents,
+      claimedCostCents: entry.claimedCostCents,
+      effectiveCostCents: entry.effectiveCostCents,
+      responseMs: entry.responseMs,
+      fatalViolations: entry.violations.filter((violation) => violation.severity === 'fatal').length,
+    })),
+    experimentId: result.judge.experimentId,
+    costBasis: result.judge.costBasis,
   })
 }
 

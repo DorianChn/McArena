@@ -60,6 +60,10 @@ export interface JudgeContext {
   dataset: ArenaDataset
   agents: [AgentExecution, AgentExecution]
   logger: Logger
+  /** 官方价格预言机：裁判优先用它独立核价（不信任 Agent 自述价格） */
+  priceOracle?: PriceOracle
+  /** 比赛种子：参与可复现实验 ID 的派生 */
+  seed?: number
 }
 
 export interface JudgeEngine {
@@ -258,6 +262,8 @@ export class MatchOrchestrator {
         dataset: input.dataset,
         agents: [alpha, beta],
         logger: this.deps.logger,
+        priceOracle: input.priceOracle,
+        seed: input.seed,
       })
 
       const result: MatchResult = MatchResultSchema.parse({

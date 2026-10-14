@@ -79,20 +79,25 @@ runMatch(config, dataSource): MatchRecord
   ├── RuleEngine.generateTaskCard(seed)           // 随机但可复现的任务卡
   ├── AgentAlpha.decide(task, snapshot)           // 极速猎手（单遍贪心，1 个候选，满足约束下最省钱）
   ├── AgentBeta.decide(task, snapshot)            // 深度优化师（束搜索多候选，约束/营养/价格择优）
-  └── Judge.evaluate(task, snapshot, [traceA, traceB])
-        ├── 需求满足度 30  // 餐品数量/场景/约束满足率
-        ├── 预算控制   25  // 应付总价 ≤ 预算；越接近预算下限且不超支得分越高（防通合并买浪费）
-        ├── 营养均衡   20  // 与目标营养画像的加权偏差
-        ├── 优惠利用   15  // 命中的有效优惠券面值
-        └── 可解释性   10  // 决策链路完整度与理由引用数据准确率
+  └── Judge.evaluate(task, snapshot, [traceA, traceB], priceOracle?)
+        ├── 独立验证 verifyAgentProposal()        // 裁判重算：存在性/数量/重复/单价/优惠/营养/官方核价
+        │     └── priceStatus: verified | mismatch | not-verified（NOT_VERIFIED 明确标注，不视为通过）
+        ├── 五维打分（输入全部为裁判重算值，不采信 Agent 自述）
+        │     ├── 需求满足度 30  // 裁判校验通过率
+        │     ├── 预算控制   25  // 裁决成本（官方>重算）≤ 预算；不超支且剩余比例适中得分越高
+        │     ├── 营养均衡   20  // 裁判重算的加权达成率（热量0.4/蛋白质0.4/钠0.2）
+        │     ├── 优惠利用   15  // 裁判重算的有效优惠 / 券前应付
+        │     └── 可解释性   10  // 决策链路完整度与校验说明覆盖率
+        └── 胜负判定（字典序）：资格(fatal 失格) → 官方成本 → 重算成本 → 营养/目标 → 速度 → 平局
 ```
 
 设计约束：
 
-- **可复现**：所有随机性来自 `seed`（mulberry32 PRNG），裁判无随机；同一 `(config, snapshotHash, engineVersion)` 输出字节级一致。
-- **可解释**：每个得分项必须携带 `{ score, max, formula, evidence[] }`，前端直接渲染公式与证据。
+- **可复现**：所有随机性来自 `seed`（mulberry32 PRNG），裁判无随机；同一 `(config, snapshotHash, engineVersion)` 输出字节级一致。`experimentId` 由 (规则版本, 种子, 数据集指纹, 引擎版本, 验证结果) 派生，实测耗时等非确定值不参与。
+- **可解释**：每个得分项必须携带 `{ score, max, formula, evidence[] }`；每条违规携带 severity + message + evidenceRef；前端直接渲染公式、证据与独立验证报告。
 - **公平**：两 Agent 使用同一 snapshot、同一信息集、同一工具视图；不允许互见对方决策。
-- 价格一律使用官方 `calculate-price` 返回结果，Agent 不做任何自估。
+- **独立**：裁判不信任 Agent 自述成绩（`constraintChecks` / `totalCents` 仅作申报值对照）；无效方案不能凭低价取胜。
+- 价格一律使用官方 `calculate-price` 返回结果（无法核价 → NOT_VERIFIED），Agent 与裁判均不做任何自估。
 
 ### 3.4 apps/api —— 服务层
 

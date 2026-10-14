@@ -38,6 +38,28 @@ function makeMenuItem() {
   })
 }
 
+/** 阶段04：单个 Agent 的独立验证报告夹具 */
+function verificationFixture(): MatchResult['judge']['verification'] {
+  return (['alpha', 'beta'] as const).map((agentId) => ({
+    agentId,
+    engine: 'mock-dev-scaffold@0.1.0',
+    eligible: true,
+    priceStatus: 'not-verified' as const,
+    officialCostCents: null,
+    claimedCostCents: 2000,
+    recomputedCostCents: 2000,
+    effectiveCostCents: 2000,
+    targetAchievement: null,
+    verifiedSubtotalCents: 2000,
+    verifiedDeliveryCents: 0,
+    verifiedDiscountCents: 0,
+    validCouponCodes: [],
+    responseMs: 0,
+    checks: [],
+    violations: [],
+  }))
+}
+
 function makeResult(overrides: Partial<MatchResult> = {}): MatchResult {
   const base: MatchResult = {
     matchId: 'match-1',
@@ -101,6 +123,11 @@ function makeResult(overrides: Partial<MatchResult> = {}): MatchResult {
       winner: 'alpha',
       headline: '预算猎手胜出',
       notes: [],
+      rulesVersion: 'judge-rules/1.1.0',
+      experimentId: 'exp_test_00000000',
+      costBasis: 'claimed-unverified',
+      verification: verificationFixture(),
+      allViolations: [],
     },
     engineVersions: {
       orchestrator: '0.1.0',

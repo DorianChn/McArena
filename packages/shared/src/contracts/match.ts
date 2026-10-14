@@ -115,6 +115,102 @@ export type ScoreDimension = z.infer<typeof ScoreDimensionSchema>
 export const MatchWinnerSchema = z.enum(['alpha', 'beta', 'tie'])
 export type MatchWinner = z.infer<typeof MatchWinnerSchema>
 
+// ---------------------------------------------------------------- 裁判验证（阶段04）
+
+/** 违规严重级别：fatal = 失去资格；warning = 记录但不剥夺资格 */
+export const ViolationSeveritySchema = z.enum(['fatal', 'warning'])
+export type ViolationSeverity = z.infer<typeof ViolationSeveritySchema>
+
+/** 违规码（固定枚举，前端与测试共用） */
+export const JudgeViolationCodeSchema = z.enum([
+  'empty-proposal',
+  'unknown-item',
+  'unavailable-item',
+  'invalid-qty',
+  'invalid-price',
+  'duplicate-items',
+  'budget-exceeded',
+  'people-not-covered',
+  'distinct-items-exceeded',
+  'missing-required-code',
+  'missing-required-tag',
+  'missing-required-category',
+  'coupon-not-found',
+  'coupon-not-applicable',
+  'coupon-threshold-not-met',
+  'coupon-unsupported-type',
+  'discount-mismatch',
+  'price-mismatch',
+  'price-not-verifiable',
+  'nutrition-data-missing',
+  'internal-error',
+])
+export type JudgeViolationCode = z.infer<typeof JudgeViolationCodeSchema>
+
+export const JudgeViolationSchema = z.object({
+  code: JudgeViolationCodeSchema,
+  severity: ViolationSeveritySchema,
+  /** 中文原因说明 */
+  message: z.string().min(1),
+  /** 数据证据引用（如 `dataset.menuItems[burger-classic].priceCents`、`snapshot:<id>`） */
+  evidenceRef: z.string().default(''),
+})
+export type JudgeViolation = z.infer<typeof JudgeViolationSchema>
+
+/** 单项校验结果（供可解释报告逐条展示） */
+export const JudgeCheckSchema = z.object({
+  name: z.string().min(1),
+  passed: z.boolean(),
+  detail: z.string().default(''),
+  /** 该检查引用的数据证据 */
+  evidenceRef: z.string().default(''),
+})
+export type JudgeCheck = z.infer<typeof JudgeCheckSchema>
+
+/** 价格核验状态：verified=官方口径一致；mismatch=与官方不符（以官方为准）；not-verified=无官方记录 */
+export const PriceVerificationStatusSchema = z.enum(['verified', 'mismatch', 'not-verified'])
+export type PriceVerificationStatus = z.infer<typeof PriceVerificationStatusSchema>
+
+/** 单个 Agent 的独立验证报告（裁判不信任 Agent 自述成绩） */
+export const AgentVerificationSchema = z.object({
+  agentId: AgentIdSchema,
+  engine: z.string().min(1),
+  /** 硬性资格：无 fatal 违规 */
+  eligible: z.boolean(),
+  priceStatus: PriceVerificationStatusSchema,
+  /** 官方核算应付成本（分）；核价失败时为 null */
+  officialCostCents: z.number().int().nonnegative().nullable(),
+  /** Agent 自述应付成本（分） */
+  claimedCostCents: z.number().int().nonnegative().nullable(),
+  /** 裁判用数据集单价与券规则独立重算的成本（分） */
+  recomputedCostCents: z.number().int().nonnegative().nullable(),
+  /** 裁决采用的有效成本：官方核价 > 裁判重算 > 自述 */
+  effectiveCostCents: z.number().int().nonnegative().nullable(),
+  /** 营养/用户目标达成率（0–1）；无目标或数据缺失时为 null */
+  targetAchievement: z.number().min(0).max(1).nullable(),
+  /** 裁判用数据集单价独立重算的餐品小计（分） */
+  verifiedSubtotalCents: z.number().int().nonnegative().nullable(),
+  /** 裁判重算的配送费（分） */
+  verifiedDeliveryCents: z.number().int().nonnegative().nullable(),
+  /** 裁判重算的优惠金额（分，仅计入通过验证的券） */
+  verifiedDiscountCents: z.number().int().nonnegative().nullable(),
+  /** 通过裁判验证、实际计入优惠的券编码 */
+  validCouponCodes: z.array(z.string()).default([]),
+  /** 实际响应时间（毫秒，取自 AgentExecution.durationMs） */
+  responseMs: z.number().int().nonnegative(),
+  checks: z.array(JudgeCheckSchema).default([]),
+  violations: z.array(JudgeViolationSchema).default([]),
+})
+export type AgentVerification = z.infer<typeof AgentVerificationSchema>
+
+export const CostBasisSchema = z.enum([
+  /** 双方（或至少胜方）成本经官方 calculate-price 核验 */
+  'official-verified',
+  /** 成本仅来自 Agent 自述，未经官方核验 */
+  'claimed-unverified',
+])
+export type CostBasis = z.infer<typeof CostBasisSchema>
+
 export const JudgeResultSchema = z.object({
   dimensions: z.array(ScoreDimensionSchema).min(1),
   totalScore: z.number().nonnegative(),
@@ -123,6 +219,19 @@ export const JudgeResultSchema = z.object({
   /** 中文结论一句话 */
   headline: z.string().min(1),
   notes: z.array(z.string()).default([]),
+  // ---- 阶段04：独立裁判 ----
+  /** 评分规则版本（变更即视为新规则实验） */
+  rulesVersion: z.string().min(1).default('judge-rules/1.0.0'),
+  /** 可复现实验 ID：同 (规则, 种子, 数据集指纹, 引擎版本, 验证结果) → 同 ID */
+  experimentId: z.string().min(1),
+  /** 成本比较依据 */
+  costBasis: CostBasisSchema.default('claimed-unverified'),
+  /** 两个 Agent 的独立验证报告（含违规与证据引用） */
+  verification: z.array(AgentVerificationSchema).length(2),
+  /** 全部违规（含 warning）的扁平汇总，便于前端集中展示 */
+  allViolations: z
+    .array(JudgeViolationSchema.extend({ agentId: AgentIdSchema }))
+    .default([]),
 })
 export type JudgeResult = z.infer<typeof JudgeResultSchema>
 
@@ -206,6 +315,30 @@ export function canonicalizeMatch(result: MatchResult): string {
       })),
     })),
     judge: {
+      rulesVersion: result.judge.rulesVersion,
+      experimentId: result.judge.experimentId,
+      costBasis: result.judge.costBasis,
+      winner: result.judge.winner,
+      headline: result.judge.headline,
+      // 验证与违规是确定性计算结果，进入复现指纹
+      verification: result.judge.verification.map((entry) => ({
+        agentId: entry.agentId,
+        engine: entry.engine,
+        eligible: entry.eligible,
+        priceStatus: entry.priceStatus,
+        officialCostCents: entry.officialCostCents,
+        claimedCostCents: entry.claimedCostCents,
+        recomputedCostCents: entry.recomputedCostCents,
+        effectiveCostCents: entry.effectiveCostCents,
+        targetAchievement: entry.targetAchievement,
+        verifiedSubtotalCents: entry.verifiedSubtotalCents,
+        verifiedDeliveryCents: entry.verifiedDeliveryCents,
+        verifiedDiscountCents: entry.verifiedDiscountCents,
+        validCouponCodes: entry.validCouponCodes,
+        checks: entry.checks,
+        violations: entry.violations,
+      })),
+      allViolations: result.judge.allViolations,
       dimensions: result.judge.dimensions.map((dimension) => ({
         key: dimension.key,
         label: dimension.label,
@@ -224,8 +357,6 @@ export function canonicalizeMatch(result: MatchResult): string {
       })),
       totalScore: result.judge.totalScore,
       totalMax: result.judge.totalMax,
-      winner: result.judge.winner,
-      headline: result.judge.headline,
       notes: result.judge.notes,
     },
     engineVersions: result.engineVersions,

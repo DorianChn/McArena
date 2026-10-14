@@ -452,8 +452,8 @@ export async function benchmarkScenario(input: {
   ])
 
   const judgeEngine = new RuleBasedJudge()
-  const judgeContext = { challenge, dataset, agents: [alpha, beta] as [AgentExecution, AgentExecution], logger }
-  const [scoreAlpha, scoreBeta] = judgeEngine.scoreAgents(judgeContext)
+  const judgeContext = { challenge, dataset, agents: [alpha, beta] as [AgentExecution, AgentExecution], logger, priceOracle, seed }
+  const [scoreAlpha, scoreBeta] = await judgeEngine.scoreAgents(judgeContext)
   const judge = await judgeEngine.evaluate(judgeContext)
 
   return {

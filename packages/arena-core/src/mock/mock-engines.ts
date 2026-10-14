@@ -214,6 +214,36 @@ export class MockJudgeEngine {
     const totalBeta = beta?.total ?? 0
     const winner: 'alpha' | 'beta' | 'tie' = totalAlpha === totalBeta ? 'tie' : totalAlpha > totalBeta ? 'alpha' : 'beta'
 
+    // mock 裁判不做真实独立验证（正式裁判为 arena-core 的 RuleBasedJudge）；
+    // 这里仅填充结构合法的验证报告，priceStatus 固定 not-verified，绝不冒充实测。
+    const verification = agents.map((agent) => ({
+      agentId: agent.agentId,
+      engine: `${agent.engine}@${agent.engineVersion}`,
+      eligible: agent.proposal !== null,
+      priceStatus: 'not-verified' as const,
+      officialCostCents: null,
+      claimedCostCents: agent.proposal?.totalCents ?? null,
+      recomputedCostCents: null,
+      effectiveCostCents: agent.proposal?.totalCents ?? null,
+      targetAchievement: null,
+      verifiedSubtotalCents: agent.proposal?.subtotalCents ?? null,
+      verifiedDeliveryCents: agent.proposal?.deliveryFeeCents ?? null,
+      verifiedDiscountCents: agent.proposal?.discountCents ?? null,
+      validCouponCodes: [],
+      responseMs: agent.durationMs ?? 0,
+      checks: [],
+      violations: agent.proposal
+        ? []
+        : [
+            {
+              code: 'empty-proposal' as const,
+              severity: 'fatal' as const,
+              message: 'mock 裁判：Agent 未产出提案',
+              evidenceRef: '',
+            },
+          ],
+    }))
+
     return Promise.resolve({
       dimensions: [
         dimension('requirement-fit', '需求满足度', 30, 0.3, 'score = 满足约束数 / 总约束数 × 30', alpha?.fit ?? 0, beta?.fit ?? 0),
@@ -227,9 +257,16 @@ export class MockJudgeEngine {
       winner,
       headline: `mock 裁判：${winner === 'tie' ? '双方战平' : winner === 'alpha' ? '预算猎手领先' : '营养均衡派领先'}（${Math.max(totalAlpha, totalBeta).toFixed(1)} / 100）`,
       notes: [
-        '本局裁判为 mock-dev-scaffold 脚手架，打分逻辑为演示用途。',
+        '本局裁判为 mock-dev-scaffold 脚手架，打分逻辑为演示用途；正式裁判为 arena-core 的 RuleBasedJudge（独立验证）。',
         dataset.dataOrigin === 'mock' ? MOCK_DATA_WARNING : '',
       ].filter((note) => note.length > 0),
+      rulesVersion: 'mock-dev-scaffold/0.1.0',
+      experimentId: `exp_mock_${context.seed ?? 0}_${dataset.sourceRef}`,
+      costBasis: 'claimed-unverified',
+      verification,
+      allViolations: verification.flatMap((entry) =>
+        entry.violations.map((violation) => ({ ...violation, agentId: entry.agentId })),
+      ),
     })
   }
 }
