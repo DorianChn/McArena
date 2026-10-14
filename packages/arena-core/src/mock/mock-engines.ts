@@ -264,6 +264,30 @@ export class MockJudgeEngine {
       experimentId: `exp_mock_${context.seed ?? 0}_${dataset.sourceRef}`,
       costBasis: 'claimed-unverified',
       verification,
+      agentScores: [
+        {
+          agentId: 'alpha' as const,
+          total: alpha?.total ?? 0,
+          dimensions: {
+            'requirement-fit': alpha?.fit ?? 0,
+            'budget-control': alpha?.budgetControl ?? 0,
+            'nutrition-balance': alpha?.nutrition ?? 0,
+            'coupon-usage': alpha?.coupon ?? 0,
+            explainability: alpha?.explain ?? 0,
+          },
+        },
+        {
+          agentId: 'beta' as const,
+          total: beta?.total ?? 0,
+          dimensions: {
+            'requirement-fit': beta?.fit ?? 0,
+            'budget-control': beta?.budgetControl ?? 0,
+            'nutrition-balance': beta?.nutrition ?? 0,
+            'coupon-usage': beta?.coupon ?? 0,
+            explainability: beta?.explain ?? 0,
+          },
+        },
+      ],
       allViolations: verification.flatMap((entry) =>
         entry.violations.map((violation) => ({ ...violation, agentId: entry.agentId })),
       ),

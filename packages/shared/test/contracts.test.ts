@@ -127,6 +127,30 @@ function makeResult(overrides: Partial<MatchResult> = {}): MatchResult {
       experimentId: 'exp_test_00000000',
       costBasis: 'claimed-unverified',
       verification: verificationFixture(),
+      agentScores: [
+        {
+          agentId: 'alpha',
+          total: 20,
+          dimensions: {
+            'requirement-fit': 0,
+            'budget-control': 20,
+            'nutrition-balance': 0,
+            'coupon-usage': 0,
+            explainability: 0,
+          },
+        },
+        {
+          agentId: 'beta',
+          total: 0,
+          dimensions: {
+            'requirement-fit': 0,
+            'budget-control': 0,
+            'nutrition-balance': 0,
+            'coupon-usage': 0,
+            explainability: 0,
+          },
+        },
+      ],
       allViolations: [],
     },
     engineVersions: {

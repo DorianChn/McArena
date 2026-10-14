@@ -1,0 +1,70 @@
+# 命令：node skill/mc-arena/scripts/run-match.mjs --people 2 --budget 60 --goal balanced --seed 42
+# 时间：2026-10-14T20:33:18+08:00
+
+[mc-arena] 已启用默认产物输出：<repo-root>\artifacts
+──────────────────────────────────────────────────────────────────
+麦门 AI 竞技场 · 单局战报（种子 42｜模式 mock）
+──────────────────────────────────────────────────────────────────
+任务卡：自定义挑战 · 2 人堂食｜预算 ¥60、人均 500 kcal、人均蛋白 20g、必含标签 burger/side/drink
+玩家自定义约束：2 人、堂食、预算 ¥60、必含标签 burger、side、drink、有营养目标、优先使用优惠券
+数据来源：mock（scenario://stage03-fixtures）｜比赛 ID match_mv83c6u6_42
+⚠ 阶段03 场景测试数据集（模拟数据，非麦当劳官方数据）
+
+【α 极速猎手】speed-greedy@1.0.0｜总分 78.5/100
+    自述应付 ¥22.00｜裁决成本 ¥22.00｜核价 not-verified｜资格 通过
+    实测 8ms｜候选 1｜工具调用 1
+      · 经典牛肉堡 ×1 = ¥15.00
+      · 可乐（中） ×1 = ¥7.00
+      · 薯条（中） ×1 = ¥8.00
+【β 深度优化师】optimizer-search@1.0.0｜总分 79.6/100
+    自述应付 ¥25.00｜裁决成本 ¥25.00｜核价 not-verified｜资格 通过
+    实测 3ms｜候选 248｜工具调用 6
+      · 经典牛肉堡 ×1 = ¥15.00
+      · 拿铁咖啡 ×1 = ¥10.00
+      · 薯条（中） ×1 = ¥8.00
+
+裁判结论：极速猎手胜出（五维总分 78.5 : 79.6 / 100）——双方均无官方核价记录（NOT_VERIFIED），按裁判重算成本比较，α更低（¥22.00 : ¥25.00）
+规则 judge-rules/1.1.0｜实验 exp_bcc724febf31e0b8｜成本依据 claimed-unverified
+五维得分（双方）：
+  需求满足度　 α  25.7｜β  25.7｜满分 30
+  预算控制　　 α  21.3｜β  20.8｜满分 25
+  营养均衡　　 α  17.5｜β  19.4｜满分 20
+  优惠利用　　 α   4.0｜β   3.6｜满分 15
+  可解释性　　 α  10.0｜β  10.0｜满分 10
+违规记录：
+  [warning] α 无法通过官方 calculate-price 核对应付价格，本方案成本标记为 NOT_VERIFIED
+  [warning] β 无法通过官方 calculate-price 核对应付价格，本方案成本标记为 NOT_VERIFIED
+
+可复现配置（粘贴到竞技场「挑战设置」或同种子重跑即可复现）：
+{
+  "seed": 42,
+  "mode": "mock",
+  "constraints": {
+    "people": 2,
+    "budgetCents": 6000,
+    "scene": "dine-in",
+    "mustIncludeCodes": [],
+    "excludedCodes": [],
+    "requiredTags": [
+      "burger",
+      "side",
+      "drink"
+    ],
+    "requiredCategories": [],
+    "nutritionTarget": {
+      "kcal": 500,
+      "proteinG": 20
+    },
+    "preferCoupons": true
+  },
+  "dataset": {
+    "sourceRef": "scenario://stage03-fixtures",
+    "dataOrigin": "mock",
+    "sha256": null
+  },
+  "experimentId": "exp_bcc724febf31e0b8"
+}
+
+已生成可打开的竞技场结果：<repo-root>\artifacts\mc-arena-2026-10-14T12-33-18-723Z.html
+已生成 JSON 结果：<repo-root>\artifacts\mc-arena-2026-10-14T12-33-18-723Z.json
+──────────────────────────────────────────────────────────────────

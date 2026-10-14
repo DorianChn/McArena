@@ -1,0 +1,1177 @@
+{
+  "ok": true,
+  "result": {
+    "matchId": "match_mv83crh5_42",
+    "seed": 42,
+    "challenge": {
+      "id": "challenge-custom-42",
+      "seed": 42,
+      "constraints": {
+        "people": 2,
+        "budgetCents": 6000,
+        "scene": "dine-in",
+        "mustIncludeCodes": [],
+        "excludedCodes": [],
+        "requiredTags": [
+          "burger",
+          "side",
+          "drink"
+        ],
+        "requiredCategories": [],
+        "nutritionTarget": {
+          "kcal": 500,
+          "proteinG": 20
+        },
+        "preferCoupons": true
+      },
+      "title": "自定义挑战 · 2 人堂食｜预算 ¥60、人均 500 kcal、人均蛋白 20g、必含标签 burger/side/drink",
+      "brief": "玩家自定义约束：2 人、堂食、预算 ¥60、必含标签 burger、side、drink、有营养目标、优先使用优惠券",
+      "generatedAt": "2026-10-14T12:33:46.263Z"
+    },
+    "dataOrigin": "mock",
+    "dataset": {
+      "sourceRef": "scenario://stage03-fixtures",
+      "sha256": null,
+      "notice": "阶段03 场景测试数据集（模拟数据，非麦当劳官方数据）",
+      "capturedAt": "2026-10-14T00:00:00.000Z"
+    },
+    "agents": [
+      {
+        "agentId": "alpha",
+        "name": "极速猎手",
+        "role": "极速策略：单遍贪心构造，最低计算成本，追求即时可用解",
+        "engine": "speed-greedy",
+        "engineVersion": "1.0.0",
+        "status": "completed",
+        "dataOrigin": "mock",
+        "proposal": {
+          "items": [
+            {
+              "code": "burger-classic",
+              "name": "经典牛肉堡",
+              "qty": 1,
+              "unitPriceCents": 1500,
+              "lineTotalCents": 1500,
+              "nutrition": {
+                "kcal": 520,
+                "proteinG": 26,
+                "fatG": 22,
+                "carbG": 45,
+                "sodiumMg": 820
+              }
+            },
+            {
+              "code": "cola-medium",
+              "name": "可乐（中）",
+              "qty": 1,
+              "unitPriceCents": 700,
+              "lineTotalCents": 700,
+              "nutrition": {
+                "kcal": 180,
+                "proteinG": 0,
+                "fatG": 0,
+                "carbG": 45,
+                "sodiumMg": 20
+              }
+            },
+            {
+              "code": "fries-medium",
+              "name": "薯条（中）",
+              "qty": 1,
+              "unitPriceCents": 800,
+              "lineTotalCents": 800,
+              "nutrition": {
+                "kcal": 320,
+                "proteinG": 4,
+                "fatG": 15,
+                "carbG": 41,
+                "sodiumMg": 260
+              }
+            }
+          ],
+          "subtotalCents": 3000,
+          "deliveryFeeCents": 0,
+          "discountCents": 800,
+          "totalCents": 2200,
+          "couponCodes": [
+            "coupon-threshold-30-5",
+            "coupon-side-3"
+          ],
+          "constraintChecks": [
+            {
+              "name": "餐品数量覆盖人数",
+              "satisfied": true,
+              "detail": "共 3 件 / 需求 2 人"
+            },
+            {
+              "name": "预算约束",
+              "satisfied": true,
+              "detail": "应付 ¥22.00 / 预算 ¥60.00"
+            },
+            {
+              "name": "种类上限",
+              "satisfied": true,
+              "detail": "未设置上限"
+            },
+            {
+              "name": "必选标签：burger",
+              "satisfied": true,
+              "detail": "burger"
+            },
+            {
+              "name": "必选标签：side",
+              "satisfied": true,
+              "detail": "side"
+            },
+            {
+              "name": "必选标签：drink",
+              "satisfied": true,
+              "detail": "drink"
+            }
+          ],
+          "priceOrigin": "mock"
+        },
+        "evidence": [
+          {
+            "id": "alpha-1",
+            "kind": "data-source",
+            "message": "使用数据集 scenario://stage03-fixtures（模拟数据，共 10 项餐品）",
+            "resultSummary": "阶段03 场景测试数据集（模拟数据，非麦当劳官方数据）",
+            "at": "2026-10-14T12:33:46.266Z"
+          },
+          {
+            "id": "alpha-2",
+            "kind": "selection",
+            "message": "满足必选标签「burger」：取最便宜的 经典牛肉堡（¥15.00）",
+            "at": "2026-10-14T12:33:46.266Z"
+          },
+          {
+            "id": "alpha-3",
+            "kind": "selection",
+            "message": "满足必选标签「side」：取最便宜的 薯条（中）（¥8.00）",
+            "at": "2026-10-14T12:33:46.266Z"
+          },
+          {
+            "id": "alpha-4",
+            "kind": "selection",
+            "message": "满足必选标签「drink」：取最便宜的 可乐（中）（¥7.00）",
+            "at": "2026-10-14T12:33:46.266Z"
+          },
+          {
+            "id": "alpha-5",
+            "kind": "selection",
+            "message": "人数覆盖完成：3 件覆盖 2 人",
+            "at": "2026-10-14T12:33:46.266Z"
+          },
+          {
+            "id": "alpha-6",
+            "kind": "price",
+            "message": "优惠券评估：命中 coupon-threshold-30-5、coupon-side-3，优惠 ¥8.00（数据集内 2 张）",
+            "at": "2026-10-14T12:33:46.273Z"
+          },
+          {
+            "id": "alpha-7",
+            "kind": "price",
+            "message": "未命中官方 calculate-price 记录，按官方餐品单价与官方券规则折算：应付 ¥22.00",
+            "at": "2026-10-14T12:33:46.274Z"
+          },
+          {
+            "id": "alpha-8",
+            "kind": "constraint-check",
+            "message": "餐品数量覆盖人数：满足（共 3 件 / 需求 2 人）",
+            "at": "2026-10-14T12:33:46.274Z"
+          },
+          {
+            "id": "alpha-9",
+            "kind": "constraint-check",
+            "message": "预算约束：满足（应付 ¥22.00 / 预算 ¥60.00）",
+            "at": "2026-10-14T12:33:46.274Z"
+          },
+          {
+            "id": "alpha-10",
+            "kind": "constraint-check",
+            "message": "种类上限：满足（未设置上限）",
+            "at": "2026-10-14T12:33:46.274Z"
+          },
+          {
+            "id": "alpha-11",
+            "kind": "constraint-check",
+            "message": "必选标签：burger：满足（burger）",
+            "at": "2026-10-14T12:33:46.274Z"
+          },
+          {
+            "id": "alpha-12",
+            "kind": "constraint-check",
+            "message": "必选标签：side：满足（side）",
+            "at": "2026-10-14T12:33:46.274Z"
+          },
+          {
+            "id": "alpha-13",
+            "kind": "constraint-check",
+            "message": "必选标签：drink：满足（drink）",
+            "at": "2026-10-14T12:33:46.274Z"
+          },
+          {
+            "id": "alpha-14",
+            "kind": "system",
+            "message": "极速策略完成：候选 1 个、工具调用 1 次（精确耗时见 AgentExecution.durationMs）",
+            "at": "2026-10-14T12:33:46.274Z"
+          }
+        ],
+        "startedAt": "2026-10-14T12:33:46.266Z",
+        "finishedAt": "2026-10-14T12:33:46.274Z",
+        "durationMs": 8,
+        "candidateCount": 1,
+        "toolCallCount": 1,
+        "toolCalls": [
+          {
+            "tool": "calculate-price",
+            "args": {
+              "items": [
+                {
+                  "code": "burger-classic",
+                  "qty": 1
+                },
+                {
+                  "code": "cola-medium",
+                  "qty": 1
+                },
+                {
+                  "code": "fries-medium",
+                  "qty": 1
+                }
+              ],
+              "couponCodes": [
+                "coupon-threshold-30-5",
+                "coupon-side-3"
+              ],
+              "scene": "dine-in"
+            },
+            "resultSummary": "回放数据集中无该购物车的官方计价记录",
+            "hit": false,
+            "at": "2026-10-14T12:33:46.274Z"
+          }
+        ],
+        "phases": [
+          {
+            "name": "init",
+            "message": "极速猎手启动：单遍贪心策略（算法型 Agent，未调用大模型）",
+            "at": "2026-10-14T12:33:46.266Z"
+          },
+          {
+            "name": "load-data",
+            "message": "候选池就绪：10 项在售餐品（已排除 0 项）",
+            "at": "2026-10-14T12:33:46.266Z"
+          },
+          {
+            "name": "plan",
+            "message": "策略：硬约束满足 + 应付总价最小化的单遍贪心构造",
+            "at": "2026-10-14T12:33:46.266Z"
+          },
+          {
+            "name": "search",
+            "message": "单遍贪心完成：评估 1 个候选购物车（3 种 / 3 件）",
+            "at": "2026-10-14T12:33:46.266Z"
+          },
+          {
+            "name": "evaluate",
+            "message": "进入统一收尾：优惠券评估 + 官方计价查询",
+            "at": "2026-10-14T12:33:46.266Z"
+          },
+          {
+            "name": "finalize",
+            "message": "提案就绪：应付 ¥22.00｜工具调用 1 次",
+            "at": "2026-10-14T12:33:46.274Z"
+          },
+          {
+            "name": "done",
+            "message": "执行完成",
+            "at": "2026-10-14T12:33:46.274Z"
+          }
+        ],
+        "recovery": {
+          "used": false,
+          "reason": ""
+        }
+      },
+      {
+        "agentId": "beta",
+        "name": "深度优化师",
+        "role": "优化策略：束搜索多候选 + 组合比较，追求约束满足与营养均衡",
+        "engine": "optimizer-search",
+        "engineVersion": "1.0.0",
+        "status": "completed",
+        "dataOrigin": "mock",
+        "proposal": {
+          "items": [
+            {
+              "code": "burger-classic",
+              "name": "经典牛肉堡",
+              "qty": 1,
+              "unitPriceCents": 1500,
+              "lineTotalCents": 1500,
+              "nutrition": {
+                "kcal": 520,
+                "proteinG": 26,
+                "fatG": 22,
+                "carbG": 45,
+                "sodiumMg": 820
+              }
+            },
+            {
+              "code": "coffee-latte",
+              "name": "拿铁咖啡",
+              "qty": 1,
+              "unitPriceCents": 1000,
+              "lineTotalCents": 1000,
+              "nutrition": {
+                "kcal": 150,
+                "proteinG": 8,
+                "fatG": 6,
+                "carbG": 18,
+                "sodiumMg": 75
+              }
+            },
+            {
+              "code": "fries-medium",
+              "name": "薯条（中）",
+              "qty": 1,
+              "unitPriceCents": 800,
+              "lineTotalCents": 800,
+              "nutrition": {
+                "kcal": 320,
+                "proteinG": 4,
+                "fatG": 15,
+                "carbG": 41,
+                "sodiumMg": 260
+              }
+            }
+          ],
+          "subtotalCents": 3300,
+          "deliveryFeeCents": 0,
+          "discountCents": 800,
+          "totalCents": 2500,
+          "couponCodes": [
+            "coupon-threshold-30-5",
+            "coupon-side-3"
+          ],
+          "constraintChecks": [
+            {
+              "name": "餐品数量覆盖人数",
+              "satisfied": true,
+              "detail": "共 3 件 / 需求 2 人"
+            },
+            {
+              "name": "预算约束",
+              "satisfied": true,
+              "detail": "应付 ¥25.00 / 预算 ¥60.00"
+            },
+            {
+              "name": "种类上限",
+              "satisfied": true,
+              "detail": "未设置上限"
+            },
+            {
+              "name": "必选标签：burger",
+              "satisfied": true,
+              "detail": "burger"
+            },
+            {
+              "name": "必选标签：side",
+              "satisfied": true,
+              "detail": "side"
+            },
+            {
+              "name": "必选标签：drink",
+              "satisfied": true,
+              "detail": "drink"
+            }
+          ],
+          "priceOrigin": "mock"
+        },
+        "evidence": [
+          {
+            "id": "beta-1",
+            "kind": "data-source",
+            "message": "使用数据集 scenario://stage03-fixtures（模拟数据，共 10 项餐品）",
+            "resultSummary": "阶段03 场景测试数据集（模拟数据，非麦当劳官方数据）",
+            "at": "2026-10-14T12:33:46.275Z"
+          },
+          {
+            "id": "beta-2",
+            "kind": "selection",
+            "message": "策略：束搜索枚举候选购物车 → 修复硬约束 → 逐个券评估与官方计价 → 按约束满足率/营养偏差/价格择优",
+            "at": "2026-10-14T12:33:46.275Z"
+          },
+          {
+            "id": "beta-3",
+            "kind": "search",
+            "message": "束搜索（宽度 8，轮数上限 4）：实际 4 轮，累计评估候选 248 个，候选池 20 个（每轮幸存者均保留，浅层与深层方案都可进入对比）",
+            "at": "2026-10-14T12:33:46.276Z"
+          },
+          {
+            "id": "beta-4",
+            "kind": "evaluate",
+            "message": "预筛排序依据：约束满足率 → 营养偏差 → 算术总价（不调用工具），前 6 名进入计价",
+            "at": "2026-10-14T12:33:46.277Z"
+          },
+          {
+            "id": "beta-5",
+            "kind": "evaluate",
+            "message": "组合比较：6 个候选逐一计价后，最优者约束满足率 100%、营养偏差 0.060、应付 ¥25.00（3 种 / 3 件）",
+            "at": "2026-10-14T12:33:46.277Z"
+          },
+          {
+            "id": "beta-6",
+            "kind": "evaluate",
+            "message": "落选候选：burger-classicx1,cola-mediumx1,nuggets-5x1｜满足率 100%｜偏差 0.095｜应付 ¥23.00",
+            "at": "2026-10-14T12:33:46.278Z"
+          },
+          {
+            "id": "beta-7",
+            "kind": "evaluate",
+            "message": "落选候选：burger-chickenx1,cola-mediumx1,nuggets-5x1｜满足率 100%｜偏差 0.105｜应付 ¥25.00",
+            "at": "2026-10-14T12:33:46.278Z"
+          },
+          {
+            "id": "beta-8",
+            "kind": "evaluate",
+            "message": "落选候选：burger-chickenx1,cola-mediumx1,nuggets-5x1,soup-cornx1｜满足率 100%｜偏差 0.110｜应付 ¥31.00",
+            "at": "2026-10-14T12:33:46.278Z"
+          },
+          {
+            "id": "beta-9",
+            "kind": "evaluate",
+            "message": "落选候选：burger-classicx1,cola-mediumx1,nuggets-5x1,soup-cornx1｜满足率 100%｜偏差 0.120｜应付 ¥29.00",
+            "at": "2026-10-14T12:33:46.278Z"
+          },
+          {
+            "id": "beta-10",
+            "kind": "evaluate",
+            "message": "落选候选：burger-classicx1,cola-mediumx2,nuggets-5x1｜满足率 100%｜偏差 0.135｜应付 ¥30.00",
+            "at": "2026-10-14T12:33:46.278Z"
+          },
+          {
+            "id": "beta-11",
+            "kind": "price",
+            "message": "优惠券评估（多候选对比阶段已完成）：命中 coupon-threshold-30-5、coupon-side-3，优惠 ¥8.00",
+            "at": "2026-10-14T12:33:46.278Z"
+          },
+          {
+            "id": "beta-12",
+            "kind": "price",
+            "message": "采用多候选对比阶段的官方计价结果：应付 ¥25.00（未重复发起计价调用）",
+            "at": "2026-10-14T12:33:46.278Z"
+          },
+          {
+            "id": "beta-13",
+            "kind": "constraint-check",
+            "message": "餐品数量覆盖人数：满足（共 3 件 / 需求 2 人）",
+            "at": "2026-10-14T12:33:46.278Z"
+          },
+          {
+            "id": "beta-14",
+            "kind": "constraint-check",
+            "message": "预算约束：满足（应付 ¥25.00 / 预算 ¥60.00）",
+            "at": "2026-10-14T12:33:46.278Z"
+          },
+          {
+            "id": "beta-15",
+            "kind": "constraint-check",
+            "message": "种类上限：满足（未设置上限）",
+            "at": "2026-10-14T12:33:46.278Z"
+          },
+          {
+            "id": "beta-16",
+            "kind": "constraint-check",
+            "message": "必选标签：burger：满足（burger）",
+            "at": "2026-10-14T12:33:46.278Z"
+          },
+          {
+            "id": "beta-17",
+            "kind": "constraint-check",
+            "message": "必选标签：side：满足（side）",
+            "at": "2026-10-14T12:33:46.278Z"
+          },
+          {
+            "id": "beta-18",
+            "kind": "constraint-check",
+            "message": "必选标签：drink：满足（drink）",
+            "at": "2026-10-14T12:33:46.278Z"
+          },
+          {
+            "id": "beta-19",
+            "kind": "system",
+            "message": "优化策略完成：候选 248 个、工具调用 6 次（精确耗时见 AgentExecution.durationMs）",
+            "at": "2026-10-14T12:33:46.278Z"
+          }
+        ],
+        "startedAt": "2026-10-14T12:33:46.275Z",
+        "finishedAt": "2026-10-14T12:33:46.278Z",
+        "durationMs": 3,
+        "candidateCount": 248,
+        "toolCallCount": 6,
+        "toolCalls": [
+          {
+            "tool": "calculate-price",
+            "args": {
+              "items": [
+                {
+                  "code": "burger-classic",
+                  "qty": 1
+                },
+                {
+                  "code": "coffee-latte",
+                  "qty": 1
+                },
+                {
+                  "code": "fries-medium",
+                  "qty": 1
+                }
+              ],
+              "couponCodes": [
+                "coupon-threshold-30-5",
+                "coupon-side-3"
+              ],
+              "scene": "dine-in"
+            },
+            "resultSummary": "无该购物车的官方计价记录",
+            "hit": false,
+            "at": "2026-10-14T12:33:46.277Z"
+          },
+          {
+            "tool": "calculate-price",
+            "args": {
+              "items": [
+                {
+                  "code": "burger-classic",
+                  "qty": 1
+                },
+                {
+                  "code": "cola-medium",
+                  "qty": 1
+                },
+                {
+                  "code": "nuggets-5",
+                  "qty": 1
+                }
+              ],
+              "couponCodes": [
+                "coupon-threshold-30-5",
+                "coupon-side-3"
+              ],
+              "scene": "dine-in"
+            },
+            "resultSummary": "无该购物车的官方计价记录",
+            "hit": false,
+            "at": "2026-10-14T12:33:46.277Z"
+          },
+          {
+            "tool": "calculate-price",
+            "args": {
+              "items": [
+                {
+                  "code": "burger-chicken",
+                  "qty": 1
+                },
+                {
+                  "code": "cola-medium",
+                  "qty": 1
+                },
+                {
+                  "code": "nuggets-5",
+                  "qty": 1
+                }
+              ],
+              "couponCodes": [
+                "coupon-threshold-30-5",
+                "coupon-side-3"
+              ],
+              "scene": "dine-in"
+            },
+            "resultSummary": "无该购物车的官方计价记录",
+            "hit": false,
+            "at": "2026-10-14T12:33:46.277Z"
+          },
+          {
+            "tool": "calculate-price",
+            "args": {
+              "items": [
+                {
+                  "code": "burger-chicken",
+                  "qty": 1
+                },
+                {
+                  "code": "cola-medium",
+                  "qty": 1
+                },
+                {
+                  "code": "nuggets-5",
+                  "qty": 1
+                },
+                {
+                  "code": "soup-corn",
+                  "qty": 1
+                }
+              ],
+              "couponCodes": [
+                "coupon-threshold-30-5",
+                "coupon-side-3"
+              ],
+              "scene": "dine-in"
+            },
+            "resultSummary": "无该购物车的官方计价记录",
+            "hit": false,
+            "at": "2026-10-14T12:33:46.277Z"
+          },
+          {
+            "tool": "calculate-price",
+            "args": {
+              "items": [
+                {
+                  "code": "burger-classic",
+                  "qty": 1
+                },
+                {
+                  "code": "cola-medium",
+                  "qty": 1
+                },
+                {
+                  "code": "nuggets-5",
+                  "qty": 1
+                },
+                {
+                  "code": "soup-corn",
+                  "qty": 1
+                }
+              ],
+              "couponCodes": [
+                "coupon-threshold-30-5",
+                "coupon-side-3"
+              ],
+              "scene": "dine-in"
+            },
+            "resultSummary": "无该购物车的官方计价记录",
+            "hit": false,
+            "at": "2026-10-14T12:33:46.277Z"
+          },
+          {
+            "tool": "calculate-price",
+            "args": {
+              "items": [
+                {
+                  "code": "burger-classic",
+                  "qty": 1
+                },
+                {
+                  "code": "cola-medium",
+                  "qty": 2
+                },
+                {
+                  "code": "nuggets-5",
+                  "qty": 1
+                }
+              ],
+              "couponCodes": [
+                "coupon-threshold-30-5",
+                "coupon-side-3"
+              ],
+              "scene": "dine-in"
+            },
+            "resultSummary": "无该购物车的官方计价记录",
+            "hit": false,
+            "at": "2026-10-14T12:33:46.277Z"
+          }
+        ],
+        "phases": [
+          {
+            "name": "init",
+            "message": "深度优化师启动：束搜索 + 多候选组合比较（算法型 Agent，未调用大模型）",
+            "at": "2026-10-14T12:33:46.275Z"
+          },
+          {
+            "name": "load-data",
+            "message": "候选池就绪：10 项在售餐品（已排除 0 项）",
+            "at": "2026-10-14T12:33:46.275Z"
+          },
+          {
+            "name": "plan",
+            "message": "初始化：渐进式剪枝 + 束宽 8 + 计价对比名额 6",
+            "at": "2026-10-14T12:33:46.275Z"
+          },
+          {
+            "name": "search",
+            "message": "束搜索完成：4 轮，累计评估 248 个候选，候选池 20 个",
+            "at": "2026-10-14T12:33:46.276Z"
+          },
+          {
+            "name": "evaluate",
+            "message": "预筛：15 个修复后候选中取前 6 个进入真实计价对比",
+            "at": "2026-10-14T12:33:46.277Z"
+          },
+          {
+            "name": "finalize",
+            "message": "统一收尾：券结果复用 + 提案组装 + 结构化校验（不重复发起工具调用）",
+            "at": "2026-10-14T12:33:46.278Z"
+          },
+          {
+            "name": "done",
+            "message": "执行完成",
+            "at": "2026-10-14T12:33:46.278Z"
+          }
+        ],
+        "recovery": {
+          "used": false,
+          "reason": ""
+        }
+      }
+    ],
+    "judge": {
+      "dimensions": [
+        {
+          "key": "requirement-fit",
+          "label": "需求满足度",
+          "score": 25.71428571428571,
+          "max": 30,
+          "weight": 0.3,
+          "formula": "裁判校验通过 12/14 × 30",
+          "evidence": [
+            {
+              "id": "judge-1",
+              "kind": "judge",
+              "message": "极速猎手 25.7 分：裁判校验通过 12/14 × 30",
+              "resultSummary": "极速猎手：独立校验 12/14 项通过（未通过：官方核价、营养目标达成）",
+              "at": "2026-10-14T12:33:46.281Z"
+            },
+            {
+              "id": "judge-2",
+              "kind": "judge",
+              "message": "深度优化师 25.7 分：裁判校验通过 12/14 × 30",
+              "resultSummary": "深度优化师：独立校验 12/14 项通过（未通过：官方核价、营养目标达成）",
+              "at": "2026-10-14T12:33:46.281Z"
+            }
+          ]
+        },
+        {
+          "key": "budget-control",
+          "label": "预算控制",
+          "score": 21.333333333333332,
+          "max": 25,
+          "weight": 0.25,
+          "formula": "裁决成本 ¥22.00 ≤ 预算 ¥60.00，剩余比例 63.3% → 15 + 10×0.633",
+          "evidence": [
+            {
+              "id": "judge-3",
+              "kind": "judge",
+              "message": "极速猎手 21.3 分：裁决成本 ¥22.00 ≤ 预算 ¥60.00，剩余比例 63.3% → 15 + 10×0.633",
+              "resultSummary": "极速猎手：裁决成本 ¥22.00 ≤ 预算 ¥60.00，剩余比例 63.3% → 15 + 10×0.633",
+              "at": "2026-10-14T12:33:46.281Z"
+            },
+            {
+              "id": "judge-4",
+              "kind": "judge",
+              "message": "深度优化师 20.8 分：裁决成本 ¥25.00 ≤ 预算 ¥60.00，剩余比例 58.3% → 15 + 10×0.583",
+              "resultSummary": "深度优化师：裁决成本 ¥25.00 ≤ 预算 ¥60.00，剩余比例 58.3% → 15 + 10×0.583",
+              "at": "2026-10-14T12:33:46.281Z"
+            }
+          ]
+        },
+        {
+          "key": "nutrition-balance",
+          "label": "营养均衡",
+          "score": 19.4,
+          "max": 20,
+          "weight": 0.2,
+          "formula": "加权达成率 87.5% × 20（权重 热量0.4/蛋白质0.4/钠0.2，裁判按数据集营养数据重算）",
+          "evidence": [
+            {
+              "id": "judge-5",
+              "kind": "judge",
+              "message": "极速猎手 17.5 分：加权达成率 87.5% × 20（权重 热量0.4/蛋白质0.4/钠0.2，裁判按数据集营养数据重算）",
+              "resultSummary": "极速猎手：加权达成率 87.5% × 20（权重 热量0.4/蛋白质0.4/钠0.2，裁判按数据集营养数据重算）",
+              "at": "2026-10-14T12:33:46.281Z"
+            },
+            {
+              "id": "judge-6",
+              "kind": "judge",
+              "message": "深度优化师 19.4 分：加权达成率 97.0% × 20（权重 热量0.4/蛋白质0.4/钠0.2，裁判按数据集营养数据重算）",
+              "resultSummary": "深度优化师：加权达成率 97.0% × 20（权重 热量0.4/蛋白质0.4/钠0.2，裁判按数据集营养数据重算）",
+              "at": "2026-10-14T12:33:46.281Z"
+            }
+          ]
+        },
+        {
+          "key": "coupon-usage",
+          "label": "优惠利用",
+          "score": 4,
+          "max": 15,
+          "weight": 0.15,
+          "formula": "裁判重算优惠 / 券前应付 × 15（封顶）",
+          "evidence": [
+            {
+              "id": "judge-7",
+              "kind": "judge",
+              "message": "极速猎手 4.0 分：裁判重算优惠 / 券前应付 × 15（封顶）",
+              "resultSummary": "极速猎手：计入优惠 ¥8.00，券前应付 ¥30.00（有效券：coupon-threshold-30-5、coupon-side-3）",
+              "at": "2026-10-14T12:33:46.281Z"
+            },
+            {
+              "id": "judge-8",
+              "kind": "judge",
+              "message": "深度优化师 3.6 分：裁判重算优惠 / 券前应付 × 15（封顶）",
+              "resultSummary": "深度优化师：计入优惠 ¥8.00，券前应付 ¥33.00（有效券：coupon-threshold-30-5、coupon-side-3）",
+              "at": "2026-10-14T12:33:46.281Z"
+            }
+          ]
+        },
+        {
+          "key": "explainability",
+          "label": "可解释性",
+          "score": 10,
+          "max": 10,
+          "weight": 0.1,
+          "formula": "证据完整度 40% + 独立校验说明覆盖率 60%",
+          "evidence": [
+            {
+              "id": "judge-9",
+              "kind": "judge",
+              "message": "极速猎手 10.0 分：证据完整度 40% + 独立校验说明覆盖率 60%",
+              "resultSummary": "极速猎手：证据 14 条（完整度 100%），校验说明覆盖 100%",
+              "at": "2026-10-14T12:33:46.281Z"
+            },
+            {
+              "id": "judge-10",
+              "kind": "judge",
+              "message": "深度优化师 10.0 分：证据完整度 40% + 独立校验说明覆盖率 60%",
+              "resultSummary": "深度优化师：证据 19 条（完整度 100%），校验说明覆盖 100%",
+              "at": "2026-10-14T12:33:46.281Z"
+            }
+          ]
+        }
+      ],
+      "totalScore": 79.58398268398268,
+      "totalMax": 100,
+      "winner": "alpha",
+      "headline": "极速猎手胜出（五维总分 78.5 : 79.6 / 100）——双方均无官方核价记录（NOT_VERIFIED），按裁判重算成本比较，α更低（¥22.00 : ¥25.00）",
+      "notes": [
+        "评分规则版本 judge-rules/1.1.0；五维得分全部来自裁判独立重算（不采信 Agent 自述成绩）。",
+        "本局运行于模拟数据集（非麦当劳官方数据），裁判算法为真实规则实现。",
+        "成本比较依据：未能对双方完成官方核价，成本以裁判按数据集单价与券规则重算值为准（claimed-unverified，已在验证报告中标注 NOT_VERIFIED）。",
+        "α（speed-greedy@1.0.0）价格核验状态：NOT_VERIFIED（无官方 calculate-price 记录，已明确标注，不视为通过）。",
+        "β（optimizer-search@1.0.0）价格核验状态：NOT_VERIFIED（无官方 calculate-price 记录，已明确标注，不视为通过）。",
+        "判定顺序：资格 → 已验证成本 → 营养/目标达成率 → 响应速度。本局依据：双方均无官方核价记录（NOT_VERIFIED），按裁判重算成本比较，α更低（¥22.00 : ¥25.00）",
+        "算法表现：极速猎手 候选 1 个 / 工具调用 1 次；深度优化师 候选 248 个 / 工具调用 6 次（实测响应时间为真实测量值，见各 AgentExecution.durationMs，不参与复现指纹；仅作次级评价维度）。",
+        "可复现实验：相同 (规则版本, 种子, 数据集指纹, 引擎版本, 验证结果) 将得到完全相同的 experimentId 与全部确定性判定（实测耗时除外）。"
+      ],
+      "rulesVersion": "judge-rules/1.1.0",
+      "experimentId": "exp_bcc724febf31e0b8",
+      "costBasis": "claimed-unverified",
+      "verification": [
+        {
+          "agentId": "alpha",
+          "engine": "speed-greedy@1.0.0",
+          "eligible": true,
+          "priceStatus": "not-verified",
+          "officialCostCents": null,
+          "claimedCostCents": 2200,
+          "recomputedCostCents": 2200,
+          "effectiveCostCents": 2200,
+          "targetAchievement": 0.875,
+          "verifiedSubtotalCents": 3000,
+          "verifiedDeliveryCents": 0,
+          "verifiedDiscountCents": 800,
+          "validCouponCodes": [
+            "coupon-threshold-30-5",
+            "coupon-side-3"
+          ],
+          "responseMs": 8,
+          "checks": [
+            {
+              "name": "提案存在性",
+              "passed": true,
+              "detail": "3 项餐品",
+              "evidenceRef": "scenario://stage03-fixtures"
+            },
+            {
+              "name": "餐品存在且在售",
+              "passed": true,
+              "detail": "全部餐品均存在且在售",
+              "evidenceRef": ""
+            },
+            {
+              "name": "数量合法",
+              "passed": true,
+              "detail": "数量均为正整数",
+              "evidenceRef": ""
+            },
+            {
+              "name": "无重复餐品",
+              "passed": true,
+              "detail": "3 行 / 3 种",
+              "evidenceRef": ""
+            },
+            {
+              "name": "数据集单价健康",
+              "passed": true,
+              "detail": "单价均为非负整数",
+              "evidenceRef": ""
+            },
+            {
+              "name": "优惠券条件",
+              "passed": true,
+              "detail": "全部 2 张券均满足使用条件",
+              "evidenceRef": ""
+            },
+            {
+              "name": "官方核价",
+              "passed": false,
+              "detail": "数据集中无该购物车的官方 calculate-price 记录 → NOT_VERIFIED",
+              "evidenceRef": "scenario://stage03-fixtures#priceQuotes"
+            },
+            {
+              "name": "人数覆盖",
+              "passed": true,
+              "detail": "共 3 件 / 需求 2 人",
+              "evidenceRef": ""
+            },
+            {
+              "name": "预算限制",
+              "passed": true,
+              "detail": "裁决成本 ¥22.00 / 预算 ¥60.00",
+              "evidenceRef": ""
+            },
+            {
+              "name": "种类上限",
+              "passed": true,
+              "detail": "未设置上限",
+              "evidenceRef": ""
+            },
+            {
+              "name": "必选标签：burger",
+              "passed": true,
+              "detail": "已覆盖",
+              "evidenceRef": ""
+            },
+            {
+              "name": "必选标签：side",
+              "passed": true,
+              "detail": "已覆盖",
+              "evidenceRef": ""
+            },
+            {
+              "name": "必选标签：drink",
+              "passed": true,
+              "detail": "已覆盖",
+              "evidenceRef": ""
+            },
+            {
+              "name": "营养目标达成",
+              "passed": false,
+              "detail": "加权达成率 87.5%",
+              "evidenceRef": ""
+            }
+          ],
+          "violations": [
+            {
+              "code": "price-not-verifiable",
+              "severity": "warning",
+              "message": "无法通过官方 calculate-price 核对应付价格，本方案成本标记为 NOT_VERIFIED",
+              "evidenceRef": "scenario://stage03-fixtures#priceQuotes"
+            }
+          ]
+        },
+        {
+          "agentId": "beta",
+          "engine": "optimizer-search@1.0.0",
+          "eligible": true,
+          "priceStatus": "not-verified",
+          "officialCostCents": null,
+          "claimedCostCents": 2500,
+          "recomputedCostCents": 2500,
+          "effectiveCostCents": 2500,
+          "targetAchievement": 0.97,
+          "verifiedSubtotalCents": 3300,
+          "verifiedDeliveryCents": 0,
+          "verifiedDiscountCents": 800,
+          "validCouponCodes": [
+            "coupon-threshold-30-5",
+            "coupon-side-3"
+          ],
+          "responseMs": 3,
+          "checks": [
+            {
+              "name": "提案存在性",
+              "passed": true,
+              "detail": "3 项餐品",
+              "evidenceRef": "scenario://stage03-fixtures"
+            },
+            {
+              "name": "餐品存在且在售",
+              "passed": true,
+              "detail": "全部餐品均存在且在售",
+              "evidenceRef": ""
+            },
+            {
+              "name": "数量合法",
+              "passed": true,
+              "detail": "数量均为正整数",
+              "evidenceRef": ""
+            },
+            {
+              "name": "无重复餐品",
+              "passed": true,
+              "detail": "3 行 / 3 种",
+              "evidenceRef": ""
+            },
+            {
+              "name": "数据集单价健康",
+              "passed": true,
+              "detail": "单价均为非负整数",
+              "evidenceRef": ""
+            },
+            {
+              "name": "优惠券条件",
+              "passed": true,
+              "detail": "全部 2 张券均满足使用条件",
+              "evidenceRef": ""
+            },
+            {
+              "name": "官方核价",
+              "passed": false,
+              "detail": "数据集中无该购物车的官方 calculate-price 记录 → NOT_VERIFIED",
+              "evidenceRef": "scenario://stage03-fixtures#priceQuotes"
+            },
+            {
+              "name": "人数覆盖",
+              "passed": true,
+              "detail": "共 3 件 / 需求 2 人",
+              "evidenceRef": ""
+            },
+            {
+              "name": "预算限制",
+              "passed": true,
+              "detail": "裁决成本 ¥25.00 / 预算 ¥60.00",
+              "evidenceRef": ""
+            },
+            {
+              "name": "种类上限",
+              "passed": true,
+              "detail": "未设置上限",
+              "evidenceRef": ""
+            },
+            {
+              "name": "必选标签：burger",
+              "passed": true,
+              "detail": "已覆盖",
+              "evidenceRef": ""
+            },
+            {
+              "name": "必选标签：side",
+              "passed": true,
+              "detail": "已覆盖",
+              "evidenceRef": ""
+            },
+            {
+              "name": "必选标签：drink",
+              "passed": true,
+              "detail": "已覆盖",
+              "evidenceRef": ""
+            },
+            {
+              "name": "营养目标达成",
+              "passed": false,
+              "detail": "加权达成率 97.0%",
+              "evidenceRef": ""
+            }
+          ],
+          "violations": [
+            {
+              "code": "price-not-verifiable",
+              "severity": "warning",
+              "message": "无法通过官方 calculate-price 核对应付价格，本方案成本标记为 NOT_VERIFIED",
+              "evidenceRef": "scenario://stage03-fixtures#priceQuotes"
+            }
+          ]
+        }
+      ],
+      "agentScores": [
+        {
+          "agentId": "alpha",
+          "total": 78.54761904761904,
+          "dimensions": {
+            "requirement-fit": 25.71428571428571,
+            "budget-control": 21.333333333333332,
+            "nutrition-balance": 17.5,
+            "coupon-usage": 4,
+            "explainability": 10
+          }
+        },
+        {
+          "agentId": "beta",
+          "total": 79.58398268398268,
+          "dimensions": {
+            "requirement-fit": 25.71428571428571,
+            "budget-control": 20.833333333333332,
+            "nutrition-balance": 19.4,
+            "coupon-usage": 3.6363636363636367,
+            "explainability": 10
+          }
+        }
+      ],
+      "allViolations": [
+        {
+          "code": "price-not-verifiable",
+          "severity": "warning",
+          "message": "无法通过官方 calculate-price 核对应付价格，本方案成本标记为 NOT_VERIFIED",
+          "evidenceRef": "scenario://stage03-fixtures#priceQuotes",
+          "agentId": "alpha"
+        },
+        {
+          "code": "price-not-verifiable",
+          "severity": "warning",
+          "message": "无法通过官方 calculate-price 核对应付价格，本方案成本标记为 NOT_VERIFIED",
+          "evidenceRef": "scenario://stage03-fixtures#priceQuotes",
+          "agentId": "beta"
+        }
+      ]
+    },
+    "engineVersions": {
+      "orchestrator": "0.1.0",
+      "agentAlpha": "speed-greedy@1.0.0",
+      "agentBeta": "optimizer-search@1.0.0",
+      "judge": "rule-based@1.0.0"
+    },
+    "createdAt": "2026-10-14T12:33:46.281Z",
+    "warnings": [
+      "阶段03 场景测试数据集（模拟数据，非麦当劳官方数据）"
+    ]
+  },
+  "reproducibleConfig": {
+    "seed": 42,
+    "mode": "mock",
+    "constraints": {
+      "people": 2,
+      "budgetCents": 6000,
+      "scene": "dine-in",
+      "mustIncludeCodes": [],
+      "excludedCodes": [],
+      "requiredTags": [
+        "burger",
+        "side",
+        "drink"
+      ],
+      "requiredCategories": [],
+      "nutritionTarget": {
+        "kcal": 500,
+        "proteinG": 20
+      },
+      "preferCoupons": true
+    },
+    "dataset": {
+      "sourceRef": "scenario://stage03-fixtures",
+      "dataOrigin": "mock",
+      "sha256": null
+    },
+    "experimentId": "exp_bcc724febf31e0b8"
+  }
+}

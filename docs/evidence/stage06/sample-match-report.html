@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>麦门 AI 竞技场 · 种子 42</title>
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 24px; font-family: -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
+    background: #f6f6f4; color: #1c1c1c; line-height: 1.6; }
+  .wrap { max-width: 1040px; margin: 0 auto; }
+  h1 { font-size: 22px; margin: 0 0 4px; }
+  h2 { font-size: 16px; margin: 28px 0 10px; padding-left: 10px; border-left: 4px solid #da291c; }
+  h3 { font-size: 16px; margin: 0; }
+  .sub { color: #666; font-size: 13px; margin: 0 0 18px; }
+  .card { background: #fff; border: 1px solid #e6e4e0; border-radius: 12px; padding: 16px 18px; }
+  .banner { background: #fff3cd; border: 1px solid #f0d98a; color: #6b4c00; border-radius: 10px;
+    padding: 10px 14px; font-size: 13px; margin: 14px 0; }
+  .winner { font-size: 18px; font-weight: 700; color: #a3120b; }
+  .headline { margin: 6px 0 0; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .agent header { border-bottom: 1px dashed #e6e4e0; padding-bottom: 8px; margin-bottom: 10px; }
+  .agent-alpha header { border-top: 3px solid #da291c; }
+  .agent-beta header { border-top: 3px solid #ffc72c; }
+  .engine, .total { margin: 2px 0 0; font-size: 12px; color: #666; }
+  ul.meta { list-style: none; padding: 0; margin: 0 0 10px; font-size: 12px; color: #444;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 2px 12px; }
+  table.cart { width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 10px; }
+  table.cart th, table.cart td { text-align: left; padding: 4px 6px; border-bottom: 1px solid #f0efec; }
+  table.cart td.num, table.cart th:nth-child(2), table.cart th:nth-child(3) { text-align: right; }
+  .dim { display: grid; grid-template-columns: 78px 1fr 76px; align-items: center; gap: 8px; font-size: 12px; margin: 4px 0; }
+  .bar { background: #f0efec; border-radius: 6px; height: 8px; overflow: hidden; }
+  .bar i { display: block; height: 100%; background: linear-gradient(90deg,#da291c,#ffc72c); }
+  .dim-score { text-align: right; color: #555; font-variant-numeric: tabular-nums; }
+  ul.violations { margin: 8px 0 0; padding-left: 18px; font-size: 12px; }
+  ul.violations li.fatal { color: #a3120b; }
+  ul.violations li.warn { color: #8a6d00; }
+  table.cmp { width: 100%; border-collapse: collapse; font-size: 13px; }
+  table.cmp th, table.cmp td { padding: 7px 10px; border-bottom: 1px solid #f0efec; text-align: left; }
+  table.cmp th { background: #faf9f7; }
+  pre.config { background: #1c1c1c; color: #e8e8e8; padding: 12px 14px; border-radius: 10px;
+    font-size: 12px; overflow-x: auto; }
+  ol.notes { font-size: 13px; padding-left: 20px; }
+  .empty { color: #999; text-align: center; }
+  footer { margin-top: 26px; font-size: 12px; color: #888; border-top: 1px solid #e6e4e0; padding-top: 10px; }
+  @media (max-width: 760px) { .grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>麦门 AI 竞技场 · 比赛结果</h1>
+  <p class="sub">比赛 ID match_mv83crh5_42｜种子 42｜规则 judge-rules/1.1.0｜实验 exp_bcc724febf31e0b8</p>
+
+  <div class="card">
+    <h2>任务卡</h2>
+    <p><strong>自定义挑战 · 2 人堂食｜预算 ¥60、人均 500 kcal、人均蛋白 20g、必含标签 burger/side/drink</strong></p>
+    <p class="sub">玩家自定义约束：2 人、堂食、预算 ¥60、必含标签 burger、side、drink、有营养目标、优先使用优惠券</p>
+    <p class="sub">数据来源 mock｜scenario://stage03-fixtures｜成本依据 claimed-unverified</p>
+    <div class="banner">⚠ 数据提示：<ul style="margin:6px 0 0;padding-left:18px"><li>阶段03 场景测试数据集（模拟数据，非麦当劳官方数据）</li></ul></div>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <h2>裁判结论</h2>
+    <p class="winner">α 极速猎手 获胜</p>
+    <p class="headline">极速猎手胜出（五维总分 78.5 : 79.6 / 100）——双方均无官方核价记录（NOT_VERIFIED），按裁判重算成本比较，α更低（¥22.00 : ¥25.00）</p>
+  </div>
+
+  <h2>双方对决</h2>
+  <div class="grid"><section class="agent agent-alpha">
+        <header>
+          <h3>α 极速猎手</h3>
+          <p class="engine">speed-greedy@1.0.0 · 极速策略：单遍贪心构造，最低计算成本，追求即时可用解</p>
+          <p class="total">总分 <strong>78.5</strong> / 100</p>
+        </header>
+        <ul class="meta">
+          <li>状态：完成</li>
+          <li>自述应付：¥22.00</li>
+          <li>裁决成本：¥22.00</li>
+          <li>价格核验：not-verified</li>
+          <li>资格：通过</li>
+          <li>实测耗时：8 ms</li>
+          <li>候选数：1</li>
+          <li>工具调用：1</li>
+        </ul>
+        <table class="cart"><thead><tr><th>餐品</th><th>数量</th><th>小计</th></tr></thead><tbody><tr><td>经典牛肉堡</td><td class="num">×1</td><td class="num">¥15.00</td></tr><tr><td>可乐（中）</td><td class="num">×1</td><td class="num">¥7.00</td></tr><tr><td>薯条（中）</td><td class="num">×1</td><td class="num">¥8.00</td></tr></tbody></table>
+        <div class="dims"><div class="dim"><span class="dim-label">需求满足度</span>
+            <span class="bar"><i style="width:85.7%"></i></span>
+            <span class="dim-score">25.7 / 30</span></div><div class="dim"><span class="dim-label">预算控制</span>
+            <span class="bar"><i style="width:85.3%"></i></span>
+            <span class="dim-score">21.3 / 25</span></div><div class="dim"><span class="dim-label">营养均衡</span>
+            <span class="bar"><i style="width:87.5%"></i></span>
+            <span class="dim-score">17.5 / 20</span></div><div class="dim"><span class="dim-label">优惠利用</span>
+            <span class="bar"><i style="width:26.7%"></i></span>
+            <span class="dim-score">4.0 / 15</span></div><div class="dim"><span class="dim-label">可解释性</span>
+            <span class="bar"><i style="width:100.0%"></i></span>
+            <span class="dim-score">10.0 / 10</span></div></div>
+        <ul class="violations"><li class="warn">[warning] 无法通过官方 calculate-price 核对应付价格，本方案成本标记为 NOT_VERIFIED</li></ul>
+      </section><section class="agent agent-beta">
+        <header>
+          <h3>β 深度优化师</h3>
+          <p class="engine">optimizer-search@1.0.0 · 优化策略：束搜索多候选 + 组合比较，追求约束满足与营养均衡</p>
+          <p class="total">总分 <strong>79.6</strong> / 100</p>
+        </header>
+        <ul class="meta">
+          <li>状态：完成</li>
+          <li>自述应付：¥25.00</li>
+          <li>裁决成本：¥25.00</li>
+          <li>价格核验：not-verified</li>
+          <li>资格：通过</li>
+          <li>实测耗时：3 ms</li>
+          <li>候选数：248</li>
+          <li>工具调用：6</li>
+        </ul>
+        <table class="cart"><thead><tr><th>餐品</th><th>数量</th><th>小计</th></tr></thead><tbody><tr><td>经典牛肉堡</td><td class="num">×1</td><td class="num">¥15.00</td></tr><tr><td>拿铁咖啡</td><td class="num">×1</td><td class="num">¥10.00</td></tr><tr><td>薯条（中）</td><td class="num">×1</td><td class="num">¥8.00</td></tr></tbody></table>
+        <div class="dims"><div class="dim"><span class="dim-label">需求满足度</span>
+            <span class="bar"><i style="width:85.7%"></i></span>
+            <span class="dim-score">25.7 / 30</span></div><div class="dim"><span class="dim-label">预算控制</span>
+            <span class="bar"><i style="width:83.3%"></i></span>
+            <span class="dim-score">20.8 / 25</span></div><div class="dim"><span class="dim-label">营养均衡</span>
+            <span class="bar"><i style="width:97.0%"></i></span>
+            <span class="dim-score">19.4 / 20</span></div><div class="dim"><span class="dim-label">优惠利用</span>
+            <span class="bar"><i style="width:24.2%"></i></span>
+            <span class="dim-score">3.6 / 15</span></div><div class="dim"><span class="dim-label">可解释性</span>
+            <span class="bar"><i style="width:100.0%"></i></span>
+            <span class="dim-score">10.0 / 10</span></div></div>
+        <ul class="violations"><li class="warn">[warning] 无法通过官方 calculate-price 核对应付价格，本方案成本标记为 NOT_VERIFIED</li></ul>
+      </section></div>
+
+  <h2>价格对比（多口径）</h2>
+  <div class="card">
+    <table class="cmp">
+      <thead><tr><th>口径</th><th>α 极速猎手</th><th>β 深度优化师</th></tr></thead>
+      <tbody>
+        <tr><td>自述应付</td><td>¥22.00</td><td>¥25.00</td></tr>
+        <tr><td>官方核价</td><td>—</td><td>—</td></tr>
+        <tr><td>裁判重算</td><td>¥22.00</td><td>¥25.00</td></tr>
+        <tr><td>裁决采用</td><td><strong>¥22.00</strong></td><td><strong>¥25.00</strong></td></tr>
+        <tr><td>目标达成率</td><td>87.5%</td><td>97.0%</td></tr>
+        <tr><td>价格核验状态</td><td>not-verified</td><td>not-verified</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>裁判说明</h2>
+  <div class="card"><ol class="notes"><li>评分规则版本 judge-rules/1.1.0；五维得分全部来自裁判独立重算（不采信 Agent 自述成绩）。</li><li>本局运行于模拟数据集（非麦当劳官方数据），裁判算法为真实规则实现。</li><li>成本比较依据：未能对双方完成官方核价，成本以裁判按数据集单价与券规则重算值为准（claimed-unverified，已在验证报告中标注 NOT_VERIFIED）。</li><li>α（speed-greedy@1.0.0）价格核验状态：NOT_VERIFIED（无官方 calculate-price 记录，已明确标注，不视为通过）。</li><li>β（optimizer-search@1.0.0）价格核验状态：NOT_VERIFIED（无官方 calculate-price 记录，已明确标注，不视为通过）。</li><li>判定顺序：资格 → 已验证成本 → 营养/目标达成率 → 响应速度。本局依据：双方均无官方核价记录（NOT_VERIFIED），按裁判重算成本比较，α更低（¥22.00 : ¥25.00）</li><li>算法表现：极速猎手 候选 1 个 / 工具调用 1 次；深度优化师 候选 248 个 / 工具调用 6 次（实测响应时间为真实测量值，见各 AgentExecution.durationMs，不参与复现指纹；仅作次级评价维度）。</li><li>可复现实验：相同 (规则版本, 种子, 数据集指纹, 引擎版本, 验证结果) 将得到完全相同的 experimentId 与全部确定性判定（实测耗时除外）。</li></ol></div>
+
+  <h2>可复现配置</h2><div class="card"><p class="sub">把下列配置粘贴到竞技场网页的「挑战设置」，或使用相同种子重跑，即可得到一致结果（实测耗时除外）。</p><pre class="config">{
+  &quot;seed&quot;: 42,
+  &quot;mode&quot;: &quot;mock&quot;,
+  &quot;constraints&quot;: {
+    &quot;people&quot;: 2,
+    &quot;budgetCents&quot;: 6000,
+    &quot;scene&quot;: &quot;dine-in&quot;,
+    &quot;mustIncludeCodes&quot;: [],
+    &quot;excludedCodes&quot;: [],
+    &quot;requiredTags&quot;: [
+      &quot;burger&quot;,
+      &quot;side&quot;,
+      &quot;drink&quot;
+    ],
+    &quot;requiredCategories&quot;: [],
+    &quot;nutritionTarget&quot;: {
+      &quot;kcal&quot;: 500,
+      &quot;proteinG&quot;: 20
+    },
+    &quot;preferCoupons&quot;: true
+  },
+  &quot;dataset&quot;: {
+    &quot;sourceRef&quot;: &quot;scenario://stage03-fixtures&quot;,
+    &quot;dataOrigin&quot;: &quot;mock&quot;,
+    &quot;sha256&quot;: null
+  },
+  &quot;experimentId&quot;: &quot;exp_bcc724febf31e0b8&quot;
+}</pre></div>
+
+  <footer>
+    本页由 McArena 引擎自动生成，全部数值来自真实执行结果。麦门 AI 竞技场为参赛作品，
+    非麦当劳官方产品，未获得麦当劳官方认证或背书。
+  </footer>
+</div>
+</body>
+</html>

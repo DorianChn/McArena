@@ -1,0 +1,20 @@
+# 异常路径实测（安装版 Skill 脚本）
+## 1) --mode replay（无快照）
+数据源不可用：replay 模式需要仓内官方快照，但 snapshots/ 目录暂无快照文件。请放入快照，或改用 --mode mock。
+exit=3
+
+## 2) --people 99（非法参数）
+参数错误：--people 必须是 1–12 之间的整数（收到 99）
+
+exit=2
+
+## 3) --mode live（无 Token）
+数据源不可用：live 模式需要环境变量 MCD_MCP_TOKEN（在 https://open.mcd.cn/mcp 申请）。当前未配置，请改用 --mode auto / --mode mock，或先申请 Token。
+exit=3
+
+## 4) 正常路径（默认产物）
+
+已生成可打开的竞技场结果：<repo-root>\artifacts\mc-arena-2026-10-14T12-33-59-807Z.html
+已生成 JSON 结果：<repo-root>\artifacts\mc-arena-2026-10-14T12-33-59-807Z.json
+──────────────────────────────────────────────────────────────────
+[mc-arena] 已启用默认产物输出：<repo-root>\artifacts

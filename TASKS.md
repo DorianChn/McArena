@@ -110,22 +110,22 @@
 |---|---|---|---|---|
 | P3-1 🤖 | apps/api：Fastify 路由（/api/match、/api/match/:id/stream SSE、/api/snapshot、/api/healthz） | 后端 | ✅ 完成（阶段01） | curl 冒烟通过 |
 | P3-2 🤖 | 模式编排：replay 默认 / live 需 Token + 自动落快照 + 限流降级 | 后端 | 🟡 部分（live 仍阻塞于 Token） | 无 Token 时 mock/replay 正常 |
-| P3-3 🤖 | apps/web：首页 + 任务卡 + 开始比赛 | 前端 | ⬜ | 可发起一局 |
-| P3-4 🤖 | apps/web：对战时间轴 + 记分牌 + ECharts 雷达图 + 得分解释面板 | 前端 | ⬜ | 公式/证据可见 |
-| P3-5 🤖 | apps/web：复现按钮（输入 seed+snapshotId → 同结果） | 前端 | ⬜ | 两次运行结果一致 |
-| P3-6 🤖 | **Gate G3**：完整一局演示并录制 GIF | 全栈 | ⬜ | GIF 入 README |
+| P3-3 🤖 | apps/web：首页 + 任务卡 + 开始比赛 | 前端 | ✅ 完成（阶段05） | 首页/挑战设置/一键开赛 |
+| P3-4 🤖 | apps/web：对战时间轴 + 记分牌 + 雷达图 + 得分解释面板 | 前端 | ✅ 完成（阶段05） | 纯 SVG 雷达图 + 五维得分条 + 裁判报告 |
+| P3-5 🤖 | apps/web：复现按钮（输入 seed+snapshotId → 同结果） | 前端 | ✅ 完成（阶段05） | 分享卡提供可复现配置复制；同 seed 结果一致（单测覆盖） |
+| P3-6 🤖 | **Gate G3**：完整一局演示并录制 GIF | 全栈 | 🟡 部分 | 全流程可跑通；GIF 未录制（待补） |
 
 ## P4 交付物打磨（10/21–10/23）
 
 | ID | 任务 | 负责 | 状态 | 验收 |
 |---|---|---|---|---|
-| P4-1 🤖 | README.md：介绍/安装/示例/目标用户 + GIF + 架构图 | 全栈 | ⬜ | 符合参赛文件要求 |
-| P4-2 🤖 | MCP_INTEGRATION.md：server/tool/调用流程/业务价值/实测差异 | 后端 | ⬜ 依赖 P1-4 | 文件名与内容合规 |
-| P4-3 🤖 | workbuddy.md：导出 WorkBuddy 开发对话上下文（参赛项） | 用户 | ⬜ | 非必须但争取 3000 积分 |
-| P4-4 🤖 | skill/mc-arena：SKILL.md + scripts/run-match.mjs + references | 全栈 | ⬜ | WorkBuddy 可调用 |
-| P4-5 🤖 | Skill 本地验证：在 WorkBuddy 中触发并成功返回比赛解说 | 全栈 | ⬜ | 对话记录存档 |
-| P4-6 🤖 | 合规自查：无 Token/无敏感词/无品牌贬低/无外链违规 | 架构师 | ⬜ | 检查清单签字 |
-| P4-7 🤖 | **Gate G4**：五大文件齐备 | 架构师 | ⬜ | README/CONTEST_DECLARATION/MCP_INTEGRATION/mcp-config.example.json/workbuddy.md |
+| P4-1 🤖 | README.md：介绍/安装/示例/目标用户 + GIF + 架构图 | 全栈 | 🟡 部分 | 正文/示例/架构齐备；GIF 待补 |
+| P4-2 🤖 | MCP_INTEGRATION.md：server/tool/调用流程/业务价值/实测差异 | 后端 | ✅ 完成 | 文件名与内容合规 |
+| P4-3 🤖 | workbuddy.md：导出 WorkBuddy 开发对话上下文（参赛项） | 用户 | ✅ 完成（阶段06，原始导出待追加） | 阶段/指令/功能/调试/证据齐备；缺失已注明 |
+| P4-4 🤖 | skill/mc-arena：SKILL.md + scripts/run-match.mjs + references | 全栈 | ✅ 完成（阶段06） | 官方校验脚本输出 `Skill is valid!` |
+| P4-5 🤖 | Skill 本地验证：在 WorkBuddy 中触发并成功返回比赛解说 | 全栈 | ✅ 完成（阶段06） | 已安装至用户级并真实调用；11 项子进程集成测试 |
+| P4-6 🤖 | 合规自查：无 Token/无敏感词/无品牌贬低/无外链违规 | 架构师 | ✅ 完成 | 见 STAGE_06_REPORT.md 第六/九节 |
+| P4-7 🤖 | **Gate G4**：五大文件齐备 | 架构师 | ✅ 完成 | README/CONTEST_DECLARATION/MCP_INTEGRATION/mcp-config.example.json/workbuddy.md |
 
 ## P5 发布与报名（10/23–10/25）
 
@@ -136,9 +136,48 @@
 | P5-3 👤 | **Gate G5**：10/25 23:59 前提交报名 Issue（建议 10/24 提交） | 用户 | ⬜ | Issue 收到成功回复 |
 | P5-4 🤖 | 缓冲期：修复 issue / 200 响应检查 | 全栈 | ⬜ | 10/26 00:00 快照前稳定 |
 
+## 阶段05 完整前端 UI/UX（10/14）
+
+> 目标：开发完成度高、适合公开演示的中文 AI Agent 竞技场。技术栈 React + TypeScript + Tailwind CSS；
+> 公开演示模式不要求麦当劳账号或 Token；不在浏览器暴露服务端密钥；不伪造历史战绩/用户数/排行榜。
+
+| ID | 任务 | 负责 | 状态 | 验收 |
+|---|---|---|---|---|
+| S5-1 🤖 | 设计系统：Tailwind v4 `@theme inline` 语义化变量 + 深/浅双主题 | 前端 | ✅ 完成 | `index.css` + `theme.tsx` |
+| S5-2 🤖 | 首页：项目介绍 + 双 Agent 对决入口 + 玩法说明 + 数据状态 + 一键开赛 | 前端 | ✅ 完成 | `pages/HomePage.tsx` |
+| S5-3 🤖 | 挑战设置：预算/人数/营养目标/优惠偏好/预设挑战/自定义约束 | 前端 | ✅ 完成 | `pages/SetupPage.tsx` + API `constraints` 契约扩展 |
+| S5-4 🤖 | 竞技场：左右双栏对决 + 实时状态 + 决策进度 + 已验证数据 + 耗时 + 错误/等待态 | 前端 | ✅ 完成 | `pages/ArenaPage.tsx`（回放引擎 + 1x/2x/4x + 跳过） |
+| S5-5 🤖 | 比赛结果：胜者 + 双方得分 + 价格/营养对比 + 决策解释 + MCP 证据状态 + 重新挑战 | 前端 | ✅ 完成 | `pages/ResultPage.tsx` |
+| S5-6 🤖 | 分享：成绩卡 + 导出 PNG + 复制分享文案 + 复制可复现配置 + GitHub 入口 | 前端 | ✅ 完成 | `components/ShareCard.tsx` + `lib/share.ts` |
+| S5-7 🤖 | 其他：中文界面、响应式、Loading/Error/Empty、无障碍基础、性能优化 | 前端 | ✅ 完成 | `components/ui/*`、`feedback.tsx`、焦点环/44px/`prefers-reduced-motion` |
+| S5-8 🤖 | 质量门禁：typecheck 0 错 / lint 0 错 / web build 成功 / 全量测试 134 通过 | 全栈 | ✅ 完成 | 见提交记录 |
+| S5-9 🤖 | 浏览器实测 + 移动端检查 + 控制台检查 + 截图归档 + `STAGE_05_REPORT.md` | 全栈 | ⬜ **未完成** | 待补（见 STAGE_06_REPORT.md 第十节） |
+
+## 阶段06 WorkBuddy Skill 集成（10/14）
+
+> 目标：让 McArena 作为**真正的 WorkBuddy Skill** 使用。要求：可真实调用；不复制另一套不一致的业务逻辑；
+> 与网页共享核心引擎；有明确安装启用教程；不编造官方规范；版本限制需记录并给出替代方案。
+> 详细报告见 `STAGE_06_REPORT.md`。
+
+| ID | 任务 | 负责 | 状态 | 验收 |
+|---|---|---|---|---|
+| S6-1 🤖 | 查阅 WorkBuddy 官方 Skill 规范（skill-creator + quick_validate.py） | 全栈 | ✅ 完成 | `quick_validate.py` 输出 `Skill is valid!` |
+| S6-2 🤖 | 共享引擎下沉：`challenge-builder.ts` + `arena-runner.ts` + `match-html.ts` | 算法 | ✅ 完成 | API 层删除本地实现，改为再导出 |
+| S6-3 🤖 | `challenge` CLI：预算/人数/目标/场景/标签/种子/模式/JSON/产物 | 算法 | ✅ 完成 | `cli-challenge.test.ts` 18 项 |
+| S6-4 🤖 | Skill 元数据与说明：SKILL.md（官方 frontmatter）+ INSTALL.md + references | 全栈 | ✅ 完成 | 11 项集成测试校验 frontmatter 与必需文件 |
+| S6-5 🤖 | Skill 脚本：run-match.mjs（定位仓库→调用共享引擎）、parse-request.mjs、install.mjs | 全栈 | ✅ 完成 | 真实子进程测试通过（含仓库外 cwd） |
+| S6-6 🤖 | 自然语言解析：预算/人数/目标/场景/券/种子 + 歧义处理 | 全栈 | ✅ 完成 | 「3个人 预算60 要低卡 外带」解析正确 |
+| S6-7 🤖 | 异常提示：CLI_USAGE_ERROR / 快照缺失 / Token 缺失 / MATCH_FAILED | 全栈 | ✅ 完成 | 退出码 2/3/3 实测存档 |
+| S6-8 🤖 | 安装到用户级 `~/.workbuddy-ai/skills/mc-arena` 并真实调用 | 全栈 | ✅ 完成 | 从无关 cwd 调用成功；证据存档 `docs/evidence/stage06/` |
+| S6-9 🤖 | `workbuddy.md`：真实开发阶段/指令/功能/调试/证据 + 脱敏 + 缺失注明 | 架构师 | ✅ 完成 | 原始对话导出待用户追加 |
+| S6-10 🤖 | 测试与门禁：新增 55 项（全库 189/189）+ typecheck/lint/build 全绿 + 本地提交 | 全栈 | ✅ 完成 | 未 push GitHub |
+
 ## 阻塞项登记（Blockers）
 
 | 编号 | 描述 | 解除条件 | 影响范围 |
 |---|---|---|---|
-| B1 | 麦当劳 MCP Token 未申请（需手机号验证登录+人机验证，AI 无法代办） | 用户在 open.mcd.cn/mcp 完成登录激活 | P1-4 实测 schema、live 模式、裁判 `verified/mismatch` 实测；不影响 replay 全链路 |
+| B1 | 麦当劳 MCP Token 未申请（需手机号验证登录+人机验证，AI 无法代办） | 用户在 open.mcd.cn/mcp 完成登录激活 | P1-4 实测 schema、live 模式、裁判 `verified/mismatch` 实测；不影响 replay/mock 全链路 |
 | B2 | GitHub 公开仓库未创建 | 用户手动建仓 | P5 发布；不影响本地开发 |
+| B3 | `snapshots/` 无官方快照（阶段06 新登记） | 采集并放入官方快照，或申请 Token 后实时采集 | replay 模式与 Skill 的官方数据演示；当前回退场景数据集（已明确标注 mock） |
+| B4 | 阶段05 浏览器实测与截图未完成（阶段06 新登记） | 启动 dev server 后实测归档 | `STAGE_05_REPORT.md` 缺失；不影响阶段06 |
+

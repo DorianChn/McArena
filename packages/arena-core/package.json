@@ -16,7 +16,8 @@
   "scripts": {
     "typecheck": "tsc -p tsconfig.json",
     "demo": "tsx src/cli/demo.ts",
-    "bench": "tsx src/cli/demo.ts bench"
+    "bench": "tsx src/cli/demo.ts bench",
+    "challenge": "tsx src/cli/challenge.ts"
   },
   "dependencies": {
     "@mcarena/shared": "*"

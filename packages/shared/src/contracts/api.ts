@@ -2,6 +2,7 @@ import { z } from 'zod'
 import { DataOriginSchema } from '../data-origin.js'
 import { ApiErrorBodySchema } from '../errors.js'
 import {
+  ChallengeConstraintsSchema,
   ChallengeSchema,
   EvidenceRecordSchema,
 } from './core.js'
@@ -20,6 +21,10 @@ export const StartMatchRequestSchema = z.object({
   seed: z.number().int().optional(),
   /** 不传则使用服务端默认模式 */
   mode: DataModeSchema.optional(),
+  /** 阶段05：自定义挑战约束（不传则由 RuleEngine 按种子随机生成可复现任务卡）。
+   *  传入即按用户约束构建任务卡；服务端会以 ChallengeSchema 全量校验，
+   *  与随机生成走同一套结构与约束集合，保证裁判与 Agent 行为一致。 */
+  constraints: ChallengeConstraintsSchema.optional(),
 })
 export type StartMatchRequest = z.infer<typeof StartMatchRequestSchema>
 

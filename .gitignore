@@ -23,3 +23,6 @@ Thumbs.db
 
 # 快照原始留档（按需提交脱敏快照）
 snapshots/raw/
+
+# Skill / CLI 运行产物（可复现生成，不入库）
+artifacts/

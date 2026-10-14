@@ -211,6 +211,16 @@ export const CostBasisSchema = z.enum([
 ])
 export type CostBasis = z.infer<typeof CostBasisSchema>
 
+/** 单个 Agent 的五维得分摘要（前端雷达图/得分条直接使用，无需二次计算） */
+export const AgentScoreSummarySchema = z.object({
+  agentId: AgentIdSchema,
+  /** 五维总分（满分 100） */
+  total: z.number().nonnegative(),
+  /** 各维度原始得分 */
+  dimensions: z.record(ScoreDimensionKeySchema, z.number().nonnegative()),
+})
+export type AgentScoreSummary = z.infer<typeof AgentScoreSummarySchema>
+
 export const JudgeResultSchema = z.object({
   dimensions: z.array(ScoreDimensionSchema).min(1),
   totalScore: z.number().nonnegative(),
@@ -228,6 +238,8 @@ export const JudgeResultSchema = z.object({
   costBasis: CostBasisSchema.default('claimed-unverified'),
   /** 两个 Agent 的独立验证报告（含违规与证据引用） */
   verification: z.array(AgentVerificationSchema).length(2),
+  /** 两个 Agent 各自的五维原始得分（与 dimensions 中的取最大值相对应） */
+  agentScores: z.tuple([AgentScoreSummarySchema, AgentScoreSummarySchema]),
   /** 全部违规（含 warning）的扁平汇总，便于前端集中展示 */
   allViolations: z
     .array(JudgeViolationSchema.extend({ agentId: AgentIdSchema }))
@@ -320,6 +332,7 @@ export function canonicalizeMatch(result: MatchResult): string {
       costBasis: result.judge.costBasis,
       winner: result.judge.winner,
       headline: result.judge.headline,
+      agentScores: result.judge.agentScores,
       // 验证与违规是确定性计算结果，进入复现指纹
       verification: result.judge.verification.map((entry) => ({
         agentId: entry.agentId,

@@ -157,6 +157,10 @@ export class RuleBasedJudge implements JudgeEngine {
       experimentId: this.experimentIdOf(context, verification),
       costBasis,
       verification,
+      agentScores: [
+        { agentId: alpha.agentId, total: totalAlpha, dimensions: dimRecordOf(scored[0]) },
+        { agentId: beta.agentId, total: totalBeta, dimensions: dimRecordOf(scored[1]) },
+      ],
       allViolations: verification.flatMap((entry) =>
         entry.violations.map((violation) => ({ ...violation, agentId: entry.agentId })),
       ),
@@ -446,7 +450,10 @@ function headlineOf(input: {
   }
   const score = verdict.winner === 'alpha' ? input.totalAlpha : input.totalBeta
   const other = verdict.winner === 'alpha' ? input.totalBeta : input.totalAlpha
-  return `${winnerName}以 ${score.toFixed(1)} : ${other.toFixed(1)} 胜出（满分 100）——${verdict.reason}`
+  // 注意：胜负由字典序判定（资格 → 已验证成本 → 目标达成 → 速度）决定，
+  // 与五维总分不必然同向（例如成本更低但营养分略低）。因此这里明确标注
+  // 「五维总分」并附判定依据，避免读者误读为「总分更低者获胜」。
+  return `${winnerName}胜出（五维总分 ${score.toFixed(1)} : ${other.toFixed(1)} / 100）——${verdict.reason}`
 }
 
 interface NotesInput {
@@ -511,6 +518,17 @@ function buildNotes(input: NotesInput): string[] {
 
 function joinEvidence(evidence: EvidenceRecord[]): string {
   return evidence.map((entry) => entry.message).join('；')
+}
+
+/** AgentScore → 各维度数字记录（供前端雷达图使用，不做四舍五入以保持确定性） */
+function dimRecordOf(score: AgentScore): Record<DimensionKey, number> {
+  return {
+    'requirement-fit': score['requirement-fit'].score,
+    'budget-control': score['budget-control'].score,
+    'nutrition-balance': score['nutrition-balance'].score,
+    'coupon-usage': score['coupon-usage'].score,
+    explainability: score.explainability.score,
+  }
 }
 
 function sumScores(scored: AgentScore): number {

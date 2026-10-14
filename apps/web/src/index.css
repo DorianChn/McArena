@@ -1,5 +1,88 @@
 @import "tailwindcss";
 
+/*
+ * McArena 设计系统（阶段05）
+ * - 语义化颜色令牌（canvas/surface/line/ink + brand/gold），深色为默认，浅色通过 html[data-theme="light"] 切换；
+ * - 品牌色借鉴麦当劳红黄，但全部经过可读性校准，并在页脚/成绩卡明确声明「非官方项目」；
+ * - 无障碍：focus-visible 焦点环、prefers-reduced-motion、最小触摸目标 44px。
+ */
+
+:root {
+  color-scheme: dark;
+  --canvas: #0b0b10;
+  --canvas-grad-1: #14141d;
+  --canvas-grad-2: #0b0b10;
+  --surface: #15151f;
+  --surface-2: #1c1c28;
+  --surface-3: #242433;
+  --line: #2c2c3b;
+  --line-strong: #3d3d52;
+  --ink: #f4f4f6;
+  --ink-2: #b8b8c6;
+  --ink-3: #7e7e92;
+  --brand: #ff5a4d; /* 麦当劳红的可读性提升变体（深色底） */
+  --brand-strong: #e8341f;
+  --brand-soft: rgba(255, 90, 77, 0.14);
+  --gold: #ffc72c; /* 麦当劳黄 */
+  --gold-soft: rgba(255, 199, 44, 0.14);
+  --alpha-accent: #ffc72c;
+  --beta-accent: #5ec8f2;
+  --ok: #3ecf8e;
+  --warn: #ffb84d;
+  --danger: #ff6b5e;
+  --shadow-card: 0 1px 0 rgba(255, 255, 255, 0.03) inset, 0 12px 32px rgba(0, 0, 0, 0.35);
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --canvas: #faf7f2;
+  --canvas-grad-1: #ffffff;
+  --canvas-grad-2: #f4ede2;
+  --surface: #ffffff;
+  --surface-2: #f6f1e9;
+  --surface-3: #efe8dc;
+  --line: #e5ddcf;
+  --line-strong: #d3c8b5;
+  --ink: #1c1a17;
+  --ink-2: #55504a;
+  --ink-3: #8a847c;
+  --brand: #c0231a;
+  --brand-strong: #9d1a12;
+  --brand-soft: rgba(192, 35, 26, 0.08);
+  --gold: #b07d00;
+  --gold-soft: rgba(255, 199, 44, 0.22);
+  --alpha-accent: #a86200;
+  --beta-accent: #0b6fa8;
+  --ok: #0d7a4f;
+  --warn: #8a5a00;
+  --danger: #b42318;
+  --shadow-card: 0 1px 2px rgba(28, 26, 23, 0.05), 0 10px 28px rgba(28, 26, 23, 0.08);
+}
+
+@theme inline {
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-brand: var(--brand);
+  --color-brand-strong: var(--brand-strong);
+  --color-brand-soft: var(--brand-soft);
+  --color-gold: var(--gold);
+  --color-gold-soft: var(--gold-soft);
+  --color-alpha: var(--alpha-accent);
+  --color-beta: var(--beta-accent);
+  --color-ok: var(--ok);
+  --color-warn: var(--warn);
+  --color-danger: var(--danger);
+  --font-sans: "PingFang SC", "HarmonyOS Sans SC", "Microsoft YaHei", "Noto Sans SC", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "Cascadia Code", Consolas, "Courier New", monospace;
+}
+
 html,
 body,
 #root {
@@ -8,7 +91,96 @@ body,
 
 body {
   margin: 0;
-  background-color: #09090b;
-  color: #f4f4f5;
-  font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans SC", system-ui, sans-serif;
+  font-family: var(--font-sans);
+  background:
+    radial-gradient(1200px 600px at 80% -10%, var(--canvas-grad-1), transparent 60%),
+    radial-gradient(900px 500px at -10% 10%, var(--canvas-grad-2), transparent 55%),
+    var(--canvas);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--gold-soft);
+}
+
+/* 键盘焦点环（无障碍） */
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* 滚动条 */
+* {
+  scrollbar-color: var(--line-strong) transparent;
+}
+
+/* 动效尊重系统偏好 */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* 通用动效 */
+@keyframes mca-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes mca-pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 var(--gold-soft);
+  }
+  70% {
+    box-shadow: 0 0 0 10px transparent;
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+
+@keyframes mca-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes mca-shimmer {
+  from {
+    background-position: -200% 0;
+  }
+  to {
+    background-position: 200% 0;
+  }
+}
+
+.mca-anim-in {
+  animation: mca-fade-up 0.35s ease both;
+}
+
+.mca-live-dot {
+  animation: mca-pulse-ring 1.6s ease-out infinite;
+}
+
+.mca-spin {
+  animation: mca-spin 0.9s linear infinite;
+}
+
+.mca-skeleton {
+  background: linear-gradient(90deg, var(--surface-2) 25%, var(--surface-3) 50%, var(--surface-2) 75%);
+  background-size: 200% 100%;
+  animation: mca-shimmer 1.4s ease infinite;
 }

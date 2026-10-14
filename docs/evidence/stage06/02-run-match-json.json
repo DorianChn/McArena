@@ -1,0 +1,221 @@
+# 命令：node skill/mc-arena/scripts/run-match.mjs --people 3 --budget 60 --goal protein --seed 2026 --json
+
+{
+  "ok": true,
+  "matchId": "match_mv83c7yc_2026",
+  "seed": 2026,
+  "mode": "mock",
+  "dataOrigin": "mock",
+  "dataset": {
+    "sourceRef": "scenario://stage03-fixtures",
+    "sha256": null,
+    "notice": "阶段03 场景测试数据集（模拟数据，非麦当劳官方数据）",
+    "capturedAt": "2026-10-14T00:00:00.000Z"
+  },
+  "challenge": {
+    "id": "challenge-custom-2026",
+    "seed": 2026,
+    "constraints": {
+      "people": 3,
+      "budgetCents": 6000,
+      "scene": "dine-in",
+      "mustIncludeCodes": [],
+      "excludedCodes": [],
+      "requiredTags": [],
+      "requiredCategories": [],
+      "nutritionTarget": {
+        "proteinG": 30
+      },
+      "preferCoupons": true
+    },
+    "title": "自定义挑战 · 3 人堂食｜预算 ¥60、人均蛋白 30g",
+    "brief": "玩家自定义约束：3 人、堂食、预算 ¥60、有营养目标、优先使用优惠券",
+    "generatedAt": "2026-10-14T12:33:20.962Z"
+  },
+  "agents": [
+    {
+      "agentId": "alpha",
+      "name": "极速猎手",
+      "role": "极速策略：单遍贪心构造，最低计算成本，追求即时可用解",
+      "engine": "speed-greedy@1.0.0",
+      "status": "completed",
+      "valid": true,
+      "claimedTotalCents": 1800,
+      "effectiveCostCents": 1800,
+      "officialCostCents": null,
+      "priceStatus": "not-verified",
+      "targetAchievement": 0.10000000000000002,
+      "durationMs": 2,
+      "candidateCount": 1,
+      "toolCallCount": 1,
+      "items": [
+        {
+          "code": "soup-corn",
+          "name": "玉米浓汤",
+          "qty": 3,
+          "lineTotalCents": 1800
+        }
+      ],
+      "scoreTotal": 58.54545454545455
+    },
+    {
+      "agentId": "beta",
+      "name": "深度优化师",
+      "role": "优化策略：束搜索多候选 + 组合比较，追求约束满足与营养均衡",
+      "engine": "optimizer-search@1.0.0",
+      "status": "completed",
+      "valid": true,
+      "claimedTotalCents": 5400,
+      "effectiveCostCents": 5400,
+      "officialCostCents": null,
+      "priceStatus": "not-verified",
+      "targetAchievement": 1,
+      "durationMs": 9,
+      "candidateCount": 162,
+      "toolCallCount": 6,
+      "items": [
+        {
+          "code": "burger-chicken",
+          "name": "香辣鸡腿堡",
+          "qty": 2,
+          "lineTotalCents": 3400
+        },
+        {
+          "code": "combo-two",
+          "name": "双人分享餐",
+          "qty": 1,
+          "lineTotalCents": 2500
+        }
+      ],
+      "scoreTotal": 74.54391371340525
+    }
+  ],
+  "judge": {
+    "rulesVersion": "judge-rules/1.1.0",
+    "experimentId": "exp_964c083835eafde4",
+    "costBasis": "claimed-unverified",
+    "winner": "alpha",
+    "headline": "极速猎手胜出（五维总分 58.5 : 74.5 / 100）——双方均无官方核价记录（NOT_VERIFIED），按裁判重算成本比较，α更低（¥18.00 : ¥54.00）",
+    "totalScore": 74.54391371340525,
+    "totalMax": 100,
+    "agentScores": [
+      {
+        "agentId": "alpha",
+        "total": 58.54545454545455,
+        "dimensions": {
+          "requirement-fit": 24.545454545454547,
+          "budget-control": 22,
+          "nutrition-balance": 2.0000000000000004,
+          "coupon-usage": 0,
+          "explainability": 10
+        }
+      },
+      {
+        "agentId": "beta",
+        "total": 74.54391371340525,
+        "dimensions": {
+          "requirement-fit": 27.272727272727273,
+          "budget-control": 16,
+          "nutrition-balance": 20,
+          "coupon-usage": 1.271186440677966,
+          "explainability": 10
+        }
+      }
+    ],
+    "dimensions": [
+      {
+        "key": "requirement-fit",
+        "label": "需求满足度",
+        "score": 27.272727272727273,
+        "max": 30,
+        "weight": 0.3,
+        "formula": "裁判校验通过 9/11 × 30"
+      },
+      {
+        "key": "budget-control",
+        "label": "预算控制",
+        "score": 22,
+        "max": 25,
+        "weight": 0.25,
+        "formula": "裁决成本 ¥18.00 ≤ 预算 ¥60.00，剩余比例 70.0% → 15 + 10×0.700"
+      },
+      {
+        "key": "nutrition-balance",
+        "label": "营养均衡",
+        "score": 20,
+        "max": 20,
+        "weight": 0.2,
+        "formula": "加权达成率 10.0% × 20（权重 热量0.4/蛋白质0.4/钠0.2，裁判按数据集营养数据重算）"
+      },
+      {
+        "key": "coupon-usage",
+        "label": "优惠利用",
+        "score": 1.271186440677966,
+        "max": 15,
+        "weight": 0.15,
+        "formula": "裁判重算优惠 / 券前应付 × 15（封顶）"
+      },
+      {
+        "key": "explainability",
+        "label": "可解释性",
+        "score": 10,
+        "max": 10,
+        "weight": 0.1,
+        "formula": "证据完整度 40% + 独立校验说明覆盖率 60%"
+      }
+    ],
+    "notes": [
+      "评分规则版本 judge-rules/1.1.0；五维得分全部来自裁判独立重算（不采信 Agent 自述成绩）。",
+      "本局运行于模拟数据集（非麦当劳官方数据），裁判算法为真实规则实现。",
+      "成本比较依据：未能对双方完成官方核价，成本以裁判按数据集单价与券规则重算值为准（claimed-unverified，已在验证报告中标注 NOT_VERIFIED）。",
+      "α（speed-greedy@1.0.0）价格核验状态：NOT_VERIFIED（无官方 calculate-price 记录，已明确标注，不视为通过）。",
+      "β（optimizer-search@1.0.0）价格核验状态：NOT_VERIFIED（无官方 calculate-price 记录，已明确标注，不视为通过）。",
+      "判定顺序：资格 → 已验证成本 → 营养/目标达成率 → 响应速度。本局依据：双方均无官方核价记录（NOT_VERIFIED），按裁判重算成本比较，α更低（¥18.00 : ¥54.00）",
+      "算法表现：极速猎手 候选 1 个 / 工具调用 1 次；深度优化师 候选 162 个 / 工具调用 6 次（实测响应时间为真实测量值，见各 AgentExecution.durationMs，不参与复现指纹；仅作次级评价维度）。",
+      "可复现实验：相同 (规则版本, 种子, 数据集指纹, 引擎版本, 验证结果) 将得到完全相同的 experimentId 与全部确定性判定（实测耗时除外）。"
+    ],
+    "allViolations": [
+      {
+        "code": "price-not-verifiable",
+        "severity": "warning",
+        "message": "无法通过官方 calculate-price 核对应付价格，本方案成本标记为 NOT_VERIFIED",
+        "evidenceRef": "scenario://stage03-fixtures#priceQuotes",
+        "agentId": "alpha"
+      },
+      {
+        "code": "price-not-verifiable",
+        "severity": "warning",
+        "message": "无法通过官方 calculate-price 核对应付价格，本方案成本标记为 NOT_VERIFIED",
+        "evidenceRef": "scenario://stage03-fixtures#priceQuotes",
+        "agentId": "beta"
+      }
+    ]
+  },
+  "reproducibleConfig": {
+    "seed": 2026,
+    "mode": "mock",
+    "constraints": {
+      "people": 3,
+      "budgetCents": 6000,
+      "scene": "dine-in",
+      "mustIncludeCodes": [],
+      "excludedCodes": [],
+      "requiredTags": [],
+      "requiredCategories": [],
+      "nutritionTarget": {
+        "proteinG": 30
+      },
+      "preferCoupons": true
+    },
+    "dataset": {
+      "sourceRef": "scenario://stage03-fixtures",
+      "dataOrigin": "mock",
+      "sha256": null
+    },
+    "experimentId": "exp_964c083835eafde4"
+  },
+  "warnings": [
+    "阶段03 场景测试数据集（模拟数据，非麦当劳官方数据）"
+  ],
+  "artifacts": {}
+}

@@ -36,6 +36,21 @@ export {
 } from './engine/agent-utils.js'
 export { applyCoupons } from './engine/coupons.js'
 export type { Cart, FinalizeResult } from './engine/agent-utils.js'
+
+// ---- 阶段06：共享任务卡构造 / 目标预设 / 单局运行器（Web·API·CLI·Skill 唯一实现） ----
+export {
+  GOAL_PRESETS,
+  GOAL_PRESET_KEYS,
+  buildChallengeFromParams,
+  buildConstraintsFromParams,
+  buildCustomChallenge,
+  isGoalPresetKey,
+} from './engine/challenge-builder.js'
+export type { ChallengeParams, GoalPreset, GoalPresetKey } from './engine/challenge-builder.js'
+export { runArenaMatch } from './engine/arena-runner.js'
+export type { ArenaMatchOutcome, RunArenaMatchInput } from './engine/arena-runner.js'
+export { renderMatchHtml } from './render/match-html.js'
+export type { RenderMatchHtmlOptions } from './render/match-html.js'
 export {
   AgentTimeoutError,
   DEFAULT_AGENT_TIMEOUT_MS,

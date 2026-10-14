@@ -22,9 +22,9 @@
 - **真实数据**：直连麦当劳中国官方 MCP Server（`https://mcp.mcd.cn`，Streamable HTTP）；
 - **可复现**：固定随机种子 + 数据快照哈希，同一局比赛任何人运行结果完全一致；
 - **可解释**：裁判每项得分都附带公式与证据，独立验证报告逐条列出违规（severity + 数据证据引用），拒绝黑箱；
-- **无 Token 也能玩**：仓库内置录制的官方数据快照，克隆即可完整演示；
+- **无 Token 也能玩**：默认使用仓内**场景数据集**（明确标注「模拟数据，非麦当劳官方数据」），克隆即可完整演示；配置官方快照后自动切换为官方数据；
 - **安全**：只读工具白名单，默认禁止任何下单写操作；
-- **WorkBuddy Skill**：在 WorkBuddy 对话里说「来一场麦门竞技」即可开赛。
+- **WorkBuddy Skill**：在 WorkBuddy 对话里说「来一场麦门竞技」即可开赛（见 [`skill/mc-arena/INSTALL.md`](skill/mc-arena/INSTALL.md)）。
 
 ## 🚀 快速开始
 
@@ -52,7 +52,8 @@ npm run dev
 2. 复制 `.env.example` 为 `.env`，设置 `MCD_MCP_MODE=live` 与 `MCD_MCP_TOKEN`（**不要提交 .env**）；
 3. `npm run dev`。
 
-> 实时数据采集（tools 调用 → 快照落盘 → 数据集组装）将在阶段02实现，详见 MCP_INTEGRATION.md「实测校验记录」。
+> 实时数据采集（tools 调用 → 快照落盘 → 数据集组装）的协议层已在阶段02 完成；
+> 由于 **MCP Token 尚未申请**（需手机号验证 + 人机验证），`live` 模式暂不可用，详见 MCP_INTEGRATION.md 与 [`STAGE_06_REPORT.md`](STAGE_06_REPORT.md)「实际限制」。
 
 ### 命令行竞技（无需启动服务，本地完整体验）
 
@@ -62,6 +63,23 @@ npm run bench                         # 跑 8 个官方测试场景，输出双 
 npm run demo -w @mcarena/arena-core -- timeout   # 演示：Agent 超时 → 降级恢复（明确标注）
 npm run demo -w @mcarena/arena-core -- cancel    # 演示：取消执行 → CANCELLED，不产出提案
 ```
+
+### 带约束的单局竞技（`challenge` 子命令）
+
+`challenge` 是网页 API 与 WorkBuddy Skill **共用的同一入口**（同一 `runArenaMatch()`），
+支持预算、人数、场景、目标预设、必含标签/类别、营养目标、种子与数据模式：
+
+```bash
+# 2 人堂食、预算 ¥60、均衡搭配（人均 500kcal / 20g 蛋白）、种子 42
+npm run challenge -w @mcarena/arena-core -- --people 2 --budget 60 --goal balanced --seed 42
+
+# 3 人、高蛋白、输出 JSON 与可打开的 HTML 战报
+npm run challenge -w @mcarena/arena-core -- \
+  --people 3 --goal protein --json --out ./artifacts/m.json --html ./artifacts/m.html
+```
+
+`--goal` 可选：`balanced` / `protein` / `low-sodium` / `low-cal` / `budget` / `none`；
+`--mode` 可选：`auto`（默认，官方快照优先，缺失则回退场景数据集）/ `mock` / `replay` / `live`。
 
 `npm run bench` 覆盖验收要求的全部场景：¥20 / ¥30 / ¥50 预算、双人套餐、指定蛋白质目标、指定商品类别、优惠券组合、没有有效解，并对比两名 Agent 的**有效率、费用、约束满足度、运行时间与工具调用数量**。实测数据见 [`STAGE_03_REPORT.md`](STAGE_03_REPORT.md)。
 
@@ -76,7 +94,16 @@ npm run build      # 生产构建（API tsup 打包 + Web Vite 构建）
 
 ### WorkBuddy 中使用
 
-见 [`skill/mc-arena/SKILL.md`](skill/mc-arena/SKILL.md) 与 [`workbuddy.md`](workbuddy.md)。
+```bash
+node skill/mc-arena/scripts/install.mjs          # 安装到 ~/.workbuddy-ai/skills/mc-arena
+node skill/mc-arena/scripts/parse-request.mjs "3个人 预算60 要低卡 外带"
+node skill/mc-arena/scripts/run-match.mjs --people 2 --budget 60 --goal balanced --seed 42
+```
+
+安装后在 WorkBuddy 对话中说「来一场麦门竞技，2 个人 60 块要均衡搭配」即可触发。
+Skill 不含业务逻辑，全部调用仓库内共享引擎（与网页同源）。详见
+[`skill/mc-arena/SKILL.md`](skill/mc-arena/SKILL.md)、[`skill/mc-arena/INSTALL.md`](skill/mc-arena/INSTALL.md)
+与 [`STAGE_06_REPORT.md`](STAGE_06_REPORT.md)。开发过程记录见 [`workbuddy.md`](workbuddy.md)。
 
 ## 🏗 架构
 
@@ -102,8 +129,9 @@ npm run build # TypeScript strict 全量构建
 
 复现性测试：相同 `(seed, snapshotId)` 两次运行的 MatchRecord（除记录 ID 外）字节级一致。
 
-当前测试规模（2026-10-14 真实执行）：**132/132 通过**（含阶段04 独立裁判 66 项：验证器 35 + 裁判规则 31）；
-TypeScript strict 0 错误；ESLint 0 错误。
+当前测试规模（2026-10-14 真实执行）：**189/189 通过**（含阶段04 独立裁判 66 项：验证器 35 + 裁判规则 31；
+阶段06 Skill 集成 55 项：任务卡构造 18 + CLI 18 + 单局运行器 8 + Skill 子进程集成 11）；
+TypeScript strict 0 错误；ESLint 0 错误（30 条 warning，均为既有 `no-console` / `no-unsafe-*` 提示）。
 
 ## 📁 目录结构
 
@@ -114,8 +142,9 @@ TypeScript strict 0 错误；ESLint 0 错误。
 | `packages/arena-core` | 竞技内核：规则引擎、双 Agent、裁判引擎（零网络纯函数） |
 | `apps/api` | Fastify 服务：比赛 API + SSE 实时流 |
 | `apps/web` | React 中文可视化界面（决策时间轴 / 雷达图 / 解释面板 / Agent 指标） |
-| `skill/mc-arena` | WorkBuddy Skill（SKILL.md + 脚本） |
-| `snapshots/` | 录制的官方数据快照 + manifest（sha256） |
+| `skill/mc-arena` | WorkBuddy Skill（SKILL.md + scripts/run-match.mjs + scripts/parse-request.mjs + scripts/install.mjs + references） |
+| `snapshots/` | 官方数据快照目录（**当前为空**，需采集；空时自动回退场景数据集） |
+| `docs/evidence/` | 各阶段真实运行证据（CLI 输出、HTML 战报、JSON 结果） |
 | `tools/` | 快照采集等工程脚本 |
 
 ### 阶段成果
@@ -124,6 +153,8 @@ TypeScript strict 0 错误；ESLint 0 错误。
 - 阶段02：官方 MCP 接入层（只读白名单、429 退避、限流、快照回放）
 - 阶段03：双 Agent 竞技引擎（Speed / Optimizer + 执行状态机 + 基准测试）——见 [`STAGE_03_REPORT.md`](STAGE_03_REPORT.md)
 - 阶段04：独立智能裁判系统（独立验证 / 资格硬门槛 / 官方核价优先 / 可复现实验 ID）——见 [`STAGE_04_REPORT.md`](STAGE_04_REPORT.md) 与 [`JUDGE_SPEC.md`](JUDGE_SPEC.md)
+- 阶段05：完整前端 UI/UX（四页面 / 双主题 / 响应式 / 分享卡 / 无障碍；API 契约支持自定义挑战）
+- 阶段06：WorkBuddy Skill 集成（任务卡构造下沉共享引擎 / `challenge` CLI / Skill 三脚本 / 官方规范校验通过）——见 [`STAGE_06_REPORT.md`](STAGE_06_REPORT.md)
 
 ## 🎯 适用人群
 

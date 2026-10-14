@@ -8,13 +8,21 @@ import {
   RuleBasedJudge,
   RuleEngine,
   SpeedAgent,
+  buildCustomChallenge,
 } from '@mcarena/arena-core'
 import type { MatchOrchestrator as Orchestrator } from '@mcarena/arena-core'
 import type { ArenaDataSource } from './data-source.js'
 import type { Logger } from '@mcarena/shared'
 
-/** 比赛存储：内存环形缓冲（最多 200 局），附带 SSE 事件序列 */
-export class MatchStore {
+/**
+ * 任务卡构造下沉说明（阶段06）：
+ * buildCustomChallenge 已迁至 @mcarena/arena-core（packages/arena-core/src/engine/challenge-builder.ts），
+ * 由网页 API、CLI 与 WorkBuddy Skill 共用同一实现，此处仅做再导出以保持既有引用稳定。
+ */
+export { buildCustomChallenge }
+
+
+/** 比赛存储：内存环形缓冲（最多 200 局），附带 SSE 事件序列 */export class MatchStore {
   private readonly results = new Map<string, MatchResult>()
   private readonly events = new Map<string, MatchStreamEvent[]>()
   private readonly order: string[] = []
@@ -76,11 +84,13 @@ export class MatchService {
   async startMatch(request: StartMatchRequest): Promise<MatchResult> {
     const seed = request.seed ?? this.deps.defaultSeedSource?.() ?? Math.floor(Math.random() * 1_000_000)
     const logger = this.deps.logger.child({ seed })
-    logger.info('开始比赛', { mode: this.deps.dataSource.mode })
+    logger.info('开始比赛', { mode: this.deps.dataSource.mode, customChallenge: Boolean(request.constraints) })
 
     const dataset: ArenaDataset = await this.deps.dataSource.load()
-    // 任务卡：固定随机种子可复现（RuleEngine.generateTaskCard(seed, dataset)）
-    const challenge = RuleEngine.generateTaskCard(seed, dataset)
+    // 任务卡：用户自定义约束（阶段05）或固定随机种子可复现的随机任务卡
+    const challenge = request.constraints
+      ? buildCustomChallenge(request.constraints, seed)
+      : RuleEngine.generateTaskCard(seed, dataset)
     const priceOracle = new ReplayPriceOracle(dataset)
 
     const run = await this.deps.orchestrator.run({

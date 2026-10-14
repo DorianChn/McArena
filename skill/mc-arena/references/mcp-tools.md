@@ -14,3 +14,18 @@
 | campaign-calendar | 活动日历查询 | 主题任务卡素材 |
 
 接入：Streamable HTTP，`https://mcp.mcd.cn`，`Authorization: Bearer <token>`；限流 600 次/分钟。
+McArena 只使用上表中的**只读**工具，并对写操作（下单、支付、账户变更等）做黑名单拦截。
+
+## 当前接入状态（重要，请勿在解说中美化）
+
+| 项目 | 状态 | 说明 |
+|---|---|---|
+| MCP 客户端适配器 | ✅ 已实现 | Streamable HTTP + JSON-RPC + SSE 解析 + 限流 + 重试（`packages/mcd-mcp-client`） |
+| 官方 Token | ❌ 未申请 | 申请需手机号验证登录 + 人机验证，AI 无法代办；因此 `live` 模式暂不可用 |
+| 官方数据快照 | ❌ 仓库暂无 | `snapshots/` 仅有 README，无快照文件；因此 `replay` 不可用 |
+| 场景数据集（mock） | ✅ 可用 | `buildScenarioDataset()`，**明确标注「非麦当劳官方数据」** |
+
+因此本技能默认 `--mode auto`：有官方快照时优先使用，否则回退场景数据集，
+并在结果中通过 `dataOrigin` 与 `warnings` 显著标注数据来源。
+**不得**把 mock 数据描述为官方数据，也不得编造 `verified` 核价状态。
+

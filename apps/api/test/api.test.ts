@@ -105,6 +105,49 @@ describe('API 路由（mock 模式）', () => {
     await app.close()
   })
 
+  it('POST /api/match 支持阶段05 自定义挑战约束', async () => {
+    const app = await makeApp()
+    const response = await app.inject({
+      method: 'POST',
+      url: '/api/match',
+      payload: {
+        seed: 11,
+        constraints: {
+          people: 3,
+          budgetCents: 4500,
+          scene: 'dine-in',
+          mustIncludeCodes: [],
+          excludedCodes: [],
+          requiredTags: ['burger'],
+          requiredCategories: [],
+          preferCoupons: true,
+        },
+      },
+    })
+    expect(response.statusCode).toBe(200)
+    const body = MatchResultSchema.parse(response.json())
+    expect(body.challenge.constraints.people).toBe(3)
+    expect(body.challenge.constraints.budgetCents).toBe(4500)
+    expect(body.challenge.constraints.requiredTags).toEqual(['burger'])
+    expect(body.challenge.title).toContain('自定义挑战')
+    await app.close()
+  })
+
+  it('POST /api/match 自定义约束非法时返回 400（契约拒绝）', async () => {
+    const app = await makeApp()
+    const response = await app.inject({
+      method: 'POST',
+      url: '/api/match',
+      payload: {
+        seed: 11,
+        constraints: { people: 99, scene: 'dine-in' },
+      },
+    })
+    expect(response.statusCode).toBe(400)
+    expect(ApiErrorBodySchema.parse(response.json()).code).toBe('VALIDATION_ERROR')
+    await app.close()
+  })
+
   it('GET /api/match/unknown 返回 404', async () => {
     const app = await makeApp()
     const response = await app.inject({ method: 'GET', url: '/api/match/nope' })

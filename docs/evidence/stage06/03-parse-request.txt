@@ -1,0 +1,11 @@
+# 命令：node skill/mc-arena/scripts/parse-request.mjs "3个人 预算60 要低卡 外带"
+
+输入：3个人 预算60 要低卡 外带
+解析结果：--people 3 --budget 60 --scene take-away --goal low-cal
+  · 人数：3（来自「3个人」）
+  · 预算：¥60（来自「预算60」）
+  · 目标：低热量（来自「低卡」）
+  · 场景：外带（来自「外带」）
+
+# 命令：node .../parse-request.mjs "双人堂食 50元以内 高蛋白 用券" --print-args
+--people 2 --budget 50 --scene dine-in --goal protein --coupons
