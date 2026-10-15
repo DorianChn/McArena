@@ -208,7 +208,7 @@ NODE_PATH="<隔离工作区>/node_modules" node tools/e2e/visual-check.mjs
 - 本文与仓库中**不含**任何真实 Token、Cookie、API Key、账号、手机号、邮箱、身份证或私人数据。
 - `.env` 已在 `.gitignore` 中排除，仅提交 `.env.example`（占位值）。
 - 麦当劳 MCP Token **从未获取**，因此不存在泄露风险；日志器（`packages/shared/src/logger.ts`）对 `token` / `authorization` / `password` 等字段自动输出 `[REDACTED]`，并有单测覆盖。
-- Installation paths are shown as generic placeholders; no machine-specific paths are included.
+- 文中的安装路径均使用通用占位符，仅用于说明命令形式，不包含真实本地路径。
 
 ---
 
