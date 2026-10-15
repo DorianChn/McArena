@@ -124,3 +124,11 @@
 
 
 
+
+## 十一、发布与报名状态（2026-10-15 更新）
+
+- Public 仓库：[DorianChn/McArena](https://github.com/DorianChn/McArena)，创建于 2026-10-15 09:38:07 UTC；完整项目已推送至 main。
+- 首次 GitHub Actions CI：成功。
+- 报名申请：[活动 Issue #753](https://github.com/M-China/mcd-developer-innovation-challenge/issues/753)，OPEN，提交后检查时尚无官方机器人回复；是否通过暂无法确认。
+- MCP Token 实网联调与 schema / 快照字段校验仍未完成；公开演示使用场景模拟数据并已标注。
+- 上传后的公开 Star 数为 0；活动排行榜要求 Star 大于 0 才纳入。

@@ -159,3 +159,15 @@ WorkBuddy 连接器配置样例见 `mcp-config.example.json`（仅 `${MCD_MCP_TO
 
 
 
+
+## 13. 当前发布状态（2026-10-15 更新）
+
+> 本文件第 1–12 节写于发布前；本节记录用户授权后的实际状态，并覆盖其中“待发布 / 未授权”的旧状态。原文列出的本地提交哈希已因公开前路径与邮箱隐私清理而重写，不对应当前 GitHub 哈希。
+
+- **公开仓库**：[DorianChn/McArena](https://github.com/DorianChn/McArena)，Public；创建时间为 2026-10-15 09:38:07 UTC（北京时间 17:38:07）。
+- **代码**：完整项目已推送至 main。公开历史经过本机路径与提交邮箱扫描；未发现真实 .env 或匹配的凭据特征。
+- **声明文件**：GitHub 上的 CONTEST_DECLARATION.md blob SHA 与活动官方仓库一致。
+- **CI**：首次推送的 GitHub Actions workflow 已通过；后续文档更新以最新 workflow 状态为准。
+- **报名**：[活动 Issue #753](https://github.com/M-China/mcd-developer-innovation-challenge/issues/753) 已按官方格式提交，状态 OPEN；截至本次更新尚无官方机器人回复，故报名审核结果仍待确认。
+- **MCP 实网联调**：仍为 BLOCKED（未取得 Token）；演示使用已标注的场景模拟数据，不能视为真实菜单 / 价格 / 营养数据验证。
+- **排行榜**：当前公开 Star 数为 0；按官方规则，进入排行榜须大于 0。
