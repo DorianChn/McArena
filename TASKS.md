@@ -172,6 +172,21 @@
 | S6-9 🤖 | `workbuddy.md`：真实开发阶段/指令/功能/调试/证据 + 脱敏 + 缺失注明 | 架构师 | ✅ 完成 | 原始对话导出待用户追加 |
 | S6-10 🤖 | 测试与门禁：新增 55 项（全库 189/189）+ typecheck/lint/build 全绿 + 本地提交 | 全栈 | ✅ 完成 | 未 push GitHub |
 
+## 阶段07 完整质量保证、安全审计与稳定性修复（10/14–10/15）
+
+> 目标：不增加新功能，把项目打磨到可公开发布的工程质量。
+> 详细实测数据见 `STAGE_07_REPORT.md` / `TEST_REPORT.md` / `SECURITY_AUDIT.md` / `PERFORMANCE_REPORT.md`；本地提交 `0b7cc81`，**未 push GitHub**。
+
+| ID | 任务 | 负责 | 状态 | 验收 |
+|---|---|---|---|---|
+| S7-1 🤖 | 代码质量审计：TypeScript strict / ESLint / 依赖关系 / 无用代码 / 未处理异常 | 全栈 | ✅ 完成 | typecheck 0 错；lint **31 warnings → 0**（5 处真修 + CLI no-console 与 context hook 精确豁免）；0 unhandled error |
+| S7-2 🤖 | 自动化测试补全：核心算法 / MCP / Agent / Judge / API / React UI / E2E | 全栈 | ✅ 完成 | **18 文件 202 例 → 20 文件 215 例全绿**；新增 concurrency(8)/ui.tsx(5)/performance(2)/mock-adapter(3)/rate-limiter(3)/retry(3) |
+| S7-3 🤖 | 异常测试矩阵：MCP 失败 / Token 失效 / 限流 / 空菜单 / 网络中断 / 参数异常 / 超时 / 并发 / 取消 / 无有效方案 | 全栈 | ✅ 完成 | 11 项矩阵 10 项覆盖；**真实官方 MCP 联调 ⛔ BLOCKED（无 Token，未记 PASS）** |
+| S7-4 🤖 | 安全审计：硬编码密钥 / 日志脱敏 / 依赖漏洞 / 输入验证 / 未授权操作 / 危险执行 / Git 历史 | 架构师 | ✅ 完成 | 历史与工作区无密钥；脱敏有单测；**npm audit 4 漏洞 → 0**；0 处 eval；残余风险 R1–R4 登记在案 |
+| S7-5 🤖 | 性能测试：响应时间 / 内存 / 大量候选计算成本 / 异常资源释放 | 算法 | ✅ 完成 | 单局墙钟 17–26 ms（满候选 288）；20 连跑堆增 +1.6–2.6 MB 且有负增长（可回收）；MatchStore 200 环形淘汰有界 |
+| S7-6 🤖 | 浏览器实测（真实 Chrome）：全链路 + 移动端 + 控制台 | 全栈 | ✅ 完成 | 控制台 **0 错误 / 0 警告**；16 步通过；移动端无横向溢出；证据 `docs/screenshots/stage07/` |
+| S7-7 🤖 | 四份报告 + TASKS 更新 + 本地提交 | 全栈 | ✅ 完成 | `STAGE_07_REPORT.md` 等 4 份；提交 `0b7cc81`（未 push） |
+
 ## 阻塞项登记（Blockers）
 
 | 编号 | 描述 | 解除条件 | 影响范围 |
@@ -181,4 +196,6 @@
 | B3 | `snapshots/` 无官方快照（阶段06 新登记） | 采集并放入官方快照，或申请 Token 后实时采集 | replay 模式与 Skill 的官方数据演示；当前回退场景数据集（已明确标注 mock） |
 | B4 | ~~阶段05 浏览器实测与截图未完成~~ **已解除（10/14）** | — | 已完成：控制台 0 错误 + 9 张截图 + `STAGE_05_REPORT.md` |
 | B5 | 演示 GIF 未录制；未做跨浏览器与真机实测（阶段05 新登记） | 使用录屏工具；在 Firefox/Safari 与真机复测 | 交付物打磨；不影响功能验收 |
+| B6 | 真实官方 MCP 联调测试无法执行（阶段07 审计确认） | 用户在 open.mcd.cn/mcp 申请 Token 写入本地 `.env` | 与 B1 同根因；mock/fake 服务器已覆盖协议与异常语义，Token 到位后跑同一套 contract 用例即可解锁 |
+| B7 | 本机 `npm run dev` 受安全防护限制不可用（Vite 清理 `.vite/deps` 被拦截，8787 常被占用） | 换机器/关闭防护后使用 dev；当前以 `preview`（生产构建）替代完成全部浏览器实测 | 本地开发体验；不影响交付与验收 |
 
