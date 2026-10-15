@@ -1,7 +1,7 @@
 # 命令：node skill/mc-arena/scripts/run-match.mjs --people 2 --budget 60 --goal balanced --seed 42
 # 时间：2026-10-14T20:33:18+08:00
 
-[mc-arena] 已启用默认产物输出：<repo-root>\artifacts
+[mc-arena] 已启用默认产物输出：<仓库根目录>\artifacts
 ──────────────────────────────────────────────────────────────────
 麦门 AI 竞技场 · 单局战报（种子 42｜模式 mock）
 ──────────────────────────────────────────────────────────────────
@@ -65,6 +65,6 @@
   "experimentId": "exp_bcc724febf31e0b8"
 }
 
-已生成可打开的竞技场结果：<repo-root>\artifacts\mc-arena-2026-10-14T12-33-18-723Z.html
-已生成 JSON 结果：<repo-root>\artifacts\mc-arena-2026-10-14T12-33-18-723Z.json
+已生成可打开的竞技场结果：<仓库根目录>\artifacts\mc-arena-2026-10-14T12-33-18-723Z.html
+已生成 JSON 结果：<仓库根目录>\artifacts\mc-arena-2026-10-14T12-33-18-723Z.json
 ──────────────────────────────────────────────────────────────────

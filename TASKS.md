@@ -8,7 +8,7 @@
 | ID | 任务 | 负责 | 状态 | 验收 |
 |---|---|---|---|---|
 | P0-1 🤖 | 研读官方三仓库 + WorkBuddy skill 文档，确认规则/工具清单/时间节点 | 架构师 | ✅ 完成 | 见 PROJECT_PLAN.md §1 |
-| P0-2 🤖 | 创建 `<repo-root>` 并 `git init` | 架构师 | ✅ 完成 | 目录存在，main 分支 |
+| P0-2 🤖 | 创建 `<仓库根目录>` 并 `git init` | 架构师 | ✅ 完成 | 目录存在，main 分支 |
 | P0-3 🤖 | 写入 CONTEST_DECLARATION.md（官方原文，禁止改动） | 架构师 | ✅ 完成 | diff 与官方仓库一致 |
 | P0-4 🤖 | 写入 mcp-config.example.json（仅环境变量占位符） | 架构师 | ✅ 完成 | 无任何真实凭据 |
 | P0-5 🤖 | npm workspaces 骨架：根 package.json / tsconfig.base / .gitignore / .editorconfig | 后端 | ✅ 完成 | `npm install` 成功 |

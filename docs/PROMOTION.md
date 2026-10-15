@@ -7,22 +7,22 @@
 
 ### 短版（一句话）
 
-**McArena（麦门 AI 竞技场）**是一个基于麦当劳中国官方 MCP Server 的双 Agent 点餐决策竞技平台：两个算法风格迥异的 AI（极速猎手 α / 深度优化师 β）在真实菜单数据上同台竞技，一位独立裁判基于规则公开透明地打分——每一局都可解释、可复现。
+**McArena（麦门 AI 竞技场）**是一个实现麦当劳中国 MCP 客户端的双 Agent 点餐决策竞技平台：两个算法风格迥异的 Agent（极速猎手 α / 深度优化师 β）在同一任务卡和当前数据集上对决，独立裁判基于规则公开透明地打分。公开演示使用明确标注的场景模拟数据；官方 MCP 实时联调与 schema 校验尚未完成。
 
 ### 长版（约 200 字）
 
-McArena 把「点点点餐」变成一场可观看、可评判、可复现的 AI 竞赛。玩家下发一张任务卡（预算 × 人数 × 场景 × 营养目标），Agent α 用单遍贪心秒速给出最便宜的有效解，Agent β 用束搜索在数百个候选购物车中逐一真实计价、择优而出。裁判不信任任何 Agent 的自述成绩：餐品存在性、单价、优惠、营养、应付价格全部独立重算，优先通过官方 `calculate-price` 核价，无法核价时明确标注 NOT_VERIFIED。项目内置演示模式（无需 Token，标注模拟数据）与官方实时模式（MCP Token 接入）双通道，全部比赛输出含 `experimentId`，同种子逐字节复现。
+McArena 把点餐决策变成一场可观看、可评判、可复现的竞技。玩家提交预算、人数、场景和营养目标，Agent α 用单遍贪心构造方案，Agent β 用束搜索比较多个候选购物车。独立裁判基于当前数据集重新核对餐品、价格、优惠和营养；只有获得官方 `calculate-price` 结果时才按官方核价标记，否则明确标注 NOT_VERIFIED。默认演示使用无需 Token 的场景模拟数据。麦当劳 MCP 客户端已实现，但真实 Token 联调、官方 schema 校验和快照字段映射尚未完成。比赛输出含 `experimentId`，同种子结果可复现。
 
 ## 二、简明英文介绍
 
-**McArena (McDonald's AI Arena)** is a dual-agent ordering-decision arena built on McDonald's China official MCP Server. Two algorithmically distinct agents — a greedy "Speed Hunter" and a beam-search "Optimizer" — compete on the same menu snapshot, while an independent judge re-computes every claim (item existence, prices, coupons, nutrition) instead of trusting agent self-reports. Every match is explainable and bit-for-bit reproducible via `(seed, snapshotHash)`. Ships with a mock demo mode (no token required, clearly labeled) and an official live mode.
+**McArena (McDonald's AI Arena)** implements a client for McDonald's China MCP and compares two algorithmic agents — a greedy "Speed Hunter" and a beam-search "Optimizer" — on the same task and dataset. The default demo uses clearly labeled scenario data. Live MCP calls, response-schema validation, and typed snapshot mapping are pending an MCP token and real-server verification. The independent judge recalculates results from the active dataset, and matches are reproducible via `(seed, snapshotHash)`.
 
 ## 三、适合 GitHub 的项目描述
 
 ### About 一句话描述（≤ 350 字符）
 
 ```
-Dual-agent ordering-decision arena on McDonald's China official MCP Server: greedy vs beam-search agents compete while an independent judge re-computes every claim. Explainable, reproducible, zero-token demo mode.
+Dual-agent ordering-decision arena with a McDonald's China MCP client; labeled scenario-data demo; live calls and schema mapping await token verification.
 ```
 
 ### Topics 建议
@@ -41,10 +41,10 @@ mcp, mcdonalds, mcp-server, ai-agents, multi-agent, decision-making, typescript,
 | 2 | **裁判不信任 Agent** | 自述应付价与裁判重算价并列展示；致命违规直接取消获胜资格，「无效方案不能凭低价取胜」 |
 | 3 | **复现性是硬约束** | 相同 `(seed, snapshotId)` 两次运行 MatchRecord 除记录 ID 外字节级一致，有测试锁定 |
 | 4 | **数据诚实** | `DataOrigin` 三分法贯穿前后端；mock 数据在界面、CLI、JSON 三处强制标注「模拟数据」 |
-| 5 | **零 Token 全链路演示 | `npm ci && npm run dev` 即可完整跑通，CI 与评审环境无需任何凭据 |
+| 5 | **零 Token 全链路演示** | `npm ci && npm run dev` 即可完整跑通，CI 与评审环境无需任何凭据 |
 | 6 | **三端同源** | 网页 / CLI / WorkBuddy Skill 共用同一 `runArenaMatch()`，Skill 不复制业务逻辑 |
-| 7 | **写操作红线 | 只读白名单 + 下单黑名单双重机制，`create-order` 等默认拒绝且有单测 |
-| 8 | **工程质量可验证 | lint 0/0、typecheck 0 错、222 单测、npm audit 0 漏洞、浏览器实测 0 控制台错误 |
+| 7 | **写操作红线** | 只读白名单 + 下单黑名单双重机制，`create-order` 等默认拒绝且有单测 |
+| 8 | **工程质量可验证** | 本地记录为 lint 0/0、typecheck 0 错、222 单测、npm audit 0 漏洞、浏览器实测 0 控制台错误；当前远端 CI 状态以 GitHub Actions 为准 |
 
 ## 五、原创技术亮点
 
@@ -80,8 +80,8 @@ npm workspaces × 5 包，类型与契约单一事实来源：
 | 服务 | `apps/api` | Fastify：`/api/match`、`/api/match/:id/stream`（SSE）、`/api/snapshot`、`/api/healthz` |
 | 界面 | `apps/web` | React + Vite + Tailwind v4：四页面、双主题、SVG 雷达图、分享卡导出 PNG |
 
-数据流：`mcp.mcd.cn` →（live，需 Token）→ 快照落盘（sha256 manifest）→ `snapshots/` →（replay）→ `arena-core` 引擎 → MatchRecord → Web / Skill。
-无 Token 时引擎直接在场景数据集（mock）上运行，`dataOrigin` 全程可见。
+目标数据流：`mcp.mcd.cn` →（live，需 Token；未完成实测）→ 原始响应快照（sha256 manifest）→（schema 映射待完成）→ `arena-core` 引擎 → MatchRecord → Web / Skill。
+当前无 Token；引擎使用场景模拟数据运行，`dataOrigin` 全程可见。
 
 一句话架构：**「MCP 客户端只管取数，引擎只管决策，裁判只管验证，契约只管类型」**——四层各自可独立测试（222 项单测即按此分层）。
 

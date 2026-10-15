@@ -71,9 +71,9 @@
 npx vitest run packages/arena-core/test/performance.test.ts
 
 # 浏览器实测证据（需先起 preview，见 STAGE_07_REPORT §五）
-NODE_PATH="<playwright-node-modules>" \
+NODE_PATH="<PLAYWRIGHT_NODE_MODULES>" \
 MC_BASE_URL="http://127.0.0.1:5174" \
-MC_SHOT_DIR="<repo-root>/docs/screenshots/stage07" \
+MC_SHOT_DIR="<仓库根目录>/docs/screenshots/stage07" \
 node tools/e2e/visual-check.mjs
 ```
 

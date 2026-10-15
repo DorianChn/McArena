@@ -1,7 +1,7 @@
 # MCP 集成说明（MCP_INTEGRATION.md）
 
-> 本文档说明 McArena 实际使用的麦当劳 MCP Server、工具、调用流程与业务价值。
-> 官方来源：[mcd-mcp-server](https://github.com/M-China/mcd-mcp-server) ｜ 更新于 2026-10-14，工具行为以实测 schema 快照为准（见下文「实测校验」）。
+> 本文档说明 McArena 中实现的麦当劳 MCP 客户端、目标工具调用流程与业务价值。下列调用流程和工具参数依据官方公开文档整理；项目尚未取得 MCP Token，未对真实 Server 完成联调，也没有实测 schema 快照。
+> 官方来源：[mcd-mcp-server](https://github.com/M-China/mcd-mcp-server) ｜ 文档更新于 2026-10-15；真实 schema 校验状态见下文「实测校验」。
 
 ## 1. MCP Server
 
@@ -16,7 +16,9 @@
 
 项目内配置示例见 [`mcp-config.example.json`](mcp-config.example.json)，仅含 `${MCD_MCP_TOKEN}` 环境变量占位符；其结构与官方 WorkBuddy 开发指南公布的连接器配置一致（`type: streamablehttp` + `url` + `Authorization: Bearer <Token>` 请求头）。
 
-## 2. 实际使用的工具
+## 2. 计划接入的工具及代码用途
+
+客户端实现了这些只读工具的调用路径和协议层处理；由于尚无 MCP Token，尚不能声称已从官方 Server 成功调用或取得真实业务数据。
 
 | 工具名 | 官方描述 | 在 McArena 中的用途 |
 |---|---|---|
@@ -37,7 +39,9 @@
 | `query-my-coupons` / `query-my-account` / `query-my-prizes` / `order-list` / `mall-order-*` | 依赖个人账号数据，不可复现且涉及隐私，违背「可复现」核心设计 |
 | `delivery-query-addresses` / `delivery-create-address` | 同上，且为写操作 |
 
-## 3. 调用流程
+## 3. 目标调用流程（真实联调待完成）
+
+下列流程描述已实现的客户端路径与预期数据流，不代表已成功对接官方 Server。真实响应的 schema 映射和比赛快照组装尚待 Token 联调后完成。
 
 ```
 [a] 快照采集（实时模式 / 发布前执行）
@@ -81,4 +85,4 @@
 >
 > **采集工具设计约束（不伪造字段）**：`tools/snapshot-capture.ts` 只落盘**原始响应**与 manifest（逐文件 sha256），不做任何字段映射——官方返回 schema 未经真实 Token 实测前，把响应映射成 `MCPDataSnapshot` 属于猜测字段。类型化快照组装待 P1-4 校验后按实测 schema 进行（P1-6），manifest 中 `mappingVerified` 恒为 false。
 >
-> 阶段03 双 Agent 引擎已在数据结构上与官方 MCP 输出解耦：只要把 `scenario://stage03-fixtures` 数据集替换为 `replay`/`live` 模式产出的官方数据集，`npm run bench` 与 `npm run demo` 无需任何代码改动即可在真实官方数据上复现全部对比指标。
+> 阶段03 双 Agent 引擎已在数据结构上与 MCP 客户端解耦。真实响应尚未映射为 `MCPDataSnapshot`；需要先按真实 schema 完成映射与快照组装，再验证 `replay`/`live` 数据上的比赛结果。当前 `npm run demo` 与 `npm run bench` 使用明确标注的场景模拟数据。

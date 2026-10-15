@@ -7,7 +7,7 @@
  * 依赖：playwright-core（隔离安装，经 NODE_PATH 加载）与系统 Chrome。
  *
  * 用法：
- *   NODE_PATH="<playwright-node-modules>" \
+ *   NODE_PATH="<PLAYWRIGHT_NODE_MODULES>" \
  *   node tools/e2e/capture-demo-frames.mjs
  *
  * 环境变量：

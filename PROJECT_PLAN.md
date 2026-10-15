@@ -13,7 +13,7 @@
 | 参赛赛事 | 麦当劳程序员创意开发大赛（2026） |
 | 核心形态 | 双 Agent 点餐决策竞技 + 可解释智能裁判 + 中文可视化界面 + WorkBuddy Skill |
 | 技术底座 | 麦当劳中国官方 MCP Server（`https://mcp.mcd.cn`，Streamable HTTP） |
-| 项目仓库（本地） | `<repo-root>` |
+| 项目仓库（本地） | `<仓库根目录>` |
 
 ### 1.1 关键时间节点（北京时间，来自官方 activityGuidelines.md）
 
@@ -52,7 +52,7 @@ P0 基座 ──→ P1 数据接入 ──→ P2 竞技内核 ──→ P3 服�
 | 任务 | 产出 | 负责人 |
 |---|---|---|
 | 阅读官方三仓库 + WorkBuddy skill 文档 | 本文档及 ARCHITECTURE.md | 架构师（已完成） |
-| 创建本地项目 + git init | `<repo-root>` | 已完成 |
+| 创建本地项目 + git init | `<仓库根目录>` | 已完成 |
 | 写入 CONTEST_DECLARATION.md（官方原文，禁止改动） | 合规锁 | 已完成 |
 | 写入 mcp-config.example.json（仅环境变量占位符） | 合规锁 | 已完成 |
 | npm workspaces 骨架 + tsconfig + Vitest + CI | 可编译空项目 | 后端 |

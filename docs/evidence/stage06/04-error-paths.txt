@@ -14,7 +14,7 @@ exit=3
 
 ## 4) 正常路径（默认产物）
 
-已生成可打开的竞技场结果：<repo-root>\artifacts\mc-arena-2026-10-14T12-33-59-807Z.html
-已生成 JSON 结果：<repo-root>\artifacts\mc-arena-2026-10-14T12-33-59-807Z.json
+已生成可打开的竞技场结果：<仓库根目录>\artifacts\mc-arena-2026-10-14T12-33-59-807Z.html
+已生成 JSON 结果：<仓库根目录>\artifacts\mc-arena-2026-10-14T12-33-59-807Z.json
 ──────────────────────────────────────────────────────────────────
-[mc-arena] 已启用默认产物输出：<repo-root>\artifacts
+[mc-arena] 已启用默认产物输出：<仓库根目录>\artifacts

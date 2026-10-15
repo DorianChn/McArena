@@ -1,8 +1,8 @@
 # McArena · 麦门 AI 竞技场
 
-> 基于麦当劳中国官方 MCP Server 的**双 Agent 点餐决策竞技平台**——两个 AI 策略在真实菜单数据上同台竞速，独立裁判透明打分，每一局都可解释、可复现。
+> 基于麦当劳中国 MCP 接入方案的**双 Agent 点餐决策竞技平台**——两种算法策略在同一任务卡与数据集上对决，独立裁判透明评分。公开演示使用明确标注的场景数据；官方 MCP 实时联调与返回 schema 校验尚未完成。
 
-[![CI](https://github.com/OWNER/McArena/actions/workflows/ci.yml/badge.svg)](https://github.com/OWNER/McArena/actions)
+[![CI](https://github.com/DorianChn/McArena/actions/workflows/ci.yml/badge.svg)](https://github.com/DorianChn/McArena/actions)
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
 ![Node](https://img.shields.io/badge/node-%3E%3D20-brightgreen)
 ![Tests](https://img.shields.io/badge/tests-222%2F222-brightgreen)
@@ -25,19 +25,19 @@
 一张任务卡（预算 × 人数 × 场景 × 约束）+ 两名风格迥异的点餐 Agent + 一位只认规则的裁判：
 
 - ⚡ **Agent α「极速猎手」（Speed Agent）**：单遍贪心构造，只评估 1 个候选方案，用最低计算成本给出一个便宜、可预测的有效解；
-- 🔬 **Agent β「深度优化师」（Optimizer Agent）**：束搜索枚举成百上千个候选购物车，逐一修复硬约束、逐一真实计价，按「约束满足率 → 营养偏差 → 价格」择优；
-- ⚖️ **独立智能裁判（Judge Engine）**：需求满足度 / 预算控制 / 营养均衡 / 优惠利用 / 可解释性，五维打分、公式公开、证据可查。裁判**不信任 Agent 自己报告的成绩**——餐品存在性、单价、优惠、营养、应付价格全部由裁判基于当前数据集独立重算；优先通过官方 `calculate-price` 核价，无法核价时明确标注 **NOT_VERIFIED**；出现致命违规的方案直接失去获胜资格，**无效方案不能凭低价取胜**；每局产出可复现的 `experimentId`。
+- 🔬 **Agent β「深度优化师」（Optimizer Agent）**：束搜索枚举成百上千个候选购物车，逐一修复硬约束、按当前数据源计算价格，按「约束满足率 → 营养偏差 → 价格」择优；
+- ⚖️ **独立智能裁判（Judge Engine）**：需求满足度 / 预算控制 / 营养均衡 / 优惠利用 / 可解释性，五维打分、公式公开、证据可查。裁判**不信任 Agent 自己报告的成绩**——餐品存在性、单价、优惠、营养、应付价格全部由裁判基于当前数据集独立重算；只有取得官方 `calculate-price` 结果时才按官方核价标记，否则明确标注 **NOT_VERIFIED**；出现致命违规的方案直接失去获胜资格，**无效方案不能凭低价取胜**；每局产出可复现的 `experimentId`。
 
 两名 Agent 的算法**实质不同**（贪心 vs 束搜索），基准测试实测差异：平均候选数 1 vs 134、平均工具调用 1 vs 4.75 次；模拟数据下 α 更便宜、β 营养与用券更优。两者均为**算法型 Agent**（未配置大模型，已明确标注），不得把固定输出冒充 AI 推理。
 
-所有价格来自官方 `calculate-price` 工具，所有餐品与营养来自官方菜单工具——**没有任何编造的数据**。
+默认演示模式使用仓内场景数据，并明确标注为模拟数据。项目已实现麦当劳 MCP 客户端与只读工具调用链，但尚未取得 Token，因此没有真实菜单、价格或营养数据的联调证据；未经成功联调与校验的数据不会标为官方数据。
 
 ## ✨ 特性
 
-- **真实数据**：直连麦当劳中国官方 MCP Server（`https://mcp.mcd.cn`，Streamable HTTP）；
+- **麦当劳 MCP 集成（未完成实网验证）**：实现 Streamable HTTP 客户端与只读工具白名单；真实连接和工具 schema 待 Token 到位后验证；
 - **可复现**：固定随机种子 + 数据快照哈希，同一局比赛任何人运行结果完全一致；
 - **可解释**：裁判每项得分都附带公式与证据，独立验证报告逐条列出违规（severity + 数据证据引用），拒绝黑箱；
-- **无 Token 也能玩**：默认使用仓内**场景数据集**（界面明确标注「模拟数据，非麦当劳官方数据」），克隆即可完整演示；配置官方快照后自动切换为官方数据；
+- **无 Token 也能玩**：默认使用仓内**场景数据集**（界面明确标注「模拟数据，非麦当劳官方数据」），克隆即可完整演示；完成字段映射与校验前，演示只使用明确标注的场景模拟数据；
 - **安全**：只读工具白名单，默认禁止任何下单写操作；
 - **WorkBuddy Skill**：在 WorkBuddy 对话里说「来一场麦门竞技」即可开赛（见 [`skill/mc-arena/INSTALL.md`](skill/mc-arena/INSTALL.md)）。
 
@@ -48,11 +48,11 @@
 | 模式 | 数据来源 | 需要 Token | 界面标识 | 用途 |
 |---|---|---|---|---|
 | **演示模式**（默认） | 仓内场景数据集 `scenario://stage03-fixtures` | ❌ 不需要 | 黄色「模拟数据」徽标 | 克隆即可完整走通全链路，适合体验、教学、CI |
-| **官方实时模式** | 官方 MCP Server 实时采集 + 快照回放 | ✅ 需要 | 「已验证数据（官方）」徽标 | 官方菜单 / 价格 / 优惠 / 营养数据上的真实竞技 |
+| **官方数据模式（待联调）** | MCP Server 实时采集；原始快照的字段映射尚未完成 | ✅ 需要 | 仅在数据成功校验后显示官方来源 | 目标是使用官方菜单 / 价格 / 优惠 / 营养数据 |
 
 - 演示模式输出中的每一处数据均带 `dataOrigin: mock`，绝不冒充官方数据；
-- 官方实时模式下，可通过 `tools/snapshot-capture.ts` 把当次采集固化为带 sha256 的快照，之后以 `replay` 模式逐字节复现；
-- **当前状态（如实说明）**：官方实时模式代码已完成并通过协议契约测试，但 MCP Token 尚未申请（需手机号验证 + 人机验证），`live` 模式暂不可用——详见 [MCP_INTEGRATION.md](MCP_INTEGRATION.md) 与 [`STAGE_06_REPORT.md`](STAGE_06_REPORT.md)「实际限制」。
+- 快照采集工具目前只保存原始响应和 sha256 manifest，尚未完成将真实响应映射为比赛快照的步骤；
+- **当前状态（如实说明）**：MCP 客户端协议层通过假服务器契约测试；真实 live 联调与官方 schema 验证尚未完成（BLOCKED：尚无 MCP Token），快照字段映射也待完成——详见 [MCP_INTEGRATION.md](MCP_INTEGRATION.md)。
 
 ## 🚀 快速开始
 
@@ -64,18 +64,16 @@
 ### 一键启动（演示模式，无需 Token）
 
 ```bash
-git clone https://github.com/OWNER/McArena.git
+git clone https://github.com/DorianChn/McArena.git
 cd McArena
 npm ci
 npm run dev
 # 前端 http://localhost:5173 ｜ API http://localhost:8787
 ```
 
-### 官方实时模式（需要麦当劳 MCP Token）
+### 官方 MCP 原始响应采集（需要麦当劳 MCP Token；比赛映射尚未完成）
 
-1. 前往 [麦当劳 MCP 开放平台](https://open.mcd.cn/mcp)，手机号登录后在控制台「激活」申请 MCP Token；
-2. 复制 `.env.example` 为 `.env`，设置 `MCD_MCP_MODE=live` 与 `MCD_MCP_TOKEN`（**不要提交 .env**）；
-3. `npm run dev`。
+当前版本尚未完成真实 Token 联调、官方响应 schema 校验及快照字段映射，不能据此运行官方菜单上的完整比赛。取得 Token 后可按 [MCP_INTEGRATION.md](MCP_INTEGRATION.md) 采集只读原始响应；在映射与校验完成前，演示仍使用明确标记的场景模拟数据。
 
 ### 命令行竞技（无需启动服务，本地完整体验）
 
@@ -87,7 +85,7 @@ npm run demo -w @mcarena/arena-core -- cancel    # 演示：取消执行 → CAN
 ```
 
 `--goal` 可选：`balanced` / `protein` / `low-sodium` / `low-cal` / `budget` / `none`；
-`--mode` 可选：`auto`（默认，官方快照优先，缺失则回退场景数据集）/ `mock` / `replay` / `live`。
+`--mode` 可选：`auto`（默认；当前官方快照目录为空，运行使用场景数据集）/ `mock` / `replay` / `live`。
 
 ### 质量检查
 

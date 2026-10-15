@@ -143,15 +143,15 @@ export { buildCustomChallenge }  // 来自 @mcarena/arena-core，Web·CLI·Skill
 
 ```
 $ node skill/mc-arena/scripts/install.mjs
-[install] 源目录：<repo-root>\skill\mc-arena
+[install] 源目录：<仓库根目录>\skill\mc-arena
 [install] 目标目录：~\.workbuddy-ai\skills\mc-arena
-[install] 仓库根：<repo-root>
+[install] 仓库根：<仓库根目录>
 [install] 完成 ✅
 ```
 
 ### 5.2 从**无关工作目录**调用已安装 Skill（验证仓库定位）
 
-cwd = `<external-workdir>`（与仓库无关）：
+cwd = `<其他工作目录>`（与仓库无关）：
 
 ```
 $ node ~/.workbuddy-ai/skills/mc-arena/scripts/run-match.mjs \
@@ -227,8 +227,8 @@ exit=2
 exit=3
 
 ## 4) 正常路径（默认产物）
-已生成可打开的竞技场结果：<repo-root>\artifacts\mc-arena-<时间戳>.html
-已生成 JSON 结果：<repo-root>\artifacts\mc-arena-<时间戳>.json
+已生成可打开的竞技场结果：<仓库根目录>\artifacts\mc-arena-<时间戳>.html
+已生成 JSON 结果：<仓库根目录>\artifacts\mc-arena-<时间戳>.json
 ```
 
 ### 5.6 产物
