@@ -5,9 +5,24 @@
 [![CI](https://github.com/OWNER/McArena/actions/workflows/ci.yml/badge.svg)](https://github.com/OWNER/McArena/actions)
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
 ![Node](https://img.shields.io/badge/node-%3E%3D20-brightgreen)
+![Tests](https://img.shields.io/badge/tests-222%2F222-brightgreen)
 ![MCP](https://img.shields.io/badge/McDonald's%20MCP-mcp.mcd.cn-red)
 
-一局比赛 = 一张任务卡（预算 × 人数 × 场景 × 约束）+ 两名风格迥异的点餐 Agent + 一位只认规则的裁判：
+## 🖼 界面展示（真实截图）
+
+以下截图来自**生产构建 + 真实 Chrome** 的 16 步链路实测（2026-10-15，控制台 0 错误 / 0 警告，证据见 [`docs/screenshots/stage07/`](docs/screenshots/stage07/)），非设计稿：
+
+| 首页（深色） | 竞技场（回放中） | 结果页（五维对比） |
+|---|---|---|
+| ![首页](docs/screenshots/stage07/01-home-dark.png) | ![竞技场](docs/screenshots/stage07/04-arena-dark.png) | ![结果页](docs/screenshots/stage07/05-result-dark.png) |
+| 挑战设置 | 结果页（浅色） | 移动端 |
+| ![挑战设置](docs/screenshots/stage07/03-setup-dark.png) | ![结果页浅色](docs/screenshots/stage07/05b-result-light.png) | ![移动端](docs/screenshots/stage07/06-mobile-home-light.png) |
+
+> 动态演示：20 帧真实会话采集帧见 [`docs/screenshots/gif-frames/`](docs/screenshots/gif-frames/)（采集器 [`tools/e2e/capture-demo-frames.mjs`](tools/e2e/capture-demo-frames.mjs) 可一键重采）。本环境不生成视频，GIF 合成命令见「[演示 GIF](#-演示-gif合成)」。
+
+## 🎮 一局比赛是什么
+
+一张任务卡（预算 × 人数 × 场景 × 约束）+ 两名风格迥异的点餐 Agent + 一位只认规则的裁判：
 
 - ⚡ **Agent α「极速猎手」（Speed Agent）**：单遍贪心构造，只评估 1 个候选方案，用最低计算成本给出一个便宜、可预测的有效解；
 - 🔬 **Agent β「深度优化师」（Optimizer Agent）**：束搜索枚举成百上千个候选购物车，逐一修复硬约束、逐一真实计价，按「约束满足率 → 营养偏差 → 价格」择优；
@@ -22,9 +37,22 @@
 - **真实数据**：直连麦当劳中国官方 MCP Server（`https://mcp.mcd.cn`，Streamable HTTP）；
 - **可复现**：固定随机种子 + 数据快照哈希，同一局比赛任何人运行结果完全一致；
 - **可解释**：裁判每项得分都附带公式与证据，独立验证报告逐条列出违规（severity + 数据证据引用），拒绝黑箱；
-- **无 Token 也能玩**：默认使用仓内**场景数据集**（明确标注「模拟数据，非麦当劳官方数据」），克隆即可完整演示；配置官方快照后自动切换为官方数据；
+- **无 Token 也能玩**：默认使用仓内**场景数据集**（界面明确标注「模拟数据，非麦当劳官方数据」），克隆即可完整演示；配置官方快照后自动切换为官方数据；
 - **安全**：只读工具白名单，默认禁止任何下单写操作；
 - **WorkBuddy Skill**：在 WorkBuddy 对话里说「来一场麦门竞技」即可开赛（见 [`skill/mc-arena/INSTALL.md`](skill/mc-arena/INSTALL.md)）。
+
+<!-- APPEND-MARKER -->
+
+## 🔀 两种数据模式
+
+| 模式 | 数据来源 | 需要 Token | 界面标识 | 用途 |
+|---|---|---|---|---|
+| **演示模式**（默认） | 仓内场景数据集 `scenario://stage03-fixtures` | ❌ 不需要 | 黄色「模拟数据」徽标 | 克隆即可完整走通全链路，适合体验、教学、CI |
+| **官方实时模式** | 官方 MCP Server 实时采集 + 快照回放 | ✅ 需要 | 「已验证数据（官方）」徽标 | 官方菜单 / 价格 / 优惠 / 营养数据上的真实竞技 |
+
+- 演示模式输出中的每一处数据均带 `dataOrigin: mock`，绝不冒充官方数据；
+- 官方实时模式下，可通过 `tools/snapshot-capture.ts` 把当次采集固化为带 sha256 的快照，之后以 `replay` 模式逐字节复现；
+- **当前状态（如实说明）**：官方实时模式代码已完成并通过协议契约测试，但 MCP Token 尚未申请（需手机号验证 + 人机验证），`live` 模式暂不可用——详见 [MCP_INTEGRATION.md](MCP_INTEGRATION.md) 与 [`STAGE_06_REPORT.md`](STAGE_06_REPORT.md)「实际限制」。
 
 ## 🚀 快速开始
 
@@ -33,7 +61,7 @@
 - Node.js ≥ 20（开发使用 22.x）
 - npm ≥ 10
 
-### 一键启动（模拟数据模式，无需 Token）
+### 一键启动（演示模式，无需 Token）
 
 ```bash
 git clone https://github.com/OWNER/McArena.git
@@ -43,17 +71,11 @@ npm run dev
 # 前端 http://localhost:5173 ｜ API http://localhost:8787
 ```
 
-首次启动为**模拟数据模式**（界面黄色标识「模拟数据」）——可在无 Token 环境下完整走通
-「任务卡 → 双 Agent 决策 → 裁判打分 → 结果回放」全链路，且每局比赛支持 seed 复现。
-
-### 实时模式（需要麦当劳 MCP Token）
+### 官方实时模式（需要麦当劳 MCP Token）
 
 1. 前往 [麦当劳 MCP 开放平台](https://open.mcd.cn/mcp)，手机号登录后在控制台「激活」申请 MCP Token；
 2. 复制 `.env.example` 为 `.env`，设置 `MCD_MCP_MODE=live` 与 `MCD_MCP_TOKEN`（**不要提交 .env**）；
 3. `npm run dev`。
-
-> 实时数据采集（tools 调用 → 快照落盘 → 数据集组装）的协议层已在阶段02 完成；
-> 由于 **MCP Token 尚未申请**（需手机号验证 + 人机验证），`live` 模式暂不可用，详见 MCP_INTEGRATION.md 与 [`STAGE_06_REPORT.md`](STAGE_06_REPORT.md)「实际限制」。
 
 ### 命令行竞技（无需启动服务，本地完整体验）
 
@@ -64,24 +86,8 @@ npm run demo -w @mcarena/arena-core -- timeout   # 演示：Agent 超时 → 降
 npm run demo -w @mcarena/arena-core -- cancel    # 演示：取消执行 → CANCELLED，不产出提案
 ```
 
-### 带约束的单局竞技（`challenge` 子命令）
-
-`challenge` 是网页 API 与 WorkBuddy Skill **共用的同一入口**（同一 `runArenaMatch()`），
-支持预算、人数、场景、目标预设、必含标签/类别、营养目标、种子与数据模式：
-
-```bash
-# 2 人堂食、预算 ¥60、均衡搭配（人均 500kcal / 20g 蛋白）、种子 42
-npm run challenge -w @mcarena/arena-core -- --people 2 --budget 60 --goal balanced --seed 42
-
-# 3 人、高蛋白、输出 JSON 与可打开的 HTML 战报
-npm run challenge -w @mcarena/arena-core -- \
-  --people 3 --goal protein --json --out ./artifacts/m.json --html ./artifacts/m.html
-```
-
 `--goal` 可选：`balanced` / `protein` / `low-sodium` / `low-cal` / `budget` / `none`；
 `--mode` 可选：`auto`（默认，官方快照优先，缺失则回退场景数据集）/ `mock` / `replay` / `live`。
-
-`npm run bench` 覆盖验收要求的全部场景：¥20 / ¥30 / ¥50 预算、双人套餐、指定蛋白质目标、指定商品类别、优惠券组合、没有有效解，并对比两名 Agent 的**有效率、费用、约束满足度、运行时间与工具调用数量**。实测数据见 [`STAGE_03_REPORT.md`](STAGE_03_REPORT.md)。
 
 ### 质量检查
 
@@ -105,7 +111,45 @@ Skill 不含业务逻辑，全部调用仓库内共享引擎（与网页同源�
 [`skill/mc-arena/SKILL.md`](skill/mc-arena/SKILL.md)、[`skill/mc-arena/INSTALL.md`](skill/mc-arena/INSTALL.md)
 与 [`STAGE_06_REPORT.md`](STAGE_06_REPORT.md)。开发过程记录见 [`workbuddy.md`](workbuddy.md)。
 
-## 🏗 架构
+<!-- APPEND-MARKER-2 -->
+
+## 🎯 可复现 Demo 挑战
+
+一条命令跑一局完整的「自定义挑战 → 双 Agent 决策 → 独立裁判 → 可复现配置」闭环：
+
+```bash
+npm run challenge -w @mcarena/arena-core -- --people 2 --budget 60 --goal balanced --seed 42
+```
+
+真实输出（2026-10-15 实测，演示模式）：
+
+```text
+任务卡：自定义挑战 · 2 人堂食｜预算 ¥60、人均 500 kcal、人均蛋白 20g、必含标签 burger/side/drink
+数据来源：mock（scenario://stage03-fixtures）｜比赛 ID match_mv9660tm_42
+⚠ 阶段03 场景测试数据集（模拟数据，非麦当劳官方数据）
+
+【α 极速猎手】speed-greedy@1.0.0｜总分 78.5/100
+    自述应付 ¥22.00｜裁决成本 ¥22.00｜核价 not-verified｜资格 通过
+    实测 7ms｜候选 1｜工具调用 1
+【β 深度优化师】optimizer-search@1.0.0｜总分 79.6/100
+    自述应付 ¥25.00｜裁决成本 ¥25.00｜核价 not-verified｜资格 通过
+    实测 3ms｜候选 248｜工具调用 6
+
+裁判结论：极速猎手胜出（五维总分 78.5 : 79.6 / 100）——双方均无官方核价记录（NOT_VERIFIED），按裁判重算成本比较，α更低（¥22.00 : ¥25.00）
+规则 judge-rules/1.1.0｜实验 exp_bcc724febf31e0b8｜成本依据 claimed-unverified
+```
+
+同一 `seed` 重复运行得到**同一 `experimentId`**（该 ID 已在 2026-10-14 的阶段06 实测中复现）。输出末尾会给出 `reproducibleConfig`——粘贴到网页「挑战设置」或同种子重跑即可复现同一局。
+
+## 📖 使用案例
+
+1. **多人聚餐预算分配**：3 个人、¥60、要高蛋白——看 β 如何在 248 个候选里找出满足硬约束且营养偏差最小的组合，而 α 用 1 个候选闪电给出便宜解；
+2. **「省钱 vs 吃好」的量化对比**：同一任务卡下，用裁判五维图表直接比较两种策略的预算控制 / 营养均衡 / 优惠利用得分；
+3. **MCP 决策类应用的工程范本**：把「快照录制 + 规则裁判 + 证据链」三件套迁移到任何基于 MCP 的决策场景，用于回归测试与公平评测；
+4. **可解释 AI 教学演示**：雷达图 + 决策时间轴 + 逐项公式，让「Agent 如何点餐、裁判如何打分」肉眼可见；
+5. **WorkBuddy 对话内开赛**：自然语言「来一场麦门竞技，2 个人 60 块要均衡搭配」即可触发完整比赛并返回可分享战报。
+
+## 🏗 技术架构
 
 ```
 ┌────────────┐   ┌──────────────────┐   ┌─────────────────────────┐
@@ -118,35 +162,46 @@ Skill 不含业务逻辑，全部调用仓库内共享引擎（与网页同源�
                   └────────────────────┘   └──────────────────┘
 ```
 
+- **单一事实来源**：`packages/shared` 用 zod 定义跨模块契约（MenuSnapshot / TaskCard / DecisionTrace / Verdict / MatchRecord），API 与 Web 两端共享；
+- **三端同源**：网页 API、CLI、WorkBuddy Skill 共用同一 `runArenaMatch()`（`arena-core`），Skill 不复制业务逻辑；
+- **数据三分法**：`official-live` / `official-snapshot` / `mock`，由 `DataOrigin` 贯穿 MatchResult 与 UI；
+- **写操作红线**：MCP 客户端只读白名单 + 写操作黑名单双重机制，默认拒绝一切下单类工具（单测覆盖）。
+
 详细设计见 [ARCHITECTURE.md](ARCHITECTURE.md)，实施计划见 [PROJECT_PLAN.md](PROJECT_PLAN.md)。
+
+<!-- APPEND-MARKER-3 -->
 
 ## 🧪 测试与质量
 
 ```bash
-npm test      # Vitest：契约 / 决策 / 裁判 / 复现性
+npm test      # Vitest：契约 / 协议 / 决策 / 裁判 / 复现性 / API / 前端 / E2E 辅助
 npm run build # TypeScript strict 全量构建
 ```
 
 复现性测试：相同 `(seed, snapshotId)` 两次运行的 MatchRecord（除记录 ID 外）字节级一致。
 
-当前测试规模（2026-10-14 真实执行）：**189/189 通过**（含阶段04 独立裁判 66 项：验证器 35 + 裁判规则 31；
-阶段06 Skill 集成 55 项：任务卡构造 18 + CLI 18 + 单局运行器 8 + Skill 子进程集成 11）；
-TypeScript strict 0 错误；ESLint 0 错误（30 条 warning，均为既有 `no-console` / `no-unsafe-*` 提示）。
+当前基线（2026-10-15 真实执行）：
+
+- **测试 222/222 通过（22 个文件）**：含并发挑战可回放、同 seed 并发逐字节一致、SSE 404 语义、MatchStore 容量淘汰、空菜单可判决、限流 / 退避 / 401 不重试、Skill 子进程集成（11 项）、快照采集与落盘（7 项）等；
+- **TypeScript strict 0 错误；ESLint 0 错误 / 0 警告**（CLI `no-console` 与 react-refresh 两处为精确豁免并附注释）；
+- **`npm audit` 0 漏洞**（全量与 `--omit=dev`）；
+- **浏览器实测**：生产构建 + 真实 Chrome + playwright-core，16 步全链路通过，控制台 **0 错误 / 0 警告**，移动端无横向溢出（证据 `docs/screenshots/stage07/`）。
 
 ## 📁 目录结构
 
 | 路径 | 说明 |
 |---|---|
 | `packages/shared` | 数据契约（zod schema + TS 类型，单一事实来源） |
-| `packages/mcd-mcp-client` | 官方 MCP Streamable HTTP 客户端（退避重试 / 写操作黑名单） |
-| `packages/arena-core` | 竞技内核：规则引擎、双 Agent、裁判引擎（零网络纯函数） |
+| `packages/mcd-mcp-client` | 官方 MCP Streamable HTTP 客户端（退避重试 / 写操作黑名单 / 快照采集） |
+| `packages/arena-core` | 竞技内核：规则引擎、双 Agent、裁判引擎（零网络纯函数）+ `challenge` CLI |
 | `apps/api` | Fastify 服务：比赛 API + SSE 实时流 |
 | `apps/web` | React 中文可视化界面（决策时间轴 / 雷达图 / 解释面板 / Agent 指标） |
-| `skill/mc-arena` | WorkBuddy Skill（SKILL.md + scripts/run-match.mjs + scripts/parse-request.mjs + scripts/install.mjs + references） |
-| `snapshots/` | 官方数据快照目录（**当前为空**，需采集；空时自动回退场景数据集） |
+| `skill/mc-arena` | WorkBuddy Skill（SKILL.md + scripts + references + INSTALL.md） |
+| `snapshots/` | 官方数据快照目录（**当前为空**；空时自动回退场景数据集。采集：`MCD_MCP_TOKEN=<token> tsx tools/snapshot-capture.ts`，需 Token） |
+| `docs/screenshots/` | 真实浏览器截图（stage05 / stage07 / gif-frames） |
 | `docs/evidence/` | 各阶段真实运行证据（CLI 输出、HTML 战报、JSON 结果、浏览器实测报告） |
-| `docs/screenshots/` | 真实浏览器截图（深/浅色、桌面/移动端、空状态） |
-| `tools/` | 工程脚本（快照采集、`tools/e2e/visual-check.mjs` 浏览器实测） |
+| `docs/PROMOTION.md` | 传播材料（中文介绍 / English / GitHub 描述 / 技术亮点 / 架构说明） |
+| `tools/` | 工程脚本：快照采集 CLI、报名就绪自查、GIF 帧捕获、浏览器实测 |
 
 ### 阶段成果
 
@@ -156,6 +211,8 @@ TypeScript strict 0 错误；ESLint 0 错误（30 条 warning，均为既有 `no
 - 阶段04：独立智能裁判系统（独立验证 / 资格硬门槛 / 官方核价优先 / 可复现实验 ID）——见 [`STAGE_04_REPORT.md`](STAGE_04_REPORT.md) 与 [`JUDGE_SPEC.md`](JUDGE_SPEC.md)
 - 阶段05：完整前端 UI/UX（四页面 / 双主题 / 响应式 / 分享卡 / 无障碍；API 契约支持自定义挑战）——见 [`STAGE_05_REPORT.md`](STAGE_05_REPORT.md)（含真实浏览器实测与截图）
 - 阶段06：WorkBuddy Skill 集成（任务卡构造下沉共享引擎 / `challenge` CLI / Skill 三脚本 / 官方规范校验通过）——见 [`STAGE_06_REPORT.md`](STAGE_06_REPORT.md)
+- 阶段07：完整质量保证、安全审计与稳定性修复（lint 31→0、测试 215→222、audit 4→0、16 步浏览器实测）——见 [`STAGE_07_REPORT.md`](STAGE_07_REPORT.md) / [`TEST_REPORT.md`](TEST_REPORT.md) / [`SECURITY_AUDIT.md`](SECURITY_AUDIT.md) / [`PERFORMANCE_REPORT.md`](PERFORMANCE_REPORT.md)
+- 阶段08：参赛文档、演示与发布前整理——见 [`FINAL_WORKBUDDY_REPORT.md`](FINAL_WORKBUDDY_REPORT.md) 与 [`CODEX_HANDOFF.md`](CODEX_HANDOFF.md)
 
 ## 🎯 适用人群
 
@@ -168,6 +225,18 @@ TypeScript strict 0 错误；ESLint 0 错误（30 条 warning，均为既有 `no
 `now-time-info`、`query-nearby-stores`、`query-meals`、`query-meal-detail`、`calculate-price`、`query-store-coupons`、`list-nutrition-foods`、`campaign-calendar`。
 调用流程与业务价值详见 [MCP_INTEGRATION.md](MCP_INTEGRATION.md)。
 
+## 🎞 演示 GIF（合成）
+
+本仓库不内置二进制 GIF：20 帧真实采集帧位于 [`docs/screenshots/gif-frames/`](docs/screenshots/gif-frames/)（按文件名排序即为播放顺序）。在装有 ffmpeg 的机器上一条命令即可合成：
+
+```bash
+ffmpeg -framerate 2.5 -i docs/screenshots/gif-frames/%03d-*.png \
+  -vf "scale=960:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" \
+  docs/screenshots/demo.gif
+```
+
+（帧由 `node tools/e2e/capture-demo-frames.mjs` 真实采集，未经任何画面伪造；本环境不生成视频，故不在仓库内置 GIF。）
+
 ## ⚠️ 合规与免责
 
 - 本项目为麦当劳程序员创意开发大赛参赛作品，非麦当劳官方产品；输出仅供娱乐与学习参考，不构成营养或专业建议；
@@ -178,3 +247,6 @@ TypeScript strict 0 错误；ESLint 0 错误（30 条 warning，均为既有 `no
 ## 📄 License
 
 [MIT](LICENSE)
+
+
+

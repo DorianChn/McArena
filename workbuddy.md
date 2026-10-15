@@ -21,6 +21,8 @@
 | 阶段04 | 独立智能裁判系统 | `engine/verifier.ts`、`engine/judge.ts`（重写）、`JUDGE_SPEC.md`、`STAGE_04_REPORT.md` | ✅ |
 | 阶段05 | 完整前端 UI/UX 实现 | `apps/web` 设计系统 + 首页/挑战设置/竞技场/结果四页 + 分享卡 | ✅（代码完成；见阻塞项） |
 | 阶段06 | WorkBuddy Skill 集成 | `skill/mc-arena/`（SKILL.md + scripts + references + INSTALL.md）、`STAGE_06_REPORT.md`、本文件 | ✅ |
+| 阶段07 | 完整质量保证、安全审计与稳定性修复 | lint 31→0、测试 215 例（+8 并发）、`npm audit` 4→0、浏览器 16 步实测 0 控制台错误；`STAGE_07_REPORT.md` / `TEST_REPORT.md` / `SECURITY_AUDIT.md` / `PERFORMANCE_REPORT.md` | ✅ |
+| 阶段08 | 参赛文档、演示、发布前整理与交付 | `README.md`（真实截图/使用案例/模式区分）、`MCP_INTEGRATION.md`、`docs/PROMOTION.md`、`tools/contest-readiness.mjs`、GIF 帧采集器、`CODEX_HANDOFF.md`、`FINAL_WORKBUDDY_REPORT.md` | ✅（本地整理完成；发布动作移交） |
 
 ---
 
@@ -67,6 +69,15 @@
 - **指令（关键约束）**：先查阅当前 WorkBuddy 官方 Skill 开发规范；创建 Skill 目录/元数据/说明文件；将 Challenge Engine 接入 Skill；支持自然语言启动、自动解析预算/人数/目标；调用**实际实现**的双 Agent 引擎与独立裁判；返回结果与评分解释；输出可打开的竞技场结果或可复现配置；提供标准示例命令与异常提示；真实测试运行效果。必须：Skill 可真实调用；**不复制另一套不一致的业务逻辑**；**与网页共享核心引擎**；有明确安装与启用教程；**不编造官方规范**；如版本限制某项能力，记录实际限制并实现可行替代方案。另需创建 `workbuddy.md`（基于真实会话与成果、自动脱敏、缺失需注明），最后生成 `STAGE_06_REPORT.md`，**不要提交 GitHub**。
 - **工作**：见下方「真实完成的功能」与 `STAGE_06_REPORT.md`。
 
+### 阶段07 — 完整质量保证、安全审计与稳定性修复
+- **指令（关键约束）**：不增加新功能，把项目打磨到可公开发布质量；每发现问题须记录、修复并回归；**不得删除失败测试、跳过检查或伪造 Mock**；无 Token 的真实接口测试必须标 **BLOCKED 不能记 PASS**；产出 TEST/SECURITY_AUDIT/PERFORMANCE/STAGE_07 四份报告；**不上传 GitHub**。
+- **工作**：lint 31 warning → 0（CLI `no-console` 文件级豁免 + react-refresh `allowExportNames` 精确豁免 + no-unsafe 真修）；新增测试 8+5+2+3+3+3 例达 **222 例全绿**；`npm audit` 4 漏洞 → 0（vitest 3→5 + tsup 8→9）；6 处源码修复（rate-limiter 限额校验、retry 纳入 McpUnavailableError、JSON.parse any→unknown 等）；SSE 未知 id 由 200 空流改 404；真实 Chrome + 隔离 playwright-core 完成 16 步浏览器实测（控制台 0 错误/0 警告），8 张截图归档 `docs/screenshots/stage07/`。
+- **诚实性执行**：真实官方 MCP 联调无 Token → 明确 BLOCKED，未记 PASS；未删/跳任何测试。
+
+### 阶段08 — 参赛文档、演示与发布前整理
+- **指令（关键约束）**：重新核对官方赛事规则；完善五大参赛文件；准备传播材料；**不得伪造画面冒充程序运行**；不得自动建仓/push/发报名 Issue；本地变更整理后跑最后一次完整测试；生成 `CODEX_HANDOFF.md` 与 `FINAL_WORKBUDDY_REPORT.md`（末尾 READY_FOR_CODEX = YES/NO，只有真正达到发布条件才能 YES）。
+- **工作**：联网核对官方规则与 CONTEST_DECLARATION 原文（字节级一致）；README 补真实截图、使用案例、演示/实时模式区分表、更新测试基线 222；`docs/PROMOTION.md`（中英文介绍/GitHub 描述/技术亮点）；`tools/contest-readiness.mjs` 10 项就绪自查；`tools/e2e/capture-demo-frames.mjs` 采集 20 帧 GIF 素材（**不合成视频**，命令交用户）；生产构建 + preview 启动冒烟。
+
 ---
 
 ## 三、真实完成的功能（可在仓库中逐项复核）
@@ -99,7 +110,9 @@
 | 阶段03 | 66 | `npm test` |
 | 阶段04 | **132** | `npm test` |
 | 阶段05 | 134 | `npm test` |
-| 阶段06 | **189** | `npm test` |
+| 阶段06 | 189 | `npm test` |
+| 阶段07 | **215** | `npm test` |
+| 阶段07 后（快照工具） | **222** | `npm test`（22 文件） |
 
 阶段06 新增 55 项：`challenge-builder.test.ts` 18 + `arena-runner.test.ts` 8 + `cli-challenge.test.ts` 18 + `skill-integration.test.ts` 11。
 
@@ -129,6 +142,14 @@
 | 18 | 05（实测） | 浏览器控制台 404（`Failed to load resource`） | `index.html` 未声明 favicon，浏览器自动请求 `/favicon.ico` | 内联 SVG data-URI favicon，并补 `color-scheme` / `description` meta |
 | 19 | 05（实测） | 结果页雷达图说明与实现不符（写「取双方较高值」，实际已用单方得分） | 后期把数据源从 `judge.dimensions` 改为 `judge.agentScores` 时未同步文案 | 文案改为「两条曲线分别是 α / β 的裁判独立重算得分（不取较高值）」 |
 | 20 | 06（复核） | 结果页「🏆 胜出」旁徽章显示 `比分 69.3 / 100`，但 `judge.totalScore = max(α, β)` **可能显示败方分数**（α 以 62.8 胜出时徽章显示 β 的 79.9） | 胜负由字典序决定、与五维总分不必然同向，徽章却用了双方较高分 | 四处改为并列展示 α : β（结果页徽章 / JudgePanel 记分表新增两列 / 分享卡 / 分享文案），并在页脚注明「胜负由字典序判定，与五维总分不必然同向」 |
+| 21 | 07 | `vitest --reporter=unix` 报错：formatter 不存在 | 该 formatter 名称不在 vitest 5 的已注册列表 | 改用默认 formatter + grep 提取汇总行 |
+| 22 | 07 | `concurrency.test.ts` typecheck 4 处报错 | `noUncheckedIndexedAccess` 下 `responses[i]` 解构可能 undefined；`unknown` 不能直接赋 `InjectPayload` | 改 `responses.map()` 推导 + 显式 `PlanEntry[]` 类型标注 |
+| 23 | 07 | ESLint 在收紧规则后报 31 条 warning | 26 条为 CLI 目录 `no-console`（console 即 CLI 产品接口）、2 条 react-refresh 的 Context+hook 同文件导出、5 条 no-unsafe 真问题 | 前两类用**精确豁免**（文件级 no-console / `allowExportNames: ['useApp','useTheme']`）并附中文注释；5 条真修（`expect.objectContaining` 嵌套返回 any → `toMatchObject`） |
+| 24 | 07 后 | `capture-demo-frames.mjs` 把截图写进了 `tools/docs/screenshots/` | `repoRoot` 少退一级（`import.meta.dirname/..` 没有到仓库根） | 改 `path.resolve(import.meta.dirname, '..', '..')`，清理错目录后重跑 |
+| 25 | 07 后 | 帧文件名出现双扩展 `.png.png` | `snap(page, 'home')` 已自动补 `.png`，又手写了扩展名 | 改为无扩展名调用 |
+| 26 | 07 后 | 就绪脚本密钥扫描 `git grep` 报 `':!package-lock.json' is outside repository` | Windows 下 Node `execSync` 走 cmd.exe，单引号 pathspec 被原样传递 | 改 `execFileSync('git', [...])` 直接传参数组，JS 侧过滤 lock 行 |
+| 27 | 07 后 | `tsconfig.json` 纳入 `tools/**` 后 3 处新类型错误 | 新工具直接消费 `JSON.parse` 的 any；logger 形参缺 `level` 字段 | `JSON.parse` 结果改为显式结构体断言；logger 类型改 `ReturnType<typeof createSilentLogger>` |
+| 28 | 07/08 | 同一文件多个 Edit 并行发送，改动互相覆盖 | 并行 Edit 各自基于旧快照写回 | **同文件的多处修改必须顺序逐条编辑**（本轮多次复踩，已固化到工作习惯） |
 
 ---
 
@@ -136,12 +157,15 @@
 
 ### 1. Git 提交记录（本地，未 push）
 ```
+5ca3a7d feat(tools): 快照采集 CLI + 报名就绪自查 + GIF 帧捕获，补齐阶段01/发布链路
+dabeac3 docs(tasks): 登记阶段07 完成情况与阻塞项 B6/B7
+0b7cc81 test(stage07): 完整质量保证 + 安全审计 + 稳定性修复（215 用例全绿）
 3e42e2c feat(stage04): 独立智能裁判系统——不信任 Agent 自述的验证与裁决
 5630336 feat(stage-03): dual-agent arena engine (Speed + Optimizer) with state machine and benchmark
 f5b301f feat(stage-01): engineering foundation - shared contracts, MCP adapter, arena core, Fastify API, React web, CI
 23767dc chore: initialize McArena project (docs, compliance files, skeleton)
 ```
-（阶段05 / 阶段06 的提交见 `git log` 最新条目。）
+（阶段08 的提交见 `git log` 最新条目；完整历史以仓库为准。）
 
 ### 2. 可复现命令与真实输出
 | 证据文件 | 内容 |
@@ -154,20 +178,23 @@ f5b301f feat(stage-01): engineering foundation - shared contracts, MCP adapter, 
 | `docs/evidence/stage06/sample-match-result.json` | 完整比赛记录（可复现） |
 | `docs/screenshots/stage05/*.png` | 真实浏览器截图 9 张（深/浅色、桌面/移动端、空状态） |
 | `docs/evidence/stage05/visual-check-report.json` | 浏览器实测结构化报告（16 步、控制台消息、视口、主题切换结果） |
+| `docs/screenshots/stage07/*.png` | 阶段07 复核截图 8 张（16 步全链路 + 移动端 + 主题切换，控制台 0 错误/0 警告） |
+| `docs/screenshots/gif-frames/` | GIF 帧素材 20 张 + `capture-summary.json`（`tools/e2e/capture-demo-frames.mjs` 真实采集，未合成） |
+| `docs/contest-registration.md` | 报名 Issue 待发布文案（官方格式已联网核对） |
 
 ### 3. 关键命令（可自行复跑）
 ```bash
 npm install
-npm test          # 189/189 通过
+npm test          # 222/222 通过（22 文件）
 npm run typecheck # 0 错误
-npm run lint      # 0 error
+npm run lint      # 0 error / 0 warning
 npm run build     # API + Web 构建成功
 npm run bench     # 8 个官方场景双 Agent 基准对比
 
 node skill/mc-arena/scripts/parse-request.mjs "3个人 预算60 要低卡 外带"
 node skill/mc-arena/scripts/run-match.mjs --people 2 --budget 60 --goal balanced --seed 42
 
-# 前端浏览器实测（需先 npm run dev）
+# 前端浏览器实测（本机 dev 受安全防护限制，用生产 preview 替代）
 NODE_PATH="<隔离工作区>/node_modules" node tools/e2e/visual-check.mjs
 ```
 
@@ -188,12 +215,12 @@ NODE_PATH="<隔离工作区>/node_modules" node tools/e2e/visual-check.mjs
 ## 七、缺失与待补（不编造）
 
 1. **完整原始对话导出缺失**：本环境无法读取 WorkBuddy 对话的逐条原文，本文的阶段指令与摘要来自开发会话的阶段记录与仓库真实产物，**不是逐字复刻**。如需逐字原文，请在 WorkBuddy 对话右上角使用「导出」功能，并将导出内容按下方格式追加。
-2. **阶段05 浏览器实测已补做（10/14 完成）**：用 `tools/e2e/visual-check.mjs`（playwright-core + 系统 Chrome）真实点击走通
-   首页 → 挑战设置 → 竞技场 → 结果页 → 移动端 → 空状态，控制台 **0 错误 / 0 警告**，产出 9 张截图与
-   `STAGE_05_REPORT.md`。**仍缺**：演示 GIF（未录制）、跨浏览器（Firefox/Safari）与真机移动端实测。
-3. **MCP 官方数据缺失**：`snapshots/` 目录暂无官方快照，`live` 模式需 Token。因此阶段05/06 的实测均运行在
+2. **阶段05/07 浏览器实测已补做**：`tools/e2e/visual-check.mjs`（playwright-core + 系统 Chrome）真实点击走通
+   首页 → 挑战设置 → 竞技场 → 结果页 → 移动端 → 空状态，控制台 **0 错误 / 0 警告**，产出截图与
+   `STAGE_05_REPORT.md` / `STAGE_07_REPORT.md`。**仍缺**：演示 GIF 合成（帧素材 20 张已就绪，本环境不生成视频，命令已交用户）、跨浏览器（Firefox/Safari）与真机移动端实测。
+3. **MCP 官方数据缺失**：`snapshots/` 目录暂无官方快照，`live` 模式需 Token。因此阶段05/06/07 的实测均运行在
    **场景数据集（mock）**上，输出中已明确标注「模拟数据，非麦当劳官方数据」。**未**伪造任何 `verified` 核价状态。
-4. **GitHub 发布未执行**：按要求**未提交 GitHub**（本地提交已完成）。
+4. **GitHub 发布未执行**：按要求**未提交 GitHub**（本地提交已完成；建仓 / push / 发报名 Issue 均按要求交由用户与 Codex 执行）。
 
 ### 原始导出追加区（待用户补充）
 

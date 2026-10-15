@@ -187,6 +187,22 @@
 | S7-6 🤖 | 浏览器实测（真实 Chrome）：全链路 + 移动端 + 控制台 | 全栈 | ✅ 完成 | 控制台 **0 错误 / 0 警告**；16 步通过；移动端无横向溢出；证据 `docs/screenshots/stage07/` |
 | S7-7 🤖 | 四份报告 + TASKS 更新 + 本地提交 | 全栈 | ✅ 完成 | `STAGE_07_REPORT.md` 等 4 份；提交 `0b7cc81`（未 push） |
 
+## 阶段08 参赛文档、演示、发布前整理与交付（10/15）
+
+> 目标：完善正式参赛文件、准备传播材料、确认合规、完成本地生产构建验证，并生成移交文件。
+> 官方规则已于 2026-10-15 联网重新核对（活动 10/09–10/25 23:59，报名 Issue 格式、五文件清单、创建时间窗口）。
+> 移交文件 `CODEX_HANDOFF.md`，最终报告 `FINAL_WORKBUDDY_REPORT.md`（READY_FOR_CODEX 判定见其末尾）。
+
+| ID | 任务 | 负责 | 状态 | 验收 |
+|---|---|---|---|---|
+| S8-1 🤖 | 重新核对官方赛事规则（两个官方页面） | 全栈 | ✅ 完成 | 规则要点已提取并与项目现状对照；报名 Issue 格式按官方警告修正（标签与内容同行、地址裸 URL） |
+| S8-2 🤖 | 完善五大参赛文件 | 全栈 | ✅ 完成 | README 重写（5 张真实截图/使用案例/模式区分表/基线 222）；CONTEST_DECLARATION 与官方**字节级一致**；MCP_INTEGRATION 修 Token 笔误 + 官方配置对照；mcp-config 仅 `${MCD_MCP_TOKEN}` 占位符；workbuddy.md 补阶段07/08 与调试记录 21–28 |
+| S8-3 🤖 | 传播材料 | 全栈 | ✅ 完成 | `docs/PROMOTION.md`：中文介绍（短/长）/英文介绍/GitHub About+Topics/特色表/原创技术亮点/Demo 挑战/架构说明；GIF 帧已就绪但**不合成视频**（本环境限制，命令已交用户） |
+| S8-4 🤖 | 比赛要求符合性检查 | 全栈 | ✅ 完成 | `contest-readiness.mjs --online` **9/10**（唯一失败=git remote 未配置，需用户建仓）；仓库创建时间 2026-10-14 在官方窗口内；密钥扫描 0 命中 |
+| S8-5 🤖 | 本地生产构建与启动测试 | 全栈 | ✅ 完成 | build 成功（API 13.6KB/Web dist）；preview 冒烟 index 1054B/CSS 39471B/JS 286592B 全 200，`/api` 代理通 |
+| S8-6 🤖 | 生成 CODEX_HANDOFF.md（12 节） | 全栈 | ✅ 完成 | 路径/栈/目录/Git/功能/MCP 状态/Skill 实测/环境变量/测试/阻塞/发布建议/报名方法/Codex 待办 |
+| S8-7 🤖 | 最终完整测试 + FINAL_WORKBUDDY_REPORT.md + 本地提交 | 全栈 | ✅ 完成 | verify 全绿、audit 0；报告末尾明确 READY_FOR_CODEX 判定；本地提交**未 push** |
+
 ## 阻塞项登记（Blockers）
 
 | 编号 | 描述 | 解除条件 | 影响范围 |

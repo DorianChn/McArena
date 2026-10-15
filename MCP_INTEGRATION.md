@@ -10,11 +10,11 @@
 | 名称 | 麦当劳中国 MCP Server |
 | 接入地址 | `https://mcp.mcd.cn` |
 | 传输协议 | Streamable HTTP |
-| 鉴权 | 请求头 `Authorization: Bearer <MCP_MCP_TOKEN>`（Token 经 [open.mcd.cn/mcp](https://open.mcd.cn/mcp) 手机号登录后申请） |
+| 鉴权 | 请求头 `Authorization: Bearer <MCD_MCP_TOKEN>`（Token 经 [open.mcd.cn/mcp](https://open.mcd.cn/mcp) 手机号登录后申请） |
 | 限流 | 每 Token 600 次/分钟；超限返回 429；无效 Token 返回 401 |
 | 版本沿革 | 官方仓库记录至 v1.0.9（2026-09-10，新增取消订单、餐具选择、取餐柜二维码） |
 
-项目内配置示例见 [`mcp-config.example.json`](mcp-config.example.json)，仅含 `${MCD_MCP_TOKEN}` 环境变量占位符。
+项目内配置示例见 [`mcp-config.example.json`](mcp-config.example.json)，仅含 `${MCD_MCP_TOKEN}` 环境变量占位符；其结构与官方 WorkBuddy 开发指南公布的连接器配置一致（`type: streamablehttp` + `url` + `Authorization: Bearer <Token>` 请求头）。
 
 ## 2. 实际使用的工具
 
