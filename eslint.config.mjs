@@ -36,6 +36,13 @@ export default tseslint.config(
     },
   },
   {
+    // CLI 入口：console 输出即产品接口（战报/基准/演示打印），不视为调试输出
+    files: ['packages/arena-core/src/cli/**/*.ts'],
+    rules: {
+      'no-console': 'off',
+    },
+  },
+  {
     files: ['apps/web/**/*.{ts,tsx}'],
     languageOptions: {
       globals: {
@@ -49,7 +56,9 @@ export default tseslint.config(
     rules: {
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
-      'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
+      // 允许 Provider 文件同文件导出配套 hook（useTheme / useApp），
+      // 这是 React Context 的惯用模式，拆分会泄露内部 Context
+      'react-refresh/only-export-components': ['warn', { allowConstantExport: true, allowExportNames: ['useApp', 'useTheme'] }],
     },
   },
 )

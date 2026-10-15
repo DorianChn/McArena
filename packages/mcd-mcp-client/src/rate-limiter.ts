@@ -10,7 +10,7 @@ export class RateLimiter {
     private readonly maxPerMinute: number,
     private readonly now: () => number = Date.now,
   ) {
-    if (!Number.isFinite(maxPerMinute) || maxPerMinute < 1) {
+    if (!Number.isInteger(maxPerMinute) || maxPerMinute < 1) {
       throw new Error('RateLimiter: maxPerMinute 必须为正整数')
     }
   }

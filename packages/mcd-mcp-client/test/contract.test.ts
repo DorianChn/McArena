@@ -16,9 +16,10 @@ interface FakeServerState {
   authHeaders: Array<string | undefined>
   rateLimitHits: number
   unauthorized: boolean
+  unauthorizedAfterInitialize: boolean
 }
 
-const state: FakeServerState = { calls: [], authHeaders: [], rateLimitHits: 0, unauthorized: false }
+const state: FakeServerState = { calls: [], authHeaders: [], rateLimitHits: 0, unauthorized: false, unauthorizedAfterInitialize: false }
 
 function jsonRpcResult(id: number, result: unknown) {
   return { jsonrpc: '2.0', id, result }
@@ -54,7 +55,7 @@ const server: Server = createServer((req, res) => {
     }
     const send = (payload: unknown) => (wantsSse ? sendSse(200, payload) : sendJson(200, payload))
 
-    if (state.unauthorized) {
+    if (state.unauthorized || (state.unauthorizedAfterInitialize && body.method === 'tools/call')) {
       sendJson(401, jsonRpcResult(body.id, { error: 'unauthorized' }))
       return
     }
@@ -130,6 +131,7 @@ beforeEach(() => {
   state.authHeaders = []
   state.rateLimitHits = 0
   state.unauthorized = false
+  state.unauthorizedAfterInitialize = false
 })
 
 function makeAdapter(overrides: Partial<McpClientOptions> & { allowWrite?: boolean } = {}) {
@@ -216,6 +218,16 @@ describe('HttpMcpAdapter 协议行为', () => {
     await expect(adapter.call('query-meals')).rejects.toThrow(AuthError)
     // 401 发生在 initialize 阶段，不会发出 tools/call 请求
     expect(state.calls.some((c) => c.method === 'tools/call')).toBe(false)
+  })
+
+  it('初始化后 Token 失效时工具调用抛 AuthError 且不重试', async () => {
+    const adapter = makeAdapter()
+    await adapter.initialize()
+    state.calls = []
+    state.authHeaders = []
+    state.unauthorizedAfterInitialize = true
+    await expect(adapter.call('query-meals')).rejects.toThrow(AuthError)
+    expect(state.calls.filter((call) => call.method === 'tools/call')).toHaveLength(1)
   })
 
   it('isError=true 的工具结果抛 McpProtocolError', async () => {

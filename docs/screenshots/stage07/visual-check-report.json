@@ -1,0 +1,580 @@
+{
+  "baseUrl": "http://127.0.0.1:5174",
+  "chromePath": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+  "consoleErrors": [],
+  "consoleWarnings": [],
+  "steps": [
+    {
+      "step": "screenshot:01-home-dark.png",
+      "detail": "1440x960",
+      "at": "2026-10-15T05:18:06.624Z"
+    },
+    {
+      "step": "theme-toggle",
+      "detail": "data-theme: dark → light",
+      "at": "2026-10-15T05:18:07.378Z"
+    },
+    {
+      "step": "screenshot:02-home-light.png",
+      "detail": "1440x960",
+      "at": "2026-10-15T05:18:07.512Z"
+    },
+    {
+      "step": "theme-restore",
+      "detail": "data-theme: dark",
+      "at": "2026-10-15T05:18:08.053Z"
+    },
+    {
+      "step": "nav-setup",
+      "detail": "点击「开始挑战」",
+      "at": "2026-10-15T05:18:08.079Z"
+    },
+    {
+      "step": "screenshot:03-setup-dark.png",
+      "detail": "1440x960",
+      "at": "2026-10-15T05:18:09.798Z"
+    },
+    {
+      "step": "start-match",
+      "detail": "点击「开始对决」",
+      "at": "2026-10-15T05:18:09.829Z"
+    },
+    {
+      "step": "screenshot:04-arena-dark.png",
+      "detail": "1440x960",
+      "at": "2026-10-15T05:18:10.584Z"
+    },
+    {
+      "step": "wait-result",
+      "detail": "已自动跳转结果页",
+      "at": "2026-10-15T05:18:30.348Z"
+    },
+    {
+      "step": "screenshot:05-result-dark.png",
+      "detail": "1440x960",
+      "at": "2026-10-15T05:18:31.805Z"
+    },
+    {
+      "step": "result-theme",
+      "detail": "结果页 data-theme: light",
+      "at": "2026-10-15T05:18:32.559Z"
+    },
+    {
+      "step": "screenshot:05b-result-light.png",
+      "detail": "1440x960",
+      "at": "2026-10-15T05:18:32.778Z"
+    },
+    {
+      "step": "screenshot:06-mobile-home-light.png",
+      "detail": "390x844",
+      "at": "2026-10-15T05:18:34.510Z"
+    },
+    {
+      "step": "mobile-overflow",
+      "detail": "scrollWidth=390 clientWidth=390",
+      "at": "2026-10-15T05:18:34.511Z"
+    },
+    {
+      "step": "screenshot:07-mobile-setup-light.png",
+      "detail": "390x844",
+      "at": "2026-10-15T05:18:35.562Z"
+    },
+    {
+      "step": "screenshot:08-mobile-result-empty.png",
+      "detail": "390x844",
+      "at": "2026-10-15T05:18:36.591Z"
+    }
+  ],
+  "pages": {
+    "home": {
+      "text": "跳到主要内容\nMcArena 麦门竞技场\n双 Agent 点餐决策竞技 · 可解释裁判\n首页\n挑战设置\n模拟数据\nGitHub 项目入口\n2026 麦当劳程序员创意开发大赛 · 参赛作品\n让两个 AI 点餐策略 同台竞技，让裁判只认规则\n\nMcArena 基于麦当劳中国官方 MCP Server 构建：两名算法实质不同的 Agent 在真实菜单数据上竞速与择优，一位独立规则裁判透明打分—— 每一局都可解释、可复现、可分享。\n\n🚀 一键开始挑战\n🎛️ 自定义挑战\n\n无需账户、无需 Token，打开即玩\n\n对决双方\n算法实质不同 · 同一数据集同一任务卡\nα\nAgent α · 极速猎手\n\nspeed-greedy@1.0.0｜速度型 · 单遍贪心\n\n单遍贪心构造：遍历在售餐品一次，按「硬约束满足 + 应付总价最小」逐项决策，只评估 1 个候选方案。计算成本最低，追求即时可用的便宜解。\n\n候选方案\n1 个\n工具调用\n1 次\n策略原理\n贪心单遍\nVS\nβ\nAgent β · 深度优化师\n\noptimizer-search@1.0.0｜质量型 · 束搜索\n\n束搜索枚举购物车组合（宽度 8，最多 3 轮），逐轮幸存方案全部进入候选池，修复硬约束后前 6 名逐一真实计价，按「满足率 → 营养偏差 → 价格」择优。\n\n候选方案\n46–288 个\n工具调用\n≤ 6 次\n策略原理\n束搜索 + 组合比较\n\n注：两名 Agent 均为算法型 Agent（未调用大模型，已明确标注）， 任何固定输出都不会被冒充为 AI 推理。\n\n玩法说明\n\n🎯\n\n① 选择挑战\n\n一键随机生成任务卡，或在挑战设置中自定义预算、人数、营养目标、优惠偏好与必选约束。相同种子 + 相同约束 = 完全相同的挑战。\n\n⚔️\n\n② 双 Agent 对决\n\n两名算法实质不同的 Agent 读取同一份数据快照、面对同一张任务卡，独立做出点餐决策，全过程记录阶段、证据与工具调用。\n\n🔍\n\n③ 独立裁判验证\n\n裁判不信任 Agent 自述成绩：餐品存在性、单价、优惠、营养、应付价格全部独立重算；优先通过官方 calculate-price 核价，无法核价明确标注 NOT_VERIFIED。\n\n🏆\n\n④ 成绩与分享\n\n五维评分 + 胜负判定 + 可解释报告全部透明展示；生成成绩卡导出 PNG、复制分享文案或一键复现同一局。\n\n当前数据状态\nAPI v0.1.0｜已运行 1336s\nMCP 数据链路\n\n公开演示模式不要求任何账户或 Token\n\n模拟数据（已标注）\n数据模式\n模拟数据\n官方 Token\n未配置（演示无需）\nMCP 端点\nhttps://mcp.mcd.cn\n写操作\n禁止\n\n数据源：mock://dev-fixtures｜餐品 8 项｜ 优惠券 2 张｜采集于 2026-10-15T05:12:35.101Z\n\nsha256：（无校验值）｜ 调用工具：now-time-info、query-nearby-stores、query-meals、query-store-coupons、list-nutrition-foods\n\n本数据为开发用模拟夹具（mock），非麦当劳官方数据；仅用于无 Token 的开发联调，不得作为官方数据展示。 本结果基于开发用模拟数据，非麦当劳官方数据，仅供参考。\n\n免责声明\n\nMcArena（麦门 AI 竞技场）是开发者参赛作品，并非麦当劳官方项目， 与麦当劳无任何关联，未获得官方认证或授权。项目使用的麦当劳名称与红黄配色仅为致敬其品牌视觉， 不代表官方背书。官方数据通过麦当劳中国 MCP Server（mcp.mcd.cn）只读接口获取； 演示模式使用本地录制的快照或明确标注的模拟数据，不会要求任何账户或 Token。\n\n技术栈：React 18 + TypeScript + Tailwind CSS（前端）｜Fastify + SSE（服务端）｜zod 单一数据契约 ｜ 双算法型 Agent + 独立规则裁判。所有比分、耗时与证据均来自真实运行，不含虚构数据。",
+      "controls": [
+        {
+          "tag": "a",
+          "text": "跳到主要内容",
+          "type": ""
+        },
+        {
+          "tag": "a",
+          "text": "McArena 麦门竞技场\n双 Agent 点餐决策竞技 · 可解释裁判",
+          "type": ""
+        },
+        {
+          "tag": "a",
+          "text": "首页",
+          "type": ""
+        },
+        {
+          "tag": "a",
+          "text": "挑战设置",
+          "type": ""
+        },
+        {
+          "tag": "a",
+          "text": "GitHub 项目入口",
+          "type": ""
+        },
+        {
+          "tag": "button",
+          "text": "切换到浅色模式",
+          "type": "button"
+        },
+        {
+          "tag": "button",
+          "text": "🚀 一键开始挑战",
+          "type": ""
+        },
+        {
+          "tag": "button",
+          "text": "🎛️ 自定义挑战",
+          "type": ""
+        }
+      ]
+    },
+    "setup": {
+      "text": "跳到主要内容\nMcArena 麦门竞技场\n双 Agent 点餐决策竞技 · 可解释裁判\n首页\n挑战设置\n模拟数据\nGitHub 项目入口\n预设挑战\n点击预设可一键填充，再做微调\n\n¥20 一人食\n\n1 人堂食、预算 ¥20，考验省钱策略\n\n种子 21 · 点击填充\n\n双人分享餐\n\n2 人不限预算，必须包含汉堡 + 小食 + 饮品\n\n种子 22 · 点击填充\n\n高蛋白健身餐\n\n2 人预算 ¥40，人均蛋白质 ≥ 30g\n\n种子 23 · 点击填充\n\n四人家庭聚餐\n\n4 人预算 ¥80，最多 6 种，含营养目标\n\n种子 24 · 点击填充\n\n无解挑战（观察裁判）\n\n必选 ¥15 汉堡但预算只有 ¥5——看裁判如何判定无效方案\n\n种子 25 · 点击填充\n\n自定义约束\n基础设置\n\n人数与场景决定配送费与人数覆盖校验\n\n人数\n1 人\n2 人\n3 人\n4 人\n5 人\n6 人\n\n1–12 人；裁判会校验商品总数能否覆盖\n\n用餐场景\n堂食\n外带\n外送\n预算（元）\n元\n\n留空表示不限预算\n\n餐品种类上限\n种\n\n限制不同餐品的数量（1–20）\n\n营养目标\n\n按人均值设置；裁判按人数缩放校验\n\n启用营养目标\n启用后 Agent 会尝试达成目标，裁判独立核算达成率\n优惠与高级约束\n优先使用优惠券\nAgent 会评估数据集内的可用优惠券；裁判逐张验证使用条件\n必选标签\nburger\nchicken\nspicy\nside\ndrink\ndessert\nhot\nlight\ncombo\n\n提案中必须出现带这些标签的餐品（可多选）\n\n必选类别\n汉堡\n小食\n饮品\n甜品\n套餐\n轻食\n汤品\n\n提案中必须出现这些类别的餐品（可多选）\n\n必选餐品编码\n\n用逗号分隔；编码需存在于当前数据集，例如 burger-classic\n\n随机种子\n\n相同种子 + 相同约束 = 完全相同的挑战（可复现）\n\n⚔️ 开始对决\n返回首页\n\n当前约束摘要：2 人 · 堂食 · 预算 ¥40 · 无标签类别约束\n\n免责声明\n\nMcArena（麦门 AI 竞技场）是开发者参赛作品，并非麦当劳官方项目， 与麦当劳无任何关联，未获得官方认证或授权。项目使用的麦当劳名称与红黄配色仅为致敬其品牌视觉， 不代表官方背书。官方数据通过麦当劳中国 MCP Server（mcp.mcd.cn）只读接口获取； 演示模式使用本地录制的快照或明确标注的模拟数据，不会要求任何账户或 Token。\n\n技术栈：React 18 + TypeScript + Tailwind CSS（前端）｜Fastify + SSE（服务端）｜zod 单一数据契约 ｜ 双算法型 Agent + 独立规则裁判。所有比分、耗时与证据均来自真实运行，不含虚构数据。",
+      "controls": [
+        {
+          "tag": "a",
+          "text": "跳到主要内容",
+          "type": ""
+        },
+        {
+          "tag": "a",
+          "text": "McArena 麦门竞技场\n双 Agent 点餐决策竞技 · 可解释裁判",
+          "type": ""
+        },
+        {
+          "tag": "a",
+          "text": "首页",
+          "type": ""
+        },
+        {
+          "tag": "a",
+          "text": "挑战设置",
+          "type": ""
+        },
+        {
+          "tag": "a",
+          "text": "GitHub 项目入口",
+          "type": ""
+        },
+        {
+          "tag": "button",
+          "text": "切换到浅色模式",
+          "type": "button"
+        },
+        {
+          "tag": "button",
+          "text": "¥20 一人食\n\n1 人堂食、预算 ¥20，考验省钱策略\n\n种子 21 · 点击",
+          "type": "button"
+        },
+        {
+          "tag": "button",
+          "text": "双人分享餐\n\n2 人不限预算，必须包含汉堡 + 小食 + 饮品\n\n种子 22 ·",
+          "type": "button"
+        },
+        {
+          "tag": "button",
+          "text": "高蛋白健身餐\n\n2 人预算 ¥40，人均蛋白质 ≥ 30g\n\n种子 23 · 点",
+          "type": "button"
+        },
+        {
+          "tag": "button",
+          "text": "四人家庭聚餐\n\n4 人预算 ¥80，最多 6 种，含营养目标\n\n种子 24 · ",
+          "type": "button"
+        },
+        {
+          "tag": "button",
+          "text": "无解挑战（观察裁判）\n\n必选 ¥15 汉堡但预算只有 ¥5——看裁判如何判定无效",
+          "type": "button"
+        },
+        {
+          "tag": "button",
+          "text": "1 人",
+          "type": "button"
+        },
+        {
+          "tag": "button",
+          "text": "2 人",
+          "type": "button"
+        },
+        {
+          "tag": "button",
+          "text": "3 人",
+          "type": "button"
+        },
+        {
+          "tag": "button",
+          "text": "4 人",
+          "type": "button"
+        },
+        {
+          "tag": "button",
+          "text": "5 人",
+          "type": "button"
+        },
+        {
+          "tag": "button",
+          "text": "6 人",
+          "type": "button"
+        },
+        {
+          "tag": "button",
+          "text": "堂食",
+          "type": "button"
+        },
+        {
+          "tag": "button",
+          "text": "外带",
+          "type": "button"
+        },
+        {
+          "tag": "button",
+          "text": "外送",
+          "type": "button"
+        },
+        {
+          "tag": "input",
+          "text": "40",
+          "type": "number"
+        },
+        {
+          "tag": "input",
+          "text": "4",
+          "type": "number"
+        },
+        {
+          "tag": "input",
+          "text": "on",
+          "type": "checkbox"
+        },
+        {
+          "tag": "input",
+          "text": "on",
+          "type": "checkbox"
+        },
+        {
+          "tag": "button",
+          "text": "burger",
+          "type": "button"
+        },
+        {
+          "tag": "button",
+          "text": "chicken",
+          "type": "button"
+        },
+        {
+          "tag": "button",
+          "text": "spicy",
+          "type": "button"
+        },
+        {
+          "tag": "button",
+          "text": "side",
+          "type": "button"
+        },
+        {
+          "tag": "button",
+          "text": "drink",
+          "type": "button"
+        },
+        {
+          "tag": "button",
+          "text": "dessert",
+          "type": "button"
+        },
+        {
+          "tag": "button",
+          "text": "hot",
+          "type": "button"
+        },
+        {
+          "tag": "button",
+          "text": "light",
+          "type": "button"
+        },
+        {
+          "tag": "button",
+          "text": "combo",
+          "type": "button"
+        },
+        {
+          "tag": "button",
+          "text": "汉堡",
+          "type": "button"
+        },
+        {
+          "tag": "button",
+          "text": "小食",
+          "type": "button"
+        },
+        {
+          "tag": "button",
+          "text": "饮品",
+          "type": "button"
+        },
+        {
+          "tag": "button",
+          "text": "甜品",
+          "type": "button"
+        },
+        {
+          "tag": "button",
+          "text": "套餐",
+          "type": "button"
+        },
+        {
+          "tag": "button",
+          "text": "轻食",
+          "type": "button"
+        },
+        {
+          "tag": "button",
+          "text": "汤品",
+          "type": "button"
+        }
+      ]
+    },
+    "arena": {
+      "text": "跳到主要内容\nMcArena 麦门竞技场\n双 Agent 点餐决策竞技 · 可解释裁判\n首页\n挑战设置\n模拟数据\nGitHub 项目入口\n自定义挑战 · 2 人堂食｜预算 ¥40\n\n玩家自定义约束：2 人、堂食、预算 ¥40、最多 4 种餐品、优先使用优惠券\n\n种子 253777\n堂食\n预算 ¥40.00\n模拟数据\n已验证的数据\nmock://dev-fixtures\nsha256 （无校验值）\n餐品来自官方菜单工具，价格为官方 calculate-price 口径\n决策回放中（事件为服务端真实记录）\n1x\n2x\n4x\n重新播放\n跳过动画\nα\nAgent α · 极速猎手\n\nspeed-greedy@1.0.0｜极速策略：单遍贪心构造，最低计算成本，追求即时可用解\n\n决策中\n极速猎手启动：单遍贪心策略（算法型 Agent，未调用大模型）\nβ\nAgent β · 深度优化师\n\noptimizer-search@1.0.0｜优化策略：束搜索多候选 + 组合比较，追求约束满足与营养均衡\n\n决策中\n等待决策开始…\n裁判独立验证\n\n不信任 Agent 自述成绩：逐项重算餐品、价格、优惠与营养\n\n等待双方完成\n\n实际墙上耗时 14 ms｜各 Agent 实测耗时 α 1 ms / β 1 ms｜回放节奏仅为演示编排，步骤内容、顺序与指标均为真实运行结果\n\n免责声明\n\nMcArena（麦门 AI 竞技场）是开发者参赛作品，并非麦当劳官方项目， 与麦当劳无任何关联，未获得官方认证或授权。项目使用的麦当劳名称与红黄配色仅为致敬其品牌视觉， 不代表官方背书。官方数据通过麦当劳中国 MCP Server（mcp.mcd.cn）只读接口获取； 演示模式使用本地录制的快照或明确标注的模拟数据，不会要求任何账户或 Token。\n\n技术栈：React 18 + TypeScript + Tailwind CSS（前端）｜Fastify + SSE（服务端）｜zod 单一数据契约 ｜ 双算法型 Agent + 独立规则裁判。所有比分、耗时与证据均来自真实运行，不含虚构数据。",
+      "controls": [
+        {
+          "tag": "a",
+          "text": "跳到主要内容",
+          "type": ""
+        },
+        {
+          "tag": "a",
+          "text": "McArena 麦门竞技场\n双 Agent 点餐决策竞技 · 可解释裁判",
+          "type": ""
+        },
+        {
+          "tag": "a",
+          "text": "首页",
+          "type": ""
+        },
+        {
+          "tag": "a",
+          "text": "挑战设置",
+          "type": ""
+        },
+        {
+          "tag": "a",
+          "text": "GitHub 项目入口",
+          "type": ""
+        },
+        {
+          "tag": "button",
+          "text": "切换到浅色模式",
+          "type": "button"
+        },
+        {
+          "tag": "button",
+          "text": "1x",
+          "type": "button"
+        },
+        {
+          "tag": "button",
+          "text": "2x",
+          "type": "button"
+        },
+        {
+          "tag": "button",
+          "text": "4x",
+          "type": "button"
+        },
+        {
+          "tag": "button",
+          "text": "重新播放",
+          "type": ""
+        },
+        {
+          "tag": "button",
+          "text": "跳过动画",
+          "type": ""
+        }
+      ]
+    },
+    "result": {
+      "text": "跳到主要内容\nMcArena 麦门竞技场\n双 Agent 点餐决策竞技 · 可解释裁判\n首页\n挑战设置\n模拟数据\nGitHub 项目入口\n\nMATCH RESULT\n\n双方战平\n\n双方战平（各 69.3 / 100）：资格、已验证成本、目标达成率与响应时间全部一致，判定平局\n\n五维总分 α 69.3 : β 69.3 / 100\n裁判实验 exp_798fb5d34c3b4b46\n规则 judge-rules/1.1.0\n裁判重算成本（NOT_VERIFIED）\n🔁 重新挑战（同约束）\n🎛️ 换一张挑战卡\n回到首页\n自定义挑战 · 2 人堂食｜预算 ¥40\n\n玩家自定义约束：2 人、堂食、预算 ¥40、最多 4 种餐品、优先使用优惠券\n\n种子 253777\n2 人\n堂食\n预算 ¥40.00\n最多 4 种\n优先用券\n双方得分\n五维满分 100｜权重：需求30 预算25 营养20 优惠15 可解释10\n需求满足\n预算控制\n营养均衡\n优惠利用\n可解释性\nα 极速猎手\nβ 深度优化师\n\n雷达图各轴按该维度满分归一化；两条曲线分别是 α / β 的裁判独立重算得分（不取较高值）\n\nα 极速猎手（69.3）\nβ 深度优化师（69.3）\n需求满足度（满分 30）\nα 27.3｜β 27.3\n\n裁判校验通过 10/11 × 30\n\n预算控制（满分 25）\nα 22.0｜β 22.0\n\n裁决成本 ¥12.00 ≤ 预算 ¥40.00，剩余比例 70.0% → 15 + 10×0.700\n\n营养均衡（满分 20）\nα 10.0｜β 10.0\n\n任务卡未设营养目标，按中性 10 分计\n\n优惠利用（满分 15）\nα 0.0｜β 0.0\n\n裁判重算优惠 / 券前应付 × 15（封顶）\n\n可解释性（满分 10）\nα 10.0｜β 10.0\n\n证据完整度 40% + 独立校验说明覆盖率 60%\n\n方案对比\n实测耗时 / 候选数 / 工具调用均为真实测量值\nα\nAgent α · 极速猎手\n\nspeed-greedy@1.0.0\n\n实测耗时\n1 ms\n候选方案\n1\n工具调用\n1\n模拟·玉米浓汤 × 2\n¥12.00\n小计 ¥12.00\n应付 ¥12.00\nβ\nAgent β · 深度优化师\n\noptimizer-search@1.0.0\n\n实测耗时\n1 ms\n候选方案\n120\n工具调用\n6\n模拟·玉米浓汤 × 2\n¥12.00\n小计 ¥12.00\n应付 ¥12.00\n价格对比\n裁决采用：官方 calculate-price ＞ 裁判重算 ＞ Agent 自述\n口径\tAgent α\tAgent β\t说明\nAgent 自述应付\t¥12.00\t¥12.00\tAgent 自己报告的数字（裁判不采信）\n裁判重算应付\t¥12.00\t¥12.00\t按数据集单价与券规则独立重算\n官方 calculate-price\t—\t—\t命中数据集内官方计价记录；无记录为 NOT_VERIFIED\n裁决采用成本\t¥12.00\t¥12.00\t参与胜负计算的成本\n营养对比\n本局无营养目标，仅展示构成\n指标\tAgent α\tAgent β\t目标\n热量\t280 kcal\t280 kcal\t—\n蛋白质\t6.0 g\t6.0 g\t—\n钠\t960 mg\t960 mg\t—\n裁判记分与验证报告\n规则 judge-rules/1.1.0\n裁判裁决 · 独立智能裁判\n\n五维评分与验证报告全部来自裁判独立重算，不采信 Agent 自述成绩\n\n双方战平\n\n双方战平（各 69.3 / 100）：资格、已验证成本、目标达成率与响应时间全部一致，判定平局\n\n维度\tα\tβ\t满分\t公式\n需求满足度\t27.3\t27.3\t30\t裁判校验通过 10/11 × 30\n预算控制\t22.0\t22.0\t25\t裁决成本 ¥12.00 ≤ 预算 ¥40.00，剩余比例 70.0% → 15 + 10×0.700\n营养均衡\t10.0\t10.0\t20\t任务卡未设营养目标，按中性 10 分计\n优惠利用\t0.0\t0.0\t15\t裁判重算优惠 / 券前应付 × 15（封顶）\n可解释性\t10.0\t10.0\t10\t证据完整度 40% + 独立校验说明覆盖率 60%\n五维总分\t69.3\t69.3\t100\t胜负由字典序判定，与五维总分不必然同向\n独立验证报告\nα\nAgent α · 极速猎手\n通过硬性校验\nNOT_VERIFIED · 无官方核价记录\n官方核算成本\n—\nAgent 自述成本\n¥12.00\n裁判重算成本\n¥12.00\n裁决采用成本\n¥12.00\n目标达成率\n—\n实测响应\n1 ms\n校验通过\n10/11\n计入优惠的券\n无\n[警告] 无法通过官方 calculate-price 核对应付价格，本方案成本标记为 NOT_VERIFIED\nβ\nAgent β · 深度优化师\n通过硬性校验\nNOT_VERIFIED · 无官方核价记录\n官方核算成本\n—\nAgent 自述成本\n¥12.00\n裁判重算成本\n¥12.00\n裁决采用成本\n¥12.00\n目标达成率\n—\n实测响应\n1 ms\n校验通过\n10/11\n计入优惠的券\n无\n[警告] 无法通过官方 calculate-price 核对应付价格，本方案成本标记为 NOT_VERIFIED\n违规明细（2 条）\n[警告] α · price-not-verifiable：无法通过官方 calculate-price 核对应付价格，本方案成本标记为 NOT_VERIFIED（证据：mock://dev-fixtures#priceQuotes）\n[警告] β · price-not-verifiable：无法通过官方 calculate-price 核对应付价格，本方案成本标记为 NOT_VERIFIED（证据：mock://dev-fixtures#priceQuotes）\n· 评分规则版本 judge-rules/1.1.0；五维得分全部来自裁判独立重算（不采信 Agent 自述成绩）。\n· 本局运行于模拟数据集（非麦当劳官方数据），裁判算法为真实规则实现。\n· 成本比较依据：未能对双方完成官方核价，成本以裁判按数据集单价与券规则重算值为准（claimed-unverified，已在验证报告中标注 NOT_VERIFIED）。\n· α（speed-greedy@1.0.0）价格核验状态：NOT_VERIFIED（无官方 calculate-price 记录，已明确标注，不视为通过）。\n· β（optimizer-search@1.0.0）价格核验状态：NOT_VERIFIED（无官方 calculate-price 记录，已明确标注，不视为通过）。\n· 判定顺序：资格 → 已验证成本 → 营养/目标达成率 → 响应速度。本局依据：资格、已验证成本、目标达成率与响应时间全部一致，判定平局\n· 算法表现：极速猎手 候选 1 个 / 工具调用 1 次；深度优化师 候选 120 个 / 工具调用 6 次（实测响应时间为真实测量值，见各 AgentExecution.durationMs，不参与复现指纹；仅作次级评价维度）。\n· 可复现实验：相同 (规则版本, 种子, 数据集指纹, 引擎版本, 验证结果) 将得到完全相同的 experimentId 与全部确定性判定（实测耗时除外）。\n决策解释\n展开查看完整决策链路\nAgent α「极速猎手」决策链路\n9 条证据\n▼\nAgent β「深度优化师」决策链路\n16 条证据\n▼\n\n引擎版本：编排 0.1.0｜α speed-greedy@1.0.0｜β optimizer-search@1.0.0｜裁判 rule-based@1.0.0｜数据集 sha256 （无校验值）｜实测墙上耗时 14 ms\n\n分享成绩\n所有内容均来自本局真实结果\n\nMcArena · 麦门 AI 竞技场\n\n双 Agent 点餐决策竞技 · 挑战成绩\n\n非官方项目\n\n自定义挑战 · 2 人堂食｜预算 ¥40\n\n种子 253777｜模拟数据（非官方数据）｜2026/10/15 13:18:09\n\n本局胜者\n\n双方战平\n\n五维总分 α 69.3 : β 69.3\n\n实验 exp_798fb5d34c3b4b46\n\nAgent α 应付\n\n¥12.00\n\nAgent β 应付\n\n¥12.00\n\n裁判实验 ID\n\n798fb5d34c3b4b46\n\n数据校验 sha256\n\n（无校验值）\n\n裁判独立验证后裁定；成本比较依据：裁判重算（未经官方核价）。 成绩由真实运行产生。本项目非麦当劳官方项目，与麦当劳无关联。\n🖼️ 导出成绩卡 PNG\n📋 复制分享文案\n⚙️ 导出复现配置\n📄 复制配置 JSON\nGitHub 仓库将在报名审核期间公开\n数据来源与证据状态\n模拟数据（非麦当劳官方数据）\n来源 mock://dev-fixtures\nsha256 （无校验值）\n采集于 2026-10-15T05:12:35.101Z\n存在 NOT_VERIFIED 方案（已明确标注，不视为通过）\n\n本数据为开发用模拟夹具（mock），非麦当劳官方数据；仅用于无 Token 的开发联调，不得作为官方数据展示。 本结果基于开发用模拟数据，非麦当劳官方数据，仅供参考。\n\n规则：餐品、价格与优惠券数据来自官方菜单 / 优惠券工具的输出或其快照；价格一律以官方 calculate-price 为口径，无官方记录时标注 NOT_VERIFIED；裁判对每一方独立重算后才进入比较。\n\n免责声明\n\nMcArena（麦门 AI 竞技场）是开发者参赛作品，并非麦当劳官方项目， 与麦当劳无任何关联，未获得官方认证或授权。项目使用的麦当劳名称与红黄配色仅为致敬其品牌视觉， 不代表官方背书。官方数据通过麦当劳中国 MCP Server（mcp.mcd.cn）只读接口获取； 演示模式使用本地录制的快照或明确标注的模拟数据，不会要求任何账户或 Token。\n\n技术栈：React 18 + TypeScript + Tailwind CSS（前端）｜Fastify + SSE（服务端）｜zod 单一数据契约 ｜ 双算法型 Agent + 独立规则裁判。所有比分、耗时与证据均来自真实运行，不含虚构数据。",
+      "controls": [
+        {
+          "tag": "a",
+          "text": "跳到主要内容",
+          "type": ""
+        },
+        {
+          "tag": "a",
+          "text": "McArena 麦门竞技场\n双 Agent 点餐决策竞技 · 可解释裁判",
+          "type": ""
+        },
+        {
+          "tag": "a",
+          "text": "首页",
+          "type": ""
+        },
+        {
+          "tag": "a",
+          "text": "挑战设置",
+          "type": ""
+        },
+        {
+          "tag": "a",
+          "text": "GitHub 项目入口",
+          "type": ""
+        },
+        {
+          "tag": "button",
+          "text": "切换到浅色模式",
+          "type": "button"
+        },
+        {
+          "tag": "button",
+          "text": "🔁 重新挑战（同约束）",
+          "type": ""
+        },
+        {
+          "tag": "button",
+          "text": "🎛️ 换一张挑战卡",
+          "type": ""
+        },
+        {
+          "tag": "button",
+          "text": "回到首页",
+          "type": ""
+        },
+        {
+          "tag": "button",
+          "text": "Agent α「极速猎手」决策链路\n9 条证据\n▼",
+          "type": "button"
+        },
+        {
+          "tag": "button",
+          "text": "Agent β「深度优化师」决策链路\n16 条证据\n▼",
+          "type": "button"
+        },
+        {
+          "tag": "button",
+          "text": "🖼️ 导出成绩卡 PNG",
+          "type": ""
+        },
+        {
+          "tag": "button",
+          "text": "📋 复制分享文案",
+          "type": ""
+        },
+        {
+          "tag": "button",
+          "text": "⚙️ 导出复现配置",
+          "type": ""
+        },
+        {
+          "tag": "button",
+          "text": "📄 复制配置 JSON",
+          "type": ""
+        }
+      ]
+    },
+    "mobileHome": {
+      "text": "跳到主要内容\nMcArena 麦门竞技场\n首页\n挑战设置\nGitHub 项目入口\n2026 麦当劳程序员创意开发大赛 · 参赛作品\n让两个 AI 点餐策略\n同台竞技，让裁判只认规则\n\nMcArena 基于麦当劳中国官方 MCP Server 构建：两名算法实质不同的 Agent 在真实菜单数据上竞速与择优，一位独立规则裁判透明打分—— 每一局都可解释、可复现、可分享。\n\n🚀 一键开始挑战\n🎛️ 自定义挑战\n\n无需账户、无需 Token，打开即玩\n\n对决双方\n算法实质不同 · 同一数据集同一任务卡\nα\nAgent α · 极速猎手\n\nspeed-greedy@1.0.0｜速度型 · 单遍贪心\n\n单遍贪心构造：遍历在售餐品一次，按「硬约束满足 + 应付总价最小」逐项决策，只评估 1 个候选方案。计算成本最低，追求即时可用的便宜解。\n\n候选方案\n1 个\n工具调用\n1 次\n策略原理\n贪心单遍\nVS\nβ\nAgent β · 深度优化师\n\noptimizer-search@1.0.0｜质量型 · 束搜索\n\n束搜索枚举购物车组合（宽度 8，最多 3 轮），逐轮幸存方案全部进入候选池，修复硬约束后前 6 名逐一真实计价，按「满足率 → 营养偏差 → 价格」择优。\n\n候选方案\n46–288 个\n工具调用\n≤ 6 次\n策略原理\n束搜索 + 组合比较\n\n注：两名 Agent 均为算法型 Agent（未调用大模型，已明确标注）， 任何固定输出都不会被冒充为 AI 推理。\n\n玩法说明\n\n🎯\n\n① 选择挑战\n\n一键随机生成任务卡，或在挑战设置中自定义预算、人数、营养目标、优惠偏好与必选约束。相同种子 + 相同约束 = 完全相同的挑战。\n\n⚔️\n\n② 双 Agent 对决\n\n两名算法实质不同的 Agent 读取同一份数据快照、面对同一张任务卡，独立做出点餐决策，全过程记录阶段、证据与工具调用。\n\n🔍\n\n③ 独立裁判验证\n\n裁判不信任 Agent 自述成绩：餐品存在性、单价、优惠、营养、应付价格全部独立重算；优先通过官方 calculate-price 核价，无法核价明确标注 NOT_VERIFIED。\n\n🏆\n\n④ 成绩与分享\n\n五维评分 + 胜负判定 + 可解释报告全部透明展示；生成成绩卡导出 PNG、复制分享文案或一键复现同一局。\n\n当前数据状态\nAPI v0.1.0｜已运行 1364s\nMCP 数据链路\n\n公开演示模式不要求任何账户或 Token\n\n模拟数据（已标注）\n数据模式\n模拟数据\n官方 Token\n未配置（演示无需）\nMCP 端点\nhttps://mcp.mcd.cn\n写操作\n禁止\n\n数据源：mock://dev-fixtures｜餐品 8 项｜ 优惠券 2 张｜采集于 2026-10-15T05:12:35.101Z\n\nsha256：（无校验值）｜ 调用工具：now-time-info、query-nearby-stores、query-meals、query-store-coupons、list-nutrition-foods\n\n本数据为开发用模拟夹具（mock），非麦当劳官方数据；仅用于无 Token 的开发联调，不得作为官方数据展示。 本结果基于开发用模拟数据，非麦当劳官方数据，仅供参考。\n\n免责声明\n\nMcArena（麦门 AI 竞技场）是开发者参赛作品，并非麦当劳官方项目， 与麦当劳无任何关联，未获得官方认证或授权。项目使用的麦当劳名称与红黄配色仅为致敬其品牌视觉， 不代表官方背书。官方数据通过麦当劳中国 MCP Server（mcp.mcd.cn）只读接口获取； 演示模式使用本地录制的快照或明确标注的模拟数据，不会要求任何账户或 Token。\n\n技术栈：React 18 + TypeScript + Tailwind CSS（前端）｜Fastify + SSE（服务端）｜zod 单一数据契约 ｜ 双算法型 Agent + 独立规则裁判。所有比分、耗时与证据均来自真实运行，不含虚构数据。",
+      "controls": [
+        {
+          "tag": "a",
+          "text": "跳到主要内容",
+          "type": ""
+        },
+        {
+          "tag": "a",
+          "text": "McArena 麦门竞技场",
+          "type": ""
+        },
+        {
+          "tag": "a",
+          "text": "首页",
+          "type": ""
+        },
+        {
+          "tag": "a",
+          "text": "挑战设置",
+          "type": ""
+        },
+        {
+          "tag": "a",
+          "text": "GitHub 项目入口",
+          "type": ""
+        },
+        {
+          "tag": "button",
+          "text": "切换到深色模式",
+          "type": "button"
+        },
+        {
+          "tag": "button",
+          "text": "🚀 一键开始挑战",
+          "type": ""
+        },
+        {
+          "tag": "button",
+          "text": "🎛️ 自定义挑战",
+          "type": ""
+        }
+      ]
+    },
+    "mobileEmptyResult": {
+      "text": "跳到主要内容\nMcArena 麦门竞技场\n首页\n挑战设置\nGitHub 项目入口\n\n📊\n\n还没有比赛结果\n\n先发起一场对决，结果页会展示胜者、得分、价格与营养对比、决策解释与分享成绩卡。\n\n回到首页\n自定义挑战\n\n免责声明\n\nMcArena（麦门 AI 竞技场）是开发者参赛作品，并非麦当劳官方项目， 与麦当劳无任何关联，未获得官方认证或授权。项目使用的麦当劳名称与红黄配色仅为致敬其品牌视觉， 不代表官方背书。官方数据通过麦当劳中国 MCP Server（mcp.mcd.cn）只读接口获取； 演示模式使用本地录制的快照或明确标注的模拟数据，不会要求任何账户或 Token。\n\n技术栈：React 18 + TypeScript + Tailwind CSS（前端）｜Fastify + SSE（服务端）｜zod 单一数据契约 ｜ 双算法型 Agent + 独立规则裁判。所有比分、耗时与证据均来自真实运行，不含虚构数据。",
+      "controls": [
+        {
+          "tag": "a",
+          "text": "跳到主要内容",
+          "type": ""
+        },
+        {
+          "tag": "a",
+          "text": "McArena 麦门竞技场",
+          "type": ""
+        },
+        {
+          "tag": "a",
+          "text": "首页",
+          "type": ""
+        },
+        {
+          "tag": "a",
+          "text": "挑战设置",
+          "type": ""
+        },
+        {
+          "tag": "a",
+          "text": "GitHub 项目入口",
+          "type": ""
+        },
+        {
+          "tag": "button",
+          "text": "切换到深色模式",
+          "type": "button"
+        },
+        {
+          "tag": "button",
+          "text": "回到首页",
+          "type": ""
+        },
+        {
+          "tag": "button",
+          "text": "自定义挑战",
+          "type": ""
+        }
+      ]
+    }
+  },
+  "themeToggle": {
+    "before": "dark",
+    "after": "light"
+  },
+  "themeToggleRestored": "dark",
+  "resultTheme": "light",
+  "mobileOverflow": {
+    "scrollWidth": 390,
+    "clientWidth": 390
+  }
+}

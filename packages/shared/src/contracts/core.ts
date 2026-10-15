@@ -266,5 +266,7 @@ export function parseOrThrow<T extends z.ZodTypeAny>(schema: T, input: unknown, 
       issues: result.error.issues,
     })
   }
-  return result.data
+  // result.data 对泛型 T 的属性访问被推断为 any；此处 safeParse 已保证成功，
+  // 显式断言回泛型返回类型 z.infer<T>（调用方拿到的仍是强类型）
+  return result.data as z.infer<T>
 }

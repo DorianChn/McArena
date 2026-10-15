@@ -74,7 +74,8 @@ export class ReplayDataSource implements ArenaDataSource {
       throw new ConfigError('snapshots/ 目录解析后为空，请检查快照文件。')
     }
     this.logger.info('加载官方快照', { file: latest })
-    const raw = JSON.parse(await readFile(path.join(this.snapshotsDir, latest), 'utf8'))
+    // JSON.parse 返回 any：先降为 unknown，再由 zod schema 收敛为强类型
+    const raw: unknown = JSON.parse(await readFile(path.join(this.snapshotsDir, latest), 'utf8'))
     const snapshot = MCPDataSnapshotSchema.parse(raw)
     this.dataset = datasetFromSnapshot(snapshot)
     return this.dataset

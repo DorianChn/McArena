@@ -123,6 +123,15 @@ export async function buildApp(options: BuildAppOptions): Promise<FastifyInstanc
   // ---- SSE：回放比赛事件序列 ----
   app.get<{ Params: { id: string } }>('/api/match/:id/stream', async (request, reply) => {
     const events = matchService.getEvents(request.params.id)
+    // 与 GET /api/match/:id 保持一致：未知/已淘汰的 matchId 一律 404，
+    // 不返回 200 空流（前端不依赖该路由的 200 行为）
+    if (!matchService.getMatch(request.params.id)) {
+      reply.status(404).send({
+        code: 'NOT_FOUND',
+        message: `比赛 ${request.params.id} 不存在或已过期`,
+      })
+      return
+    }
     reply.raw.writeHead(200, {
       'content-type': 'text/event-stream; charset=utf-8',
       'cache-control': 'no-cache',

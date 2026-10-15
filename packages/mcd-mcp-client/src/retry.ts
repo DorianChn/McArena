@@ -1,4 +1,4 @@
-import { RateLimitError } from '@mcarena/shared'
+import { McpUnavailableError, RateLimitError } from '@mcarena/shared'
 
 /**
  * 指数退避重试（带抖动）。仅对可恢复错误重试：
@@ -14,7 +14,7 @@ export interface RetryOptions {
 }
 
 export function isRetryableError(error: unknown): boolean {
-  if (error instanceof RateLimitError) {
+  if (error instanceof RateLimitError || error instanceof McpUnavailableError) {
     return true
   }
   if (error instanceof Error) {

@@ -185,7 +185,7 @@ export class OptimizerAgent implements AgentEngine {
     // ---------------- 束搜索（每轮幸存者都进候选池） ----------------
     const rounds = challenge.constraints.people + MAX_EXTRA_ROUNDS
     const candidatePool = new Map<string, Cart>()
-    let beam: Cart[] = [new Map()]
+    let beam: Cart[] = [new Map<string, number>()]
     let searchedRounds = 0
     for (let round = 0; round < rounds; round += 1) {
       recorder.checkpoint()

@@ -214,7 +214,8 @@ async function loadLatestSnapshot(repoRoot: string): Promise<ArenaDataset | null
     .sort()
   const latest = files[files.length - 1]
   if (!latest) return null
-  const raw = JSON.parse(await readFile(path.join(dir, latest), 'utf8'))
+  // JSON.parse 返回 any：先降为 unknown，再由 zod schema 收敛为强类型
+  const raw: unknown = JSON.parse(await readFile(path.join(dir, latest), 'utf8'))
   return datasetFromSnapshot(MCPDataSnapshotSchema.parse(raw))
 }
 

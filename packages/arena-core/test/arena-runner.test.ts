@@ -51,6 +51,15 @@ describe('runArenaMatch（共享单局运行器）', () => {
     expect(result.challenge.constraints.requiredTags).toEqual(['burger'])
   })
 
+  it('空菜单场景保持可判决，不崩溃且双方均无有效提案', async () => {
+    const outcome = await runArenaMatch({ dataset: { ...dataset, menuItems: [], priceQuotes: [] }, seed: 9 })
+    const result = MatchResultSchema.parse(outcome.result)
+    expect(result.agents).toHaveLength(2)
+    expect(result.judge.winner).toBe('tie')
+    expect(result.judge.verification.every((entry) => entry.eligible === false)).toBe(true)
+    expect(result.judge.allViolations.length).toBeGreaterThan(0)
+  })
+
   it('无解场景（预算 ¥5 + 必选 ¥15 汉堡 + 2 人）→ 双方失格、判平局', async () => {
     const constraints = ChallengeConstraintsSchema.parse({
       people: 2,

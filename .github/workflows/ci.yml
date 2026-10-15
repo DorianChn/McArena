@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: read
+
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
@@ -16,10 +19,12 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - run: npm run lint
       - run: npm run build
       - run: npm test
       - name: Secret scan (block real tokens)
+        shell: bash
         run: |
-          if grep -rInE "Bearer [A-Za-z0-9._-]{20,}" --include="*.ts" --include="*.js" --include="*.mjs" --include="*.json" --include="*.md" packages apps tools skill docs; then
-            echo "::error::possible hardcoded token found"; exit 1
+          if git grep -nIE 'Bearer[[:space:]]+[A-Za-z0-9._+/=-]{20,}|(sk-[A-Za-z0-9_-]{20,}|ghp_[A-Za-z0-9]{20,}|AKIA[0-9A-Z]{16}|AIza[0-9A-Za-z_-]{30,}|-----BEGIN (RSA |EC |OPENSSH )?PRIVATE KEY-----)' -- . ':!package-lock.json'; then
+            echo "::error::possible hardcoded secret found"; exit 1
           fi
