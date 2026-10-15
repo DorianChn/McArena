@@ -7,6 +7,7 @@ export default defineConfig({
       'packages/*/test/**/*.test.ts',
       'apps/*/test/**/*.test.ts',
       'apps/*/test/**/*.test.tsx',
+      'tools/test/**/*.test.ts',
     ],
     reporters: 'default',
   },

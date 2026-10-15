@@ -5,6 +5,12 @@ export { RateLimiter } from './rate-limiter.js'
 export { withRetry, isRetryableError } from './retry.js'
 export { parseSseFrames, isEventStream, extractJsonRpcMessages } from './sse.js'
 export {
+  captureOfficialSnapshot,
+  SNAPSHOT_TOOL_SEQUENCE,
+  DEFAULT_DETAIL_SAMPLE,
+} from './snapshot-capture.js'
+export type { CapturedSnapshot, CaptureOptions } from './snapshot-capture.js'
+export {
   READ_ONLY_MCD_TOOLS,
   WRITE_MCD_TOOLS,
   McpToolListSchema,

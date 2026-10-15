@@ -74,8 +74,11 @@
 | 2026-10-14 | 官方 README 工具清单（34 项）与规则文档 | 已核对，见上方表格 |
 | 2026-10-14 | MCP 协议层对拍（initialize / tools/list / tools/call、401/429/SSE 解析） | ✅ 假服务器契约测试 13 项通过 |
 | 2026-10-14 | 双 Agent 竞技引擎在**数据集驱动**下的完整闭环（阶段03） | ✅ `npm run bench` 8 场景通过，见 STAGE_03_REPORT.md |
-| 待 P1-4 | 真实 Token 环境 `tools/list` 实测 schema | ⬜ **BLOCKED（B1）**：采集后回填（差异记录写入本节） |
+| 2026-10-15 | 快照采集工具 `tools/snapshot-capture.ts` 落成（只读序列 + 原始响应落盘 + manifest sha256） | ✅ 采集模块 4 项单测 + 落盘 3 项单测通过；CLI 退出码实测（3=无 Token / 2=用法错误） |
+| 待 P1-4 | 真实 Token 环境 `tools/list` 实测 schema | ⬜ **BLOCKED（B1）**：Token 到位后执行 `MCD_MCP_TOKEN=<token> tsx tools/snapshot-capture.ts`，采集后回填（差异记录写入本节） |
 
 > 说明：在上述实测完成前，代码中的工具参数以官方 README 描述为准编写，字段命名在实测校验后按实际 schema 校正；未经验证的参数不会被硬编码进生产逻辑。
+>
+> **采集工具设计约束（不伪造字段）**：`tools/snapshot-capture.ts` 只落盘**原始响应**与 manifest（逐文件 sha256），不做任何字段映射——官方返回 schema 未经真实 Token 实测前，把响应映射成 `MCPDataSnapshot` 属于猜测字段。类型化快照组装待 P1-4 校验后按实测 schema 进行（P1-6），manifest 中 `mappingVerified` 恒为 false。
 >
 > 阶段03 双 Agent 引擎已在数据结构上与官方 MCP 输出解耦：只要把 `scenario://stage03-fixtures` 数据集替换为 `replay`/`live` 模式产出的官方数据集，`npm run bench` 与 `npm run demo` 无需任何代码改动即可在真实官方数据上复现全部对比指标。

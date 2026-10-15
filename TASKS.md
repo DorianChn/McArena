@@ -51,9 +51,9 @@
 | P1-2 🤖 | `packages/mcd-mcp-client`：initialize/tools/list/tools/call + 退避重试 + 超时 | 后端 | ✅ 协议层完成（待真实 Token 端到端验证） | 假服务器契约测试通过 |
 | P1-3 🤖 | 写操作黑名单（create-order 等默认拒绝） | 后端 | ✅ 完成 | 单测：拦截即抛错 |
 | P1-4 🤖👤 | 用真实 Token 试连，落 `snapshots/schema-YYYYMMDD/tools.json`（实测 schema） | 后端+用户 | ⬜ 依赖 P0-8 | tools.json 生成；与官方文档差异记录入 MCP_INTEGRATION.md |
-| P1-5 🤖 | `tools/snapshot-capture.ts`：采集只读数据快照 + manifest(sha256) | 后端 | ⬜ | 无 Token 可回放 |
+| P1-5 🤖 | `tools/snapshot-capture.ts`：采集只读数据快照 + manifest(sha256) | 后端 | ✅ 工具完成（7 单测 + CLI 退出码实测）；实际采集 ⛔ BLOCKED 无 Token（见 B6） | 无 Token 可回放 |
 | P1-6 🤖 | `packages/shared` 按**实测 schema** 校正契约 | 后端 | ⬜ 依赖 P1-4 | 契约测试通过 |
-| P1-7 🤖 | **Gate G1**：无 Token 环境下 `npm run demo` 跑通 快照→比赛 闭环 | 全栈 | ⬜ | 终端输出完整 MatchRecord |
+| P1-7 🤖 | **Gate G1**：无 Token 环境下 `npm run demo` 跑通 快照→比赛 闭环 | 全栈 | 🟡 mock 闭环已实测（demo 输出完整 MatchRecord，α 66.3 : β 65.3）；快照回放闭环待 B3 真实快照 | 终端输出完整 MatchRecord |
 
 ## P2 竞技内核（10/17–10/19）
 
@@ -113,13 +113,13 @@
 | P3-3 🤖 | apps/web：首页 + 任务卡 + 开始比赛 | 前端 | ✅ 完成（阶段05） | 首页/挑战设置/一键开赛 |
 | P3-4 🤖 | apps/web：对战时间轴 + 记分牌 + 雷达图 + 得分解释面板 | 前端 | ✅ 完成（阶段05） | 纯 SVG 雷达图 + 五维得分条 + 裁判报告 |
 | P3-5 🤖 | apps/web：复现按钮（输入 seed+snapshotId → 同结果） | 前端 | ✅ 完成（阶段05） | 分享卡提供可复现配置复制；同 seed 结果一致（单测覆盖） |
-| P3-6 🤖 | **Gate G3**：完整一局演示并录制 GIF | 全栈 | 🟡 部分 | 全流程可跑通；GIF 未录制（待补） |
+| P3-6 🤖 | **Gate G3**：完整一局演示并录制 GIF | 全栈 | 🟡 部分 | 全流程可跑通（demo CLI + 浏览器链路实测）；GIF 合成留待用户（本环境不生成视频；帧捕获脚本已交付，见 P5-2 记录） |
 
 ## P4 交付物打磨（10/21–10/23）
 
 | ID | 任务 | 负责 | 状态 | 验收 |
 |---|---|---|---|---|
-| P4-1 🤖 | README.md：介绍/安装/示例/目标用户 + GIF + 架构图 | 全栈 | 🟡 部分 | 正文/示例/架构齐备；GIF 待补 |
+| P4-1 🤖 | README.md：介绍/安装/示例/目标用户 + GIF + 架构图 | 全栈 | 🟡 部分 | 正文/示例/架构齐备；GIF 帧素材已由 `tools/e2e/capture-demo-frames.mjs` 产出（`docs/screenshots/gif-frames/`，20 帧实测），最终合成留待用户 |
 | P4-2 🤖 | MCP_INTEGRATION.md：server/tool/调用流程/业务价值/实测差异 | 后端 | ✅ 完成 | 文件名与内容合规 |
 | P4-3 🤖 | workbuddy.md：导出 WorkBuddy 开发对话上下文（参赛项） | 用户 | ✅ 完成（阶段06，原始导出待追加） | 阶段/指令/功能/调试/证据齐备；缺失已注明 |
 | P4-4 🤖 | skill/mc-arena：SKILL.md + scripts/run-match.mjs + references | 全栈 | ✅ 完成（阶段06） | 官方校验脚本输出 `Skill is valid!` |
@@ -131,8 +131,8 @@
 
 | ID | 任务 | 负责 | 状态 | 验收 |
 |---|---|---|---|---|
-| P5-1 🤖👤 | push 公开仓库，CI 全绿，Release v1.0.0 | 全栈 | ⬜ | 仓库 Public |
-| P5-2 🤖 | 报名 Issue 文案准备（标题+正文单行格式，禁 Markdown 链接） | 全栈 | ⬜ | 格式对照官方样例 |
+| P5-1 🤖👤 | push 公开仓库，CI 全绿，Release v1.0.0 | 全栈 | 🟡 部分 | AI 侧就绪（见 docs/contest-registration.md 第四节：就绪自查 9/10，唯一待办是 git remote）；push/Release 依赖用户建仓（B2） |
+| P5-2 🤖 | 报名 Issue 文案准备（标题+正文单行格式，禁 Markdown 链接） | 全栈 | ✅ 完成 | 见 `docs/contest-registration.md`：官方格式原文核对 + 待发布文案 + 提交清单 |
 | P5-3 👤 | **Gate G5**：10/25 23:59 前提交报名 Issue（建议 10/24 提交） | 用户 | ⬜ | Issue 收到成功回复 |
 | P5-4 🤖 | 缓冲期：修复 issue / 200 响应检查 | 全栈 | ⬜ | 10/26 00:00 快照前稳定 |
 
@@ -195,7 +195,7 @@
 | B2 | GitHub 公开仓库未创建 | 用户手动建仓 | P5 发布；不影响本地开发 |
 | B3 | `snapshots/` 无官方快照（阶段06 新登记） | 采集并放入官方快照，或申请 Token 后实时采集 | replay 模式与 Skill 的官方数据演示；当前回退场景数据集（已明确标注 mock） |
 | B4 | ~~阶段05 浏览器实测与截图未完成~~ **已解除（10/14）** | — | 已完成：控制台 0 错误 + 9 张截图 + `STAGE_05_REPORT.md` |
-| B5 | 演示 GIF 未录制；未做跨浏览器与真机实测（阶段05 新登记） | 使用录屏工具；在 Firefox/Safari 与真机复测 | 交付物打磨；不影响功能验收 |
+| B5 | 演示 GIF 未合成（帧素材已交付，20 帧见 `docs/screenshots/gif-frames/`）；未做跨浏览器与真机实测 | 用户用 ffmpeg/ImageMagick/ezgif 合成 GIF；在 Firefox/Safari 与真机复测 | 交付物打磨；不影响功能验收（本环境不生成视频类内容，故 GIF 合成本身不由 AI 产出） |
 | B6 | 真实官方 MCP 联调测试无法执行（阶段07 审计确认） | 用户在 open.mcd.cn/mcp 申请 Token 写入本地 `.env` | 与 B1 同根因；mock/fake 服务器已覆盖协议与异常语义，Token 到位后跑同一套 contract 用例即可解锁 |
 | B7 | 本机 `npm run dev` 受安全防护限制不可用（Vite 清理 `.vite/deps` 被拦截，8787 常被占用） | 换机器/关闭防护后使用 dev；当前以 `preview`（生产构建）替代完成全部浏览器实测 | 本地开发体验；不影响交付与验收 |
 
