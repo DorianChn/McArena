@@ -77,7 +77,7 @@
 |---|---|---|
 | 2026-10-14 | 官方 README 工具清单（34 项）与规则文档 | 已核对，见上方表格 |
 | 2026-10-14 | MCP 协议层对拍（initialize / tools/list / tools/call、401/429/SSE 解析） | ✅ 假服务器契约测试 13 项通过 |
-| 2026-10-14 | 双 Agent 竞技引擎在**数据集驱动**下的完整闭环（阶段03） | ✅ `npm run bench` 8 场景通过，见 STAGE_03_REPORT.md |
+| 2026-10-14 | 双 Agent 竞技引擎在**数据集驱动**下的完整闭环（阶段03） | ✅ `npm run bench` 8 场景通过，见 [docs/archive/STAGE_03_REPORT.md](docs/archive/STAGE_03_REPORT.md) |
 | 2026-10-15 | 快照采集工具 `tools/snapshot-capture.ts` 落成（只读序列 + 原始响应落盘 + manifest sha256） | ✅ 采集模块 4 项单测 + 落盘 3 项单测通过；CLI 退出码实测（3=无 Token / 2=用法错误） |
 | 待 P1-4 | 真实 Token 环境 `tools/list` 实测 schema | ⬜ **BLOCKED（B1）**：Token 到位后执行 `MCD_MCP_TOKEN=<token> tsx tools/snapshot-capture.ts`，采集后回填（差异记录写入本节） |
 

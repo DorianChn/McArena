@@ -17,12 +17,12 @@
 | 阶段00 | 立项与架构设计 | `PROJECT_PLAN.md`、`ARCHITECTURE.md`、`TASKS.md`、`ACCEPTANCE_CRITERIA.md`、`CONTEST_DECLARATION.md` | ✅ |
 | 阶段01 | 基础工程与架构实现 | npm workspaces 五包骨架、`packages/shared`（zod 契约）、`packages/mcd-mcp-client`、`packages/arena-core`、`apps/api`（Fastify）、`apps/web`（React+Vite）、CI | ✅ |
 | 阶段02 | 麦当劳 MCP 真实接入 | `packages/mcd-mcp-client/src/http-adapter.ts`（Streamable HTTP + JSON-RPC + SSE + 限流 + 重试）、`MCP_INTEGRATION.md` | ✅（Token 未申请，见阻塞项） |
-| 阶段03 | 双 Agent 竞技引擎 | `speed-agent.ts`、`optimizer-agent.ts`、`rule-engine.ts`、`price-oracle.ts`、`scenarios.ts`、`cli/demo.ts`、`STAGE_03_REPORT.md` | ✅ |
-| 阶段04 | 独立智能裁判系统 | `engine/verifier.ts`、`engine/judge.ts`（重写）、`JUDGE_SPEC.md`、`STAGE_04_REPORT.md` | ✅ |
+| 阶段03 | 双 Agent 竞技引擎 | `speed-agent.ts`、`optimizer-agent.ts`、`rule-engine.ts`、`price-oracle.ts`、`scenarios.ts`、`cli/demo.ts`、`docs/archive/STAGE_03_REPORT.md` | ✅ |
+| 阶段04 | 独立智能裁判系统 | `engine/verifier.ts`、`engine/judge.ts`（重写）、`JUDGE_SPEC.md`、`docs/archive/STAGE_04_REPORT.md` | ✅ |
 | 阶段05 | 完整前端 UI/UX 实现 | `apps/web` 设计系统 + 首页/挑战设置/竞技场/结果四页 + 分享卡 | ✅（代码完成；见阻塞项） |
-| 阶段06 | WorkBuddy Skill 集成 | `skill/mc-arena/`（SKILL.md + scripts + references + INSTALL.md）、`STAGE_06_REPORT.md`、本文件 | ✅ |
-| 阶段07 | 完整质量保证、安全审计与稳定性修复 | lint 31→0、测试 215 例（+8 并发）、`npm audit` 4→0、浏览器 16 步实测 0 控制台错误；`STAGE_07_REPORT.md` / `TEST_REPORT.md` / `SECURITY_AUDIT.md` / `PERFORMANCE_REPORT.md` | ✅ |
-| 阶段08 | 参赛文档、演示、发布前整理与交付 | `README.md`（真实截图/使用案例/模式区分）、`MCP_INTEGRATION.md`、`docs/PROMOTION.md`、`tools/contest-readiness.mjs`、GIF 帧采集器、`CODEX_HANDOFF.md`、`FINAL_WORKBUDDY_REPORT.md` | ✅（本地整理完成；发布动作移交） |
+| 阶段06 | WorkBuddy Skill 集成 | `skill/mc-arena/`（SKILL.md + scripts + references + INSTALL.md）、`docs/archive/STAGE_06_REPORT.md`、本文件 | ✅ |
+| 阶段07 | 完整质量保证、安全审计与稳定性修复 | lint 31→0、测试 215 例（+8 并发）、`npm audit` 4→0、浏览器 16 步实测 0 控制台错误；`docs/archive/STAGE_07_REPORT.md` / `docs/archive/TEST_REPORT.md` / `docs/archive/SECURITY_AUDIT.md` / `docs/archive/PERFORMANCE_REPORT.md` | ✅ |
+| 阶段08 | 参赛文档、演示、发布前整理与交付 | `README.md`（真实截图/使用案例/模式区分）、`MCP_INTEGRATION.md`、`docs/PROMOTION.md`、`tools/contest-readiness.mjs`、GIF 帧采集器、`docs/archive/CODEX_HANDOFF.md`、`docs/archive/FINAL_WORKBUDDY_REPORT.md` | ✅（本地整理完成；发布动作移交） |
 
 ---
 
@@ -61,13 +61,13 @@
   - **新增 66 个测试**（`verifier.test.ts` 35 项 + `judge.test.ts` 31 项），全库 **132/132 通过**。
 
 ### 阶段05 — 完整前端 UI/UX
-- **指令（关键约束）**：以资深前端工程师/交互设计师/产品设计师身份，开发**完成度高、适合公开演示**的中文 AI Agent 竞技场；六大块（首页 / 挑战设置 / 竞技场 / 比赛结果 / 分享功能 / 中文界面+响应式+深浅色+状态页+无障碍）；React + TypeScript + Tailwind；公开演示模式**不得要求用户提供麦当劳账户或 Token**；**不得在浏览器暴露服务端密钥**；**禁止伪造历史战绩、真实用户数量和官方排行榜**；完成后实际启动网页、浏览器交互测试、移动端检查、控制台检查、生成 `STAGE_05_REPORT.md`；**不要提交 GitHub**。
+- **指令（关键约束）**：以资深前端工程师/交互设计师/产品设计师身份，开发**完成度高、适合公开演示**的中文 AI Agent 竞技场；六大块（首页 / 挑战设置 / 竞技场 / 比赛结果 / 分享功能 / 中文界面+响应式+深浅色+状态页+无障碍）；React + TypeScript + Tailwind；公开演示模式**不得要求用户提供麦当劳账户或 Token**；**不得在浏览器暴露服务端密钥**；**禁止伪造历史战绩、真实用户数量和官方排行榜**；完成后实际启动网页、浏览器交互测试、移动端检查、控制台检查、生成 `docs/archive/STAGE_05_REPORT.md`；**不要提交 GitHub**。
 - **工作**：Tailwind v4 `@theme inline` 语义化变量 + 双主题；零依赖 hash 路由；纯 SVG 五维雷达图；`html-to-image` 动态导入导出 PNG；React Context 状态中枢（含竞态保护）；四页面 + 分享卡；API 契约扩展 `constraints` 支持自定义挑战；无障碍（焦点环、`prefers-reduced-motion`、44px 触摸目标、`aria-*`、跳转链接）。
 - **结果**：typecheck 0 错、lint 0 错、web build 成功、全量测试 134/134。
 
 ### 阶段06 — WorkBuddy Skill 集成（本轮）
-- **指令（关键约束）**：先查阅当前 WorkBuddy 官方 Skill 开发规范；创建 Skill 目录/元数据/说明文件；将 Challenge Engine 接入 Skill；支持自然语言启动、自动解析预算/人数/目标；调用**实际实现**的双 Agent 引擎与独立裁判；返回结果与评分解释；输出可打开的竞技场结果或可复现配置；提供标准示例命令与异常提示；真实测试运行效果。必须：Skill 可真实调用；**不复制另一套不一致的业务逻辑**；**与网页共享核心引擎**；有明确安装与启用教程；**不编造官方规范**；如版本限制某项能力，记录实际限制并实现可行替代方案。另需创建 `workbuddy.md`（基于真实会话与成果、自动脱敏、缺失需注明），最后生成 `STAGE_06_REPORT.md`，**不要提交 GitHub**。
-- **工作**：见下方「真实完成的功能」与 `STAGE_06_REPORT.md`。
+- **指令（关键约束）**：先查阅当前 WorkBuddy 官方 Skill 开发规范；创建 Skill 目录/元数据/说明文件；将 Challenge Engine 接入 Skill；支持自然语言启动、自动解析预算/人数/目标；调用**实际实现**的双 Agent 引擎与独立裁判；返回结果与评分解释；输出可打开的竞技场结果或可复现配置；提供标准示例命令与异常提示；真实测试运行效果。必须：Skill 可真实调用；**不复制另一套不一致的业务逻辑**；**与网页共享核心引擎**；有明确安装与启用教程；**不编造官方规范**；如版本限制某项能力，记录实际限制并实现可行替代方案。另需创建 `workbuddy.md`（基于真实会话与成果、自动脱敏、缺失需注明），最后生成 `docs/archive/STAGE_06_REPORT.md`，**不要提交 GitHub**。
+- **工作**：见下方「真实完成的功能」与 `docs/archive/STAGE_06_REPORT.md`。
 
 ### 阶段07 — 完整质量保证、安全审计与稳定性修复
 - **指令（关键约束）**：不增加新功能，把项目打磨到可公开发布质量；每发现问题须记录、修复并回归；**不得删除失败测试、跳过检查或伪造 Mock**；无 Token 的真实接口测试必须标 **BLOCKED 不能记 PASS**；产出 TEST/SECURITY_AUDIT/PERFORMANCE/STAGE_07 四份报告；**不上传 GitHub**。
@@ -75,7 +75,7 @@
 - **诚实性执行**：真实官方 MCP 联调无 Token → 明确 BLOCKED，未记 PASS；未删/跳任何测试。
 
 ### 阶段08 — 参赛文档、演示与发布前整理
-- **指令（关键约束）**：重新核对官方赛事规则；完善五大参赛文件；准备传播材料；**不得伪造画面冒充程序运行**；不得自动建仓/push/发报名 Issue；本地变更整理后跑最后一次完整测试；生成 `CODEX_HANDOFF.md` 与 `FINAL_WORKBUDDY_REPORT.md`（末尾 READY_FOR_CODEX = YES/NO，只有真正达到发布条件才能 YES）。
+- **指令（关键约束）**：重新核对官方赛事规则；完善五大参赛文件；准备传播材料；**不得伪造画面冒充程序运行**；不得自动建仓/push/发报名 Issue；本地变更整理后跑最后一次完整测试；生成 `docs/archive/CODEX_HANDOFF.md` 与 `docs/archive/FINAL_WORKBUDDY_REPORT.md`（末尾 READY_FOR_CODEX = YES/NO，只有真正达到发布条件才能 YES）。
 - **工作**：联网核对官方规则与 CONTEST_DECLARATION 原文（字节级一致）；README 补真实截图、使用案例、演示/实时模式区分表、更新测试基线 222；`docs/PROMOTION.md`（中英文介绍/GitHub 描述/技术亮点）；`tools/contest-readiness.mjs` 10 项就绪自查；`tools/e2e/capture-demo-frames.mjs` 采集 20 帧 GIF 素材（**不合成视频**，命令交用户）；生产构建 + preview 启动冒烟。
 
 ---
@@ -199,7 +199,7 @@ NODE_PATH="<隔离工作区>/node_modules" node tools/e2e/visual-check.mjs
 ```
 
 ### 4. 阶段报告
-`STAGE_03_REPORT.md`、`STAGE_04_REPORT.md`、`STAGE_06_REPORT.md`、`JUDGE_SPEC.md`、`MCP_INTEGRATION.md`、`ARCHITECTURE.md`、`TASKS.md`。
+`docs/archive/STAGE_03_REPORT.md`、`docs/archive/STAGE_04_REPORT.md`、`docs/archive/STAGE_06_REPORT.md`、`JUDGE_SPEC.md`、`MCP_INTEGRATION.md`、`ARCHITECTURE.md`、`TASKS.md`。
 
 ---
 
@@ -217,7 +217,7 @@ NODE_PATH="<隔离工作区>/node_modules" node tools/e2e/visual-check.mjs
 1. **完整原始对话导出缺失**：本环境无法读取 WorkBuddy 对话的逐条原文，本文的阶段指令与摘要来自开发会话的阶段记录与仓库真实产物，**不是逐字复刻**。如需逐字原文，请在 WorkBuddy 对话右上角使用「导出」功能，并将导出内容按下方格式追加。
 2. **阶段05/07 浏览器实测已补做**：`tools/e2e/visual-check.mjs`（playwright-core + 系统 Chrome）真实点击走通
    首页 → 挑战设置 → 竞技场 → 结果页 → 移动端 → 空状态，控制台 **0 错误 / 0 警告**，产出截图与
-   `STAGE_05_REPORT.md` / `STAGE_07_REPORT.md`。**仍缺**：演示 GIF 合成（帧素材 20 张已就绪，本环境不生成视频，命令已交用户）、跨浏览器（Firefox/Safari）与真机移动端实测。
+   `docs/archive/STAGE_05_REPORT.md` / `docs/archive/STAGE_07_REPORT.md`。**仍缺**：演示 GIF 合成（帧素材 20 张已就绪，本环境不生成视频，命令已交用户）、跨浏览器（Firefox/Safari）与真机移动端实测。
 3. **MCP 官方数据缺失**：`snapshots/` 目录暂无官方快照，`live` 模式需 Token。因此阶段05/06/07 的实测均运行在
    **场景数据集（mock）**上，输出中已明确标注「模拟数据，非麦当劳官方数据」。**未**伪造任何 `verified` 核价状态。
 4. **GitHub 发布未执行**：按要求**未提交 GitHub**（本地提交已完成；建仓 / push / 发报名 Issue 均按要求交由用户与 Codex 执行）。

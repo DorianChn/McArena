@@ -107,7 +107,7 @@ node skill/mc-arena/scripts/run-match.mjs --people 2 --budget 60 --goal balanced
 安装后在 WorkBuddy 对话中说「来一场麦门竞技，2 个人 60 块要均衡搭配」即可触发。
 Skill 不含业务逻辑，全部调用仓库内共享引擎（与网页同源）。详见
 [`skill/mc-arena/SKILL.md`](skill/mc-arena/SKILL.md)、[`skill/mc-arena/INSTALL.md`](skill/mc-arena/INSTALL.md)
-与 [`STAGE_06_REPORT.md`](STAGE_06_REPORT.md)。开发过程记录见 [`workbuddy.md`](workbuddy.md)。
+与 [`docs/archive/STAGE_06_REPORT.md`](docs/archive/STAGE_06_REPORT.md)。开发过程记录见 [`workbuddy.md`](workbuddy.md)。
 
 <!-- APPEND-MARKER-2 -->
 
@@ -199,18 +199,19 @@ npm run build # TypeScript strict 全量构建
 | `docs/screenshots/` | 真实浏览器截图（stage05 / stage07 / gif-frames） |
 | `docs/evidence/` | 各阶段真实运行证据（CLI 输出、HTML 战报、JSON 结果、浏览器实测报告） |
 | `docs/PROMOTION.md` | 传播材料（中文介绍 / English / GitHub 描述 / 技术亮点 / 架构说明） |
+| `docs/archive/` | 阶段报告、测试/性能/安全报告与交接文档 |
 | `tools/` | 工程脚本：快照采集 CLI、报名就绪自查、GIF 帧捕获、浏览器实测 |
 
 ### 阶段成果
 
 - 阶段00/01：工程基座、共享契约、MCP 客户端、API 与前端（提交 `23767dc` / `f5b301f`）
 - 阶段02：官方 MCP 接入层（只读白名单、429 退避、限流、快照回放）
-- 阶段03：双 Agent 竞技引擎（Speed / Optimizer + 执行状态机 + 基准测试）——见 [`STAGE_03_REPORT.md`](STAGE_03_REPORT.md)
-- 阶段04：独立智能裁判系统（独立验证 / 资格硬门槛 / 官方核价优先 / 可复现实验 ID）——见 [`STAGE_04_REPORT.md`](STAGE_04_REPORT.md) 与 [`JUDGE_SPEC.md`](JUDGE_SPEC.md)
-- 阶段05：完整前端 UI/UX（四页面 / 双主题 / 响应式 / 分享卡 / 无障碍；API 契约支持自定义挑战）——见 [`STAGE_05_REPORT.md`](STAGE_05_REPORT.md)（含真实浏览器实测与截图）
-- 阶段06：WorkBuddy Skill 集成（任务卡构造下沉共享引擎 / `challenge` CLI / Skill 三脚本 / 官方规范校验通过）——见 [`STAGE_06_REPORT.md`](STAGE_06_REPORT.md)
-- 阶段07：完整质量保证、安全审计与稳定性修复（lint 31→0、测试 215→222、audit 4→0、16 步浏览器实测）——见 [`STAGE_07_REPORT.md`](STAGE_07_REPORT.md) / [`TEST_REPORT.md`](TEST_REPORT.md) / [`SECURITY_AUDIT.md`](SECURITY_AUDIT.md) / [`PERFORMANCE_REPORT.md`](PERFORMANCE_REPORT.md)
-- 阶段08：参赛文档、演示与发布前整理——见 [`FINAL_WORKBUDDY_REPORT.md`](FINAL_WORKBUDDY_REPORT.md) 与 [`CODEX_HANDOFF.md`](CODEX_HANDOFF.md)
+- 阶段03：双 Agent 竞技引擎（Speed / Optimizer + 执行状态机 + 基准测试）——见 [`docs/archive/STAGE_03_REPORT.md`](docs/archive/STAGE_03_REPORT.md)
+- 阶段04：独立智能裁判系统（独立验证 / 资格硬门槛 / 官方核价优先 / 可复现实验 ID）——见 [`docs/archive/STAGE_04_REPORT.md`](docs/archive/STAGE_04_REPORT.md) 与 [`JUDGE_SPEC.md`](JUDGE_SPEC.md)
+- 阶段05：完整前端 UI/UX（四页面 / 双主题 / 响应式 / 分享卡 / 无障碍；API 契约支持自定义挑战）——见 [`docs/archive/STAGE_05_REPORT.md`](docs/archive/STAGE_05_REPORT.md)（含真实浏览器实测与截图）
+- 阶段06：WorkBuddy Skill 集成（任务卡构造下沉共享引擎 / `challenge` CLI / Skill 三脚本 / 官方规范校验通过）——见 [`docs/archive/STAGE_06_REPORT.md`](docs/archive/STAGE_06_REPORT.md)
+- 阶段07：完整质量保证、安全审计与稳定性修复（lint 31→0、测试 215→222、audit 4→0、16 步浏览器实测）——见 [`docs/archive/STAGE_07_REPORT.md`](docs/archive/STAGE_07_REPORT.md) / [`docs/archive/TEST_REPORT.md`](docs/archive/TEST_REPORT.md) / [`docs/archive/SECURITY_AUDIT.md`](docs/archive/SECURITY_AUDIT.md) / [`docs/archive/PERFORMANCE_REPORT.md`](docs/archive/PERFORMANCE_REPORT.md)
+- 阶段08：参赛文档、演示与发布前整理——见 [`docs/archive/FINAL_WORKBUDDY_REPORT.md`](docs/archive/FINAL_WORKBUDDY_REPORT.md) 与 [`docs/archive/CODEX_HANDOFF.md`](docs/archive/CODEX_HANDOFF.md)
 
 ## 🎯 适用人群
 
@@ -241,6 +242,10 @@ ffmpeg -framerate 2.5 -i docs/screenshots/gif-frames/%03d-*.png \
 - 项目**默认禁止**调用 `create-order` 等写操作，不会产生任何真实订单；
 - Token 仅通过环境变量注入，仓库内不含任何真实凭据；
 - 餐品、价格与供应情况以麦当劳官方渠道实时结果为准。
+
+## 🤝 参与贡献
+
+见 [CONTRIBUTING.md](CONTRIBUTING.md)。本地完整检查是 `npm run verify`（依次执行 `lint`、`typecheck`、`build`、`test`）。
 
 ## 📄 License
 

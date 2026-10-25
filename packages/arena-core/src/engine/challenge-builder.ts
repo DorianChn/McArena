@@ -6,7 +6,7 @@ import type { Challenge, ChallengeConstraints, Scene } from '@mcarena/shared'
  *
  * 重要：本文件是「用户自定义约束 → 任务卡」的**唯一实现**。
  * 网页（apps/api MatchService）、CLI 与 WorkBuddy Skill 全部通过本模块构建任务卡，
- * 严禁在任一入口复制粘贴第二套逻辑，否则三端行为会漂移（见 STAGE_06_REPORT.md）。
+ * 严禁在任一入口复制粘贴第二套逻辑，否则三端行为会漂移（见 docs/archive/STAGE_06_REPORT.md）。
  *
  * 确定性：任务卡的 title/brief 完全由约束派生，不含随机内容；
  * 同一 (约束, seed) 必得同一任务卡。
