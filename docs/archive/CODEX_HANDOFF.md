@@ -139,7 +139,7 @@ WorkBuddy 连接器配置样例见 `mcp-config.example.json`（仅 `${MCD_MCP_TO
 项目简介：基于麦当劳中国 MCP 只读接口的双算法 Agent 点餐竞技场：极速猎手（单遍贪心）与深度优化师（束搜索）在同一任务卡与同一数据快照上对决，独立规则裁判五维打分并逐项重算，全程可解释、可复现，公开演示模式无需 Token。
 ```
 
-- 现成文案（含注意事项与检查清单）：[`docs/contest-registration.md`](docs/contest-registration.md)；
+- 现成文案（含注意事项与检查清单）：[`docs/contest-registration.md`](../contest-registration.md)；
 - **截止：2026-10-25 23:59（北京时间）**；以 2026-10-26 00:00 的公开 Star 数定榜，Star > 0 才进排行榜；报名成功后系统会在 Issue 下回复，失败可按原因修改后重新提交；
 - 参加 WorkBuddy 专项奖励需已提交 `workbuddy.md`（已就绪，且需在 Issue 报名外满足官方核验条件）。
 

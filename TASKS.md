@@ -69,7 +69,7 @@
 ## 阶段03 双 Agent 竞技引擎（10/14）
 
 > 目标：两个**算法实质不同**的 Agent 在同挑战同数据上竞技，支持取消/超时/失败恢复，全过程可复现可溯源。
-> 详细实测数据与验收证据见 `STAGE_03_REPORT.md`。
+> 详细实测数据与验收证据见 `docs/archive/STAGE_03_REPORT.md`。
 
 | ID | 任务 | 负责 | 状态 | 验收 |
 |---|---|---|---|---|
@@ -81,15 +81,15 @@
 | S3-6 🤖 | 记录真实运行时间 / 候选方案 / 工具调用证据 | 算法 | ✅ 完成 | `durationMs`/`candidateCount`/`toolCalls` 为实测值 |
 | S3-7 🤖 | 固定随机种子可复现挑战 | 算法 | ✅ 完成 | `canonicalizeMatch` 指纹一致 |
 | S3-8 🤖 | 决策过程传递给前端（SSE agent.started/phase/step/completed/failed + AgentCard 指标） | 全栈 | ✅ 完成 | SSE 冒烟：25 step + 14 phase + 2 completed |
-| S3-9 🤖 | 8 个官方测试场景 + 基准对比（有效率/费用/约束满足度/耗时/工具调用） | 算法 | ✅ 完成 | `npm run bench`；汇总见 STAGE_03_REPORT.md §3 |
+| S3-9 🤖 | 8 个官方测试场景 + 基准对比（有效率/费用/约束满足度/耗时/工具调用） | 算法 | ✅ 完成 | `npm run bench`；汇总见 docs/archive/STAGE_03_REPORT.md §3 |
 | S3-10 🤖 | 中文 CLI：match / bench / timeout / cancel | 全栈 | ✅ 完成 | `npm run demo` 输出战报 |
 | S3-11 🤖 | API 换装真实引擎（RuleEngine 任务卡 + ReplayPriceOracle + 降级恢复策略） | 后端 | ✅ 完成 | API 冒烟 10 用例通过 |
-| S3-12 🤖 | STAGE_03_REPORT.md + 测试（66/66）+ 类型/Lint/构建全绿 + Git 提交 | 全栈 | ✅ 完成 | 见 git log（未 push） |
+| S3-12 🤖 | docs/archive/STAGE_03_REPORT.md + 测试（66/66）+ 类型/Lint/构建全绿 + Git 提交 | 全栈 | ✅ 完成 | 见 git log（未 push） |
 
 ## 阶段04 独立智能裁判系统（10/14）
 
 > 目标：Judge Engine 作为两 Agent 之外的独立裁判，**不信任 Agent 自述成绩**，全部指标独立重算；
-> 资格硬门槛 + 有效成本优先 + 可解释报告 + 可复现实验 ID。详细规范见 `JUDGE_SPEC.md`，实测数据见 `STAGE_04_REPORT.md`。
+> 资格硬门槛 + 有效成本优先 + 可解释报告 + 可复现实验 ID。详细规范见 `JUDGE_SPEC.md`，实测数据见 `docs/archive/STAGE_04_REPORT.md`。
 
 | ID | 任务 | 负责 | 状态 | 验收 |
 |---|---|---|---|---|
@@ -102,7 +102,7 @@
 | S4-7 🤖 | `experimentId` 可复现实验 ID + `costBasis` + `allViolations` 扁平汇总 | 算法 | ✅ 完成 | 确定性与敏感性单测 |
 | S4-8 🤖 | 契约扩展（Violation/Check/AgentVerification/CostBasis）+ canonicalizeMatch 同步 | 后端 | ✅ 完成 | 契约测试 8 项通过 |
 | S4-9 🤖 | CLI 战报 + 前端 JudgePanel 展示独立验证报告（NOT_VERIFIED 高亮/证据引用） | 全栈 | ✅ 完成 | `demo match` 输出验证摘要；web build 成功 |
-| S4-10 🤖 | JUDGE_SPEC.md + STAGE_04_REPORT.md + 测试 66 项新增（全库 132/132 通过）+ Git 提交 | 全栈 | ✅ 完成 | typecheck 0 / lint 0 error / build 通过（未 push） |
+| S4-10 🤖 | JUDGE_SPEC.md + docs/archive/STAGE_04_REPORT.md + 测试 66 项新增（全库 132/132 通过）+ Git 提交 | 全栈 | ✅ 完成 | typecheck 0 / lint 0 error / build 通过（未 push） |
 
 ## P3 服务与界面（10/19–10/21）
 
@@ -124,7 +124,7 @@
 | P4-3 🤖 | workbuddy.md：导出 WorkBuddy 开发对话上下文（参赛项） | 用户 | ✅ 完成（阶段06，原始导出待追加） | 阶段/指令/功能/调试/证据齐备；缺失已注明 |
 | P4-4 🤖 | skill/mc-arena：SKILL.md + scripts/run-match.mjs + references | 全栈 | ✅ 完成（阶段06） | 官方校验脚本输出 `Skill is valid!` |
 | P4-5 🤖 | Skill 本地验证：在 WorkBuddy 中触发并成功返回比赛解说 | 全栈 | ✅ 完成（阶段06） | 已安装至用户级并真实调用；11 项子进程集成测试 |
-| P4-6 🤖 | 合规自查：无 Token/无敏感词/无品牌贬低/无外链违规 | 架构师 | ✅ 完成 | 见 STAGE_06_REPORT.md 第六/九节 |
+| P4-6 🤖 | 合规自查：无 Token/无敏感词/无品牌贬低/无外链违规 | 架构师 | ✅ 完成 | 见 docs/archive/STAGE_06_REPORT.md 第六/九节 |
 | P4-7 🤖 | **Gate G4**：五大文件齐备 | 架构师 | ✅ 完成 | README/CONTEST_DECLARATION/MCP_INTEGRATION/mcp-config.example.json/workbuddy.md |
 
 ## P5 发布与报名（10/23–10/25）
@@ -151,13 +151,13 @@
 | S5-6 🤖 | 分享：成绩卡 + 导出 PNG + 复制分享文案 + 复制可复现配置 + GitHub 入口 | 前端 | ✅ 完成 | `components/ShareCard.tsx` + `lib/share.ts` |
 | S5-7 🤖 | 其他：中文界面、响应式、Loading/Error/Empty、无障碍基础、性能优化 | 前端 | ✅ 完成 | `components/ui/*`、`feedback.tsx`、焦点环/44px/`prefers-reduced-motion` |
 | S5-8 🤖 | 质量门禁：typecheck 0 错 / lint 0 错 / web build 成功 / 全量测试 134 通过 | 全栈 | ✅ 完成 | 见提交记录 |
-| S5-9 🤖 | 浏览器实测 + 移动端检查 + 控制台检查 + 截图归档 + `STAGE_05_REPORT.md` | 全栈 | ✅ 完成 | 控制台 0 错误；9 张截图；`STAGE_05_REPORT.md` |
+| S5-9 🤖 | 浏览器实测 + 移动端检查 + 控制台检查 + 截图归档 + `docs/archive/STAGE_05_REPORT.md` | 全栈 | ✅ 完成 | 控制台 0 错误；9 张截图；`docs/archive/STAGE_05_REPORT.md` |
 
 ## 阶段06 WorkBuddy Skill 集成（10/14）
 
 > 目标：让 McArena 作为**真正的 WorkBuddy Skill** 使用。要求：可真实调用；不复制另一套不一致的业务逻辑；
 > 与网页共享核心引擎；有明确安装启用教程；不编造官方规范；版本限制需记录并给出替代方案。
-> 详细报告见 `STAGE_06_REPORT.md`。
+> 详细报告见 `docs/archive/STAGE_06_REPORT.md`。
 
 | ID | 任务 | 负责 | 状态 | 验收 |
 |---|---|---|---|---|
@@ -175,7 +175,7 @@
 ## 阶段07 完整质量保证、安全审计与稳定性修复（10/14–10/15）
 
 > 目标：不增加新功能，把项目打磨到可公开发布的工程质量。
-> 详细实测数据见 `STAGE_07_REPORT.md` / `TEST_REPORT.md` / `SECURITY_AUDIT.md` / `PERFORMANCE_REPORT.md`；本地提交 `0b7cc81`，**未 push GitHub**。
+> 详细实测数据见 `docs/archive/STAGE_07_REPORT.md` / `docs/archive/TEST_REPORT.md` / `docs/archive/SECURITY_AUDIT.md` / `docs/archive/PERFORMANCE_REPORT.md`；本地提交 `0b7cc81`，**未 push GitHub**。
 
 | ID | 任务 | 负责 | 状态 | 验收 |
 |---|---|---|---|---|
@@ -185,13 +185,13 @@
 | S7-4 🤖 | 安全审计：硬编码密钥 / 日志脱敏 / 依赖漏洞 / 输入验证 / 未授权操作 / 危险执行 / Git 历史 | 架构师 | ✅ 完成 | 历史与工作区无密钥；脱敏有单测；**npm audit 4 漏洞 → 0**；0 处 eval；残余风险 R1–R4 登记在案 |
 | S7-5 🤖 | 性能测试：响应时间 / 内存 / 大量候选计算成本 / 异常资源释放 | 算法 | ✅ 完成 | 单局墙钟 17–26 ms（满候选 288）；20 连跑堆增 +1.6–2.6 MB 且有负增长（可回收）；MatchStore 200 环形淘汰有界 |
 | S7-6 🤖 | 浏览器实测（真实 Chrome）：全链路 + 移动端 + 控制台 | 全栈 | ✅ 完成 | 控制台 **0 错误 / 0 警告**；16 步通过；移动端无横向溢出；证据 `docs/screenshots/stage07/` |
-| S7-7 🤖 | 四份报告 + TASKS 更新 + 本地提交 | 全栈 | ✅ 完成 | `STAGE_07_REPORT.md` 等 4 份；提交 `0b7cc81`（未 push） |
+| S7-7 🤖 | 四份报告 + TASKS 更新 + 本地提交 | 全栈 | ✅ 完成 | `docs/archive/STAGE_07_REPORT.md` 等 4 份；提交 `0b7cc81`（未 push） |
 
 ## 阶段08 参赛文档、演示、发布前整理与交付（10/15）
 
 > 目标：完善正式参赛文件、准备传播材料、确认合规、完成本地生产构建验证，并生成移交文件。
 > 官方规则已于 2026-10-15 联网重新核对（活动 10/09–10/25 23:59，报名 Issue 格式、五文件清单、创建时间窗口）。
-> 移交文件 `CODEX_HANDOFF.md`，最终报告 `FINAL_WORKBUDDY_REPORT.md`（READY_FOR_CODEX 判定见其末尾）。
+> 移交文件 `docs/archive/CODEX_HANDOFF.md`，最终报告 `docs/archive/FINAL_WORKBUDDY_REPORT.md`（READY_FOR_CODEX 判定见其末尾）。
 
 | ID | 任务 | 负责 | 状态 | 验收 |
 |---|---|---|---|---|
@@ -200,8 +200,8 @@
 | S8-3 🤖 | 传播材料 | 全栈 | ✅ 完成 | `docs/PROMOTION.md`：中文介绍（短/长）/英文介绍/GitHub About+Topics/特色表/原创技术亮点/Demo 挑战/架构说明；GIF 帧已就绪但**不合成视频**（本环境限制，命令已交用户） |
 | S8-4 🤖 | 比赛要求符合性检查 | 全栈 | ✅ 完成 | `contest-readiness.mjs --online` **9/10**（唯一失败=git remote 未配置，需用户建仓）；仓库创建时间 2026-10-14 在官方窗口内；密钥扫描 0 命中 |
 | S8-5 🤖 | 本地生产构建与启动测试 | 全栈 | ✅ 完成 | build 成功（API 13.6KB/Web dist）；preview 冒烟 index 1054B/CSS 39471B/JS 286592B 全 200，`/api` 代理通 |
-| S8-6 🤖 | 生成 CODEX_HANDOFF.md（12 节） | 全栈 | ✅ 完成 | 路径/栈/目录/Git/功能/MCP 状态/Skill 实测/环境变量/测试/阻塞/发布建议/报名方法/Codex 待办 |
-| S8-7 🤖 | 最终完整测试 + FINAL_WORKBUDDY_REPORT.md + 本地提交 | 全栈 | ✅ 完成 | verify 全绿、audit 0；报告末尾明确 READY_FOR_CODEX 判定；本地提交**未 push** |
+| S8-6 🤖 | 生成 docs/archive/CODEX_HANDOFF.md（12 节） | 全栈 | ✅ 完成 | 路径/栈/目录/Git/功能/MCP 状态/Skill 实测/环境变量/测试/阻塞/发布建议/报名方法/Codex 待办 |
+| S8-7 🤖 | 最终完整测试 + docs/archive/FINAL_WORKBUDDY_REPORT.md + 本地提交 | 全栈 | ✅ 完成 | verify 全绿、audit 0；报告末尾明确 READY_FOR_CODEX 判定；本地提交**未 push** |
 
 ## 阻塞项登记（Blockers）
 
@@ -210,7 +210,7 @@
 | B1 | 麦当劳 MCP Token 未申请（需手机号验证登录+人机验证，AI 无法代办） | 用户在 open.mcd.cn/mcp 完成登录激活 | P1-4 实测 schema、live 模式、裁判 `verified/mismatch` 实测；不影响 replay/mock 全链路 |
 | B2 | GitHub 公开仓库未创建 | 用户手动建仓 | P5 发布；不影响本地开发 |
 | B3 | `snapshots/` 无官方快照（阶段06 新登记） | 采集并放入官方快照，或申请 Token 后实时采集 | replay 模式与 Skill 的官方数据演示；当前回退场景数据集（已明确标注 mock） |
-| B4 | ~~阶段05 浏览器实测与截图未完成~~ **已解除（10/14）** | — | 已完成：控制台 0 错误 + 9 张截图 + `STAGE_05_REPORT.md` |
+| B4 | ~~阶段05 浏览器实测与截图未完成~~ **已解除（10/14）** | — | 已完成：控制台 0 错误 + 9 张截图 + `docs/archive/STAGE_05_REPORT.md` |
 | B5 | 演示 GIF 未合成（帧素材已交付，20 帧见 `docs/screenshots/gif-frames/`）；未做跨浏览器与真机实测 | 用户用 ffmpeg/ImageMagick/ezgif 合成 GIF；在 Firefox/Safari 与真机复测 | 交付物打磨；不影响功能验收（本环境不生成视频类内容，故 GIF 合成本身不由 AI 产出） |
 | B6 | 真实官方 MCP 联调测试无法执行（阶段07 审计确认） | 用户在 open.mcd.cn/mcp 申请 Token 写入本地 `.env` | 与 B1 同根因；mock/fake 服务器已覆盖协议与异常语义，Token 到位后跑同一套 contract 用例即可解锁 |
 | B7 | 本机 `npm run dev` 受安全防护限制不可用（Vite 清理 `.vite/deps` 被拦截，8787 常被占用） | 换机器/关闭防护后使用 dev；当前以 `preview`（生产构建）替代完成全部浏览器实测 | 本地开发体验；不影响交付与验收 |
