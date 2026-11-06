@@ -28,6 +28,25 @@ describe('MCP retry policy', () => {
     expect(retried).toHaveBeenCalledWith(expect.any(RateLimitError), 1, 120)
   })
 
+  it('honors the server-provided Retry-After delay for rate limits', async () => {
+    vi.useFakeTimers()
+    let calls = 0
+    const retried = vi.fn()
+    const resultPromise = withRetry(() => {
+      calls += 1
+      if (calls === 1) {
+        return Promise.reject(new RateLimitError('rate limited', { retryAfterMs: 250 }))
+      }
+      return Promise.resolve('ok')
+    }, { retries: 1, baseDelayMs: 100, maxDelayMs: 100, jitterRatio: 0.2, random: () => 1, onRetry: retried })
+
+    await vi.advanceTimersByTimeAsync(249)
+    expect(calls).toBe(1)
+    await vi.advanceTimersByTimeAsync(1)
+    await expect(resultPromise).resolves.toBe('ok')
+    expect(retried).toHaveBeenCalledWith(expect.any(RateLimitError), 1, 250)
+  })
+
   it('does not retry permanent failures or exceed retry count', async () => {
     const permanent = vi.fn().mockRejectedValue(new Error('invalid request'))
     await expect(withRetry(permanent, { retries: 3, baseDelayMs: 0 })).rejects.toThrow('invalid request')

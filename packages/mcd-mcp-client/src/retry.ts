@@ -44,12 +44,26 @@ export async function withRetry<T>(
       if (attempt >= retries || !isRetryableError(error)) {
         throw error
       }
-      const exponential = Math.min(maxDelayMs, baseDelayMs * 2 ** attempt)
-      const jitter = exponential * jitterRatio * (random() * 2 - 1)
-      const delayMs = Math.max(0, Math.round(exponential + jitter))
+      const retryAfterMs = error instanceof RateLimitError ? error.retryAfterMs : undefined
+      const delayMs =
+        typeof retryAfterMs === 'number' && Number.isFinite(retryAfterMs) && retryAfterMs >= 0
+          ? Math.round(retryAfterMs)
+          : retryDelayMs(attempt, baseDelayMs, maxDelayMs, jitterRatio, random)
       attempt += 1
       options.onRetry?.(error, attempt, delayMs)
       await new Promise((resolve) => setTimeout(resolve, delayMs))
     }
   }
+}
+
+function retryDelayMs(
+  attempt: number,
+  baseDelayMs: number,
+  maxDelayMs: number,
+  jitterRatio: number,
+  random: () => number,
+): number {
+  const exponential = Math.min(maxDelayMs, baseDelayMs * 2 ** attempt)
+  const jitter = exponential * jitterRatio * (random() * 2 - 1)
+  return Math.max(0, Math.round(exponential + jitter))
 }
