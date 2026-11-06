@@ -29,10 +29,17 @@ export { buildCustomChallenge }
   private readonly capacity: number
 
   constructor(capacity = 200) {
+    if (!Number.isInteger(capacity) || capacity < 1) {
+      throw new Error('MatchStore: capacity 必须为正整数')
+    }
     this.capacity = capacity
   }
 
   save(result: MatchResult, events: MatchStreamEvent[]): void {
+    const existingIndex = this.order.indexOf(result.matchId)
+    if (existingIndex !== -1) {
+      this.order.splice(existingIndex, 1)
+    }
     this.results.set(result.matchId, result)
     this.events.set(result.matchId, events)
     this.order.push(result.matchId)
