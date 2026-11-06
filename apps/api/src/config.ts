@@ -6,15 +6,24 @@ import { ConfigError, DataModeSchema } from '@mcarena/shared'
  * 任何敏感值（MCD_MCP_TOKEN）不会进入日志；缺失关键配置时抛出带中文指引的 ConfigError。
  */
 
-const booleanFromEnv = z
-  .string()
-  .default('false')
-  .transform((value) => value === 'true' || value === '1')
+const booleanFromEnv = z.string().default('false').transform((value, ctx) => {
+  switch (value.trim().toLowerCase()) {
+    case 'true':
+    case '1':
+      return true
+    case 'false':
+    case '0':
+      return false
+    default:
+      ctx.addIssue({ code: 'custom', message: '必须是 true、false、1 或 0' })
+      return z.NEVER
+  }
+})
 
 export const ApiConfigSchema = z.object({
   nodeEnv: z.enum(['development', 'test', 'production']).default('development'),
   host: z.string().min(1).default('127.0.0.1'),
-  port: z.coerce.number().int().positive().default(8787),
+  port: z.coerce.number().int().min(1).max(65_535).default(8787),
   logLevel: z.enum(['debug', 'info', 'warn', 'error']).default('info'),
   corsOrigin: z.string().default('*'),
   dataMode: DataModeSchema.default('mock'),

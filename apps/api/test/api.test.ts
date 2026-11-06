@@ -176,6 +176,21 @@ describe('API 路由（mock 模式）', () => {
 })
 
 describe('配置与数据源模式', () => {
+  it('allow-write 环境变量只接受明确布尔值', () => {
+    for (const [value, expected] of [
+      ['true', true], ['1', true], ['TRUE', true],
+      ['false', false], ['0', false], ['False', false],
+    ] as const) {
+      expect(makeConfig({ MCD_ALLOW_WRITE_TOOLS: value }).mcp.allowWrite).toBe(expected)
+    }
+    expect(() => makeConfig({ MCD_ALLOW_WRITE_TOOLS: 'tru' })).toThrow(/mcp\.allowWrite/)
+  })
+
+  it('API 端口限制在 TCP 有效范围内', () => {
+    expect(makeConfig({ API_PORT: '65535' }).port).toBe(65535)
+    expect(() => makeConfig({ API_PORT: '65536' })).toThrow(/port/)
+  })
+
   it('replay 模式无快照时 /api/snapshot 返回 CONFIG_ERROR', async () => {
     const app = await makeApp('replay')
     const response = await app.inject({ method: 'GET', url: '/api/snapshot' })
