@@ -50,7 +50,19 @@ async function request<T>(
   }
 
   const text = await response.text()
-  const payload: unknown = text ? (JSON.parse(text) as unknown) : null
+  let payload: unknown = null
+  if (text) {
+    try {
+      payload = JSON.parse(text) as unknown
+    } catch {
+      throw new ApiClientError({
+        code: response.ok ? 'VALIDATION_ERROR' : 'INTERNAL',
+        message: response.ok
+          ? 'API 响应不是有效 JSON'
+          : `HTTP ${response.status}（响应不是有效 JSON）`,
+      })
+    }
+  }
 
   if (!response.ok) {
     const parsed = ApiErrorBodySchema.safeParse(payload)
