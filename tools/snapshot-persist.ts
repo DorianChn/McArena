@@ -13,6 +13,9 @@ import path from 'node:path'
 
 export const SNAPSHOT_MANIFEST_SCHEMA = 'mcarena.snapshot-manifest/1'
 
+const SNAPSHOT_ID_PATTERN = /^snap-[A-Za-z0-9][A-Za-z0-9._-]{0,122}$/
+const SNAPSHOT_FILE_NAME_PATTERN = /^[A-Za-z0-9][A-Za-z0-9._-]{0,254}$/
+
 export interface SnapshotFileEntry {
   /** 清单内文件名（相对快照目录） */
   name: string
@@ -66,14 +69,29 @@ export interface SnapshotBundleResult {
  * 若中途失败，已写入文件保留在现场，manifest 缺失即可判定「快照不完整」。
  */
 export function writeSnapshotBundle(outDir: string, input: SnapshotBundleInput): SnapshotBundleResult {
+  if (!SNAPSHOT_ID_PATTERN.test(input.snapshotId)) {
+    throw new Error(`快照 ID 无效：${input.snapshotId}`)
+  }
+
+  const fileNames = new Set<string>()
+  for (const file of input.files) {
+    if (file.name.includes('/') || file.name.includes('\\')) {
+      throw new Error(`快照文件名不允许包含路径分隔符：${file.name}`)
+    }
+    if (!SNAPSHOT_FILE_NAME_PATTERN.test(file.name) || file.name === 'manifest.json') {
+      throw new Error(`快照文件名无效或为保留名称：${file.name}`)
+    }
+    if (fileNames.has(file.name)) {
+      throw new Error(`快照文件名重复：${file.name}`)
+    }
+    fileNames.add(file.name)
+  }
+
   const dir = path.join(outDir, input.snapshotId)
   mkdirSync(dir, { recursive: true })
 
   const entries: SnapshotFileEntry[] = []
   for (const file of input.files) {
-    if (path.basename(file.name) !== file.name) {
-      throw new Error(`快照文件名不允许包含路径分隔符：${file.name}`)
-    }
     const bytes = Buffer.byteLength(file.content, 'utf8')
     writeFileSync(path.join(dir, file.name), file.content, 'utf8')
     entries.push({ name: file.name, bytes, sha256: sha256Of(file.content) })
