@@ -1,4 +1,4 @@
-import { mkdtempSync, readFileSync, rmSync } from 'node:fs'
+import { existsSync, mkdtempSync, readFileSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
@@ -74,5 +74,42 @@ describe('快照落盘与校验清单', () => {
         files: [{ name: '../evil.json', content: '{}' }],
       }),
     ).toThrow(/不允许包含路径分隔符/)
+  })
+
+  it('快照 ID 不能包含路径分隔符，且校验失败时不创建越界目录', () => {
+    const outputDir = path.join(outRoot, 'isolated-output')
+    expect(() =>
+      writeSnapshotBundle(outputDir, {
+        snapshotId: '../escaped',
+        capturedAt: '2026-10-15T00:00:00.000Z',
+        mcpServer: { url: 'https://mcp.mcd.cn', name: 'x', version: null },
+        toolsListedCount: 0,
+        toolsInvoked: [],
+        files: [],
+      }),
+    ).toThrow(/快照 ID 无效/)
+    expect(existsSync(path.join(outRoot, 'escaped'))).toBe(false)
+  })
+
+  it('拒绝重复文件名及覆盖 manifest.json', () => {
+    const input = {
+      snapshotId: 'snap-test-invalid-files',
+      capturedAt: '2026-10-15T00:00:00.000Z',
+      mcpServer: { url: 'https://mcp.mcd.cn', name: 'x', version: null },
+      toolsListedCount: 0,
+      toolsInvoked: [],
+    }
+    expect(() =>
+      writeSnapshotBundle(outRoot, {
+        ...input,
+        files: [{ name: 'data.json', content: '{}' }, { name: 'data.json', content: '{"x":1}' }],
+      }),
+    ).toThrow(/文件名重复/)
+    expect(() =>
+      writeSnapshotBundle(outRoot, {
+        ...input,
+        files: [{ name: 'manifest.json', content: '{}' }],
+      }),
+    ).toThrow(/保留名称/)
   })
 })
