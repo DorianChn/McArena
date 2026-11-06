@@ -51,6 +51,28 @@ describe('API 客户端', () => {
     })
   })
 
+  it('成功响应不是 JSON 时返回契约错误，而不是泄漏 SyntaxError', async () => {
+    vi.stubGlobal('fetch', vi.fn(() => Promise.resolve({
+      ok: true,
+      status: 200,
+      text: () => Promise.resolve('<html>proxy error</html>'),
+    })))
+    await expect(api.health()).rejects.toMatchObject({
+      body: { code: 'VALIDATION_ERROR', message: 'API 响应不是有效 JSON' },
+    })
+  })
+
+  it('HTTP 错误响应不是 JSON 时仍保留 HTTP 状态码', async () => {
+    vi.stubGlobal('fetch', vi.fn(() => Promise.resolve({
+      ok: false,
+      status: 502,
+      text: () => Promise.resolve('<html>bad gateway</html>'),
+    })))
+    await expect(api.health()).rejects.toMatchObject({
+      body: { code: 'INTERNAL', message: 'HTTP 502（响应不是有效 JSON）' },
+    })
+  })
+
   it('网络层失败映射为可用错误', async () => {
     vi.stubGlobal(
       'fetch',
