@@ -158,6 +158,12 @@ describe('API 并发与容量', () => {
 })
 
 describe('MatchStore 容量与并发', () => {
+  it('容量必须是正整数，避免无效配置导致存储无界或淘汰循环卡住', () => {
+    for (const capacity of [0, -1, 1.5, Number.NaN, Number.POSITIVE_INFINITY]) {
+      expect(() => new MatchStore(capacity)).toThrow('capacity 必须为正整数')
+    }
+  })
+
   it('超出容量时淘汰最旧一局（保留最新）', () => {
     const store = new MatchStore(3)
     store.save(makeMatchResult('m1'), [])
@@ -170,6 +176,19 @@ describe('MatchStore 容量与并发', () => {
     expect(store.getEvents('m1')).toEqual([])
     expect(store.get('m2')?.matchId).toBe('m2')
     expect(store.get('m4')?.matchId).toBe('m4') // 最新保留
+  })
+
+  it('重复 matchId 更新后只保留一个队列位置，并保护最新结果', () => {
+    const store = new MatchStore(2)
+    store.save(makeMatchResult('m1'), [])
+    store.save(makeMatchResult('m2'), [])
+    store.save({ ...makeMatchResult('m1'), seed: 2 }, [])
+    store.save(makeMatchResult('m3'), [])
+
+    expect(store.size).toBe(2)
+    expect(store.get('m2')).toBeUndefined()
+    expect(store.get('m1')?.seed).toBe(2)
+    expect(store.get('m3')?.matchId).toBe('m3')
   })
 
   it('淘汰后原 id 的 SSE 事件同步不可读', () => {
